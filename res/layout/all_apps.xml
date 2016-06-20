@@ -25,6 +25,7 @@
 
     <!-- Both android:focusable and android:focusableInTouchMode are needed for
          the view to get focus change events. -->
+    <!--搜索的位置-->
     <FrameLayout
         android:id="@+id/search_box_container"
         android:layout_width="match_parent"

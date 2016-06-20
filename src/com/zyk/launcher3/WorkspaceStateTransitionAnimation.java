@@ -165,6 +165,27 @@ class TransitionStates {
         overviewToAllApps = (oldStateIsOverview && stateIsOverviewHidden);
         allAppsToWorkspace = (stateIsNormalHidden && stateIsNormal);
     }
+
+    @Override
+    public String toString() {
+        return "TransitionStates{" +
+                "oldStateIsNormal=" + oldStateIsNormal +
+                ", oldStateIsSpringLoaded=" + oldStateIsSpringLoaded +
+                ", oldStateIsNormalHidden=" + oldStateIsNormalHidden +
+                ", oldStateIsOverviewHidden=" + oldStateIsOverviewHidden +
+                ", oldStateIsOverview=" + oldStateIsOverview +
+                ", stateIsNormal=" + stateIsNormal +
+                ", stateIsSpringLoaded=" + stateIsSpringLoaded +
+                ", stateIsNormalHidden=" + stateIsNormalHidden +
+                ", stateIsOverviewHidden=" + stateIsOverviewHidden +
+                ", stateIsOverview=" + stateIsOverview +
+                ", workspaceToAllApps=" + workspaceToAllApps +
+                ", overviewToAllApps=" + overviewToAllApps +
+                ", allAppsToWorkspace=" + allAppsToWorkspace +
+                ", workspaceToOverview=" + workspaceToOverview +
+                ", overviewToWorkspace=" + overviewToWorkspace +
+                '}';
+    }
 }
 
 /**
@@ -195,6 +216,7 @@ public class WorkspaceStateTransitionAnimation {
     @Thunk float mSpringLoadedShrinkFactor;
     @Thunk float mOverviewModeShrinkFactor;
     @Thunk float mWorkspaceScrimAlpha;
+    @Thunk float mAllAppsScrimAlpha;
     @Thunk int mAllAppsTransitionTime;
     @Thunk int mOverviewTransitionTime;
     @Thunk int mOverlayTransitionTime;
@@ -214,6 +236,7 @@ public class WorkspaceStateTransitionAnimation {
         mOverviewModeShrinkFactor =
                 res.getInteger(R.integer.config_workspaceOverviewShrinkPercentage) / 100f;
         mWorkspaceScrimAlpha = res.getInteger(R.integer.config_workspaceScrimAlpha) / 100f;
+        mAllAppsScrimAlpha   = res.getInteger(R.integer.config_AllAppsAlpha) / 100f;
         mWorkspaceFadeInAdjacentScreens = grid.shouldFadeAdjacentWorkspaceScreens();
     }
 
@@ -226,6 +249,7 @@ public class WorkspaceStateTransitionAnimation {
         int workspaceDuration = getAnimationDuration(states);
         animateWorkspace(states, toPage, animated, workspaceDuration, layerViews,
                 accessibilityEnabled);
+        System.out.println("states:"+states);
         animateBackgroundGradient(states, animated, BACKGROUND_FADE_OUT_DURATION);
         return mStateAnimator;
     }
@@ -483,7 +507,10 @@ public class WorkspaceStateTransitionAnimation {
         final DragLayer dragLayer = mLauncher.getDragLayer();
         final float startAlpha = dragLayer.getBackgroundAlpha();
         float finalAlpha = states.stateIsNormal ? 0 : mWorkspaceScrimAlpha;
-
+        //add by zhuyk
+        if(states.workspaceToAllApps || states.overviewToAllApps){//AllApps 透明度提高些
+            finalAlpha = mAllAppsScrimAlpha;
+        }
         if (finalAlpha != startAlpha) {
             if (animated) {
                 // These properties refer to the background protection gradient used for AllApps

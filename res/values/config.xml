@@ -23,6 +23,8 @@
 <!-- AllApps & Launcher transitions -->
     <!-- The alpha of the AppsCustomize bg in spring loaded mode -->
     <integer name="config_workspaceScrimAlpha">55</integer>
+    <!--AllApps界面的透明度 add by zhuyk-->
+    <integer name="config_AllAppsAlpha">20</integer>
     <integer name="config_allAppsTransitionTime">100</integer>
     <integer name="config_overviewTransitionTime">250</integer>
 
