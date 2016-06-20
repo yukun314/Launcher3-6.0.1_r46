@@ -20,8 +20,11 @@
 <resources>
     <!-- The color tints to apply to the text and drag view when hovering
          over the delete target or the info target -->
+    <!--卸载 应用未拖进的颜色-->
     <color name="delete_target_hover_tint">#FFC1C1C1</color>
+    <!--卸载 应用拖进的颜色-->
     <color name="uninstall_target_hover_tint">#FFF0592B</color>
+    <!--应用信息 应用拖进字体颜色-->
     <color name="info_target_hover_tint">#FF009688</color>
     <color name="cling_scrim_background">#80000000</color>
 
