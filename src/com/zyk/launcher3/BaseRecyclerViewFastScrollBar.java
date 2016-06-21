@@ -40,6 +40,7 @@ public class BaseRecyclerViewFastScrollBar {
         void setFastScrollFocused(boolean focused, boolean animated);
     }
 
+    //滚动条的透明度，
     private final static int MAX_TRACK_ALPHA = 30;
     private final static int SCROLL_BAR_VIS_DURATION = 150;
 
