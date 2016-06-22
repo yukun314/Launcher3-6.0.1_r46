@@ -46,12 +46,18 @@
     <color name="outline_color">#FFFFFFFF</color>
 
     <!-- Containers -->
-    <color name="container_fastscroll_thumb_inactive_color">#009688</color>
-    <color name="container_fastscroll_thumb_active_color">#009688</color>
+    <!--<color name="container_fastscroll_thumb_inactive_color">#009688</color>-->
+    <!--<color name="container_fastscroll_thumb_active_color">#009688</color>-->
+    <color name="container_fastscroll_thumb_inactive_color">#e200a9f2</color>
+    <color name="container_fastscroll_thumb_active_color">#e200a9f2</color>
+    <!--add zhuyk-->
+    <color name="container_fastscroll_thumb_text_color">#e2ffffff</color>
 
     <!-- All Apps -->
     <color name="all_apps_grid_section_text_color">#009688</color>
     <color name="all_apps_search_market_button_focused_bg_color">#DDDDDD</color>
+    <!--add zhuyk-->
+    <color name="all_apps_search_bg_color">#DDDDDD</color>
 
     <!-- Widgets view -->
     <color name="widgets_view_section_text_color">#FFFFFF</color>

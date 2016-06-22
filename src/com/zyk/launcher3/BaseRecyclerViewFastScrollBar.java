@@ -41,7 +41,7 @@ public class BaseRecyclerViewFastScrollBar {
     }
 
     //滚动条的透明度，
-    private final static int MAX_TRACK_ALPHA = 30;
+    private final static int MAX_TRACK_ALPHA = 60;
     private final static int SCROLL_BAR_VIS_DURATION = 150;
 
     @Thunk BaseRecyclerView mRv;
@@ -80,7 +80,8 @@ public class BaseRecyclerViewFastScrollBar {
         mRv = rv;
         mPopup = new BaseRecyclerViewFastScrollPopup(rv, res);
         mTrackPaint = new Paint();
-        mTrackPaint.setColor(rv.getFastScrollerTrackColor(Color.BLACK));
+//        mTrackPaint.setColor(rv.getFastScrollerTrackColor(Color.BLACK));
+        mTrackPaint.setColor(Color.rgb(230,230,230));
         mTrackPaint.setAlpha(MAX_TRACK_ALPHA);
         mThumbInactiveColor = rv.getFastScrollerThumbInactiveColor(
                 res.getColor(R.color.container_fastscroll_thumb_inactive_color));

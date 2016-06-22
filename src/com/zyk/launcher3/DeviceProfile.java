@@ -378,6 +378,9 @@ public class DeviceProfile {
         return visibleChildren;
     }
 
+    /**
+     * 设置各个控件的位置
+     */
     public void layout(Launcher launcher) {
         FrameLayout.LayoutParams lp;
         boolean hasVerticalBarLayout = isVerticalBarLayout();
@@ -502,6 +505,18 @@ public class DeviceProfile {
                 }
             }
         }
+
+        // Layout the allapps
+        View allapps = launcher.findViewById(R.id.apps_view);
+        lp = (FrameLayout.LayoutParams) allapps.getLayoutParams();
+        if (hasVerticalBarLayout) {
+
+        } else if (isTablet) {
+
+        } else {
+            lp.bottomMargin = hotseatBarHeightPx;
+        }
+        allapps.setLayoutParams(lp);
     }
 
     private int getCurrentWidth() {

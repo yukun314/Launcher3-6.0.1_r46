@@ -1367,7 +1367,6 @@ public class Launcher extends Activity
         if (mHotseat != null) {
             mHotseat.setOnLongClickListener(this);
         }
-
         mOverviewPanel = (ViewGroup) findViewById(R.id.overview_panel);
         mWidgetsButton = findViewById(R.id.widget_button);
         mWidgetsButton.setOnClickListener(new OnClickListener() {

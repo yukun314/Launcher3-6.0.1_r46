@@ -14,7 +14,9 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/all_apps_panel_shape"
-    android:insetTop="@dimen/container_bounds_minus_quantum_panel_padding_inset"
-    android:insetBottom="@dimen/container_bounds_minus_quantum_panel_padding_inset" />
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+    <solid android:color="@color/all_apps_search_bg_color" />
+    <corners
+        android:radius="2dp" />
+</shape>
