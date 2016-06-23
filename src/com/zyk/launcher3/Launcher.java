@@ -132,7 +132,8 @@ public class Launcher extends Activity
         implements View.OnClickListener, OnLongClickListener, LauncherModel.Callbacks,
                    View.OnTouchListener, PageSwitchListener, LauncherProviderChangeListener {
     static final String TAG = "Launcher";
-    static final boolean LOGD = false;
+    //FIXME 需要改成false
+    static final boolean LOGD = true;
 
     static final boolean PROFILE_STARTUP = false;
     static final boolean DEBUG_WIDGETS = true;
@@ -321,6 +322,10 @@ public class Launcher extends Activity
     private final int mRestoreScreenOrientationDelay = 500;
 
     @Thunk Drawable mWorkspaceBackgroundDrawable;
+
+    //add zhuyk
+    private Drawable mAllAppsButtonDrawable;
+    private Drawable mHomeButtonDrawable;
 
     private final ArrayList<Integer> mSynchronouslyBoundPages = new ArrayList<Integer>();
     private static final boolean DISABLE_SYNCHRONOUS_BINDING_CURRENT_PAGE = false;
@@ -2554,6 +2559,30 @@ public class Launcher extends Activity
             if (mLauncherCallbacks != null) {
                 mLauncherCallbacks.onClickAllAppsButton(v);
             }
+            if(mAllAppsButton instanceof TextView) {
+                if(mHomeButtonDrawable == null) {
+                    mHomeButtonDrawable = getResources().getDrawable(R.drawable.home_button_icon);
+                    resizeIconDrawable(mHomeButtonDrawable);
+                }
+                ((TextView)mAllAppsButton).setCompoundDrawables(null, mHomeButtonDrawable, null, null);
+            }
+
+        } else {
+            showWorkspace(true);
+//            allAppsBack();
+        }
+    }
+
+    /**
+     * 设置allapps返回时的drawable
+     */
+    public void allAppsBack(){
+        if(mAllAppsButton instanceof TextView) {
+            if(mAllAppsButtonDrawable == null) {
+                mAllAppsButtonDrawable = getResources().getDrawable(R.drawable.all_apps_button_icon);
+                resizeIconDrawable(mAllAppsButtonDrawable);
+            }
+            ((TextView)mAllAppsButton).setCompoundDrawables(null, mAllAppsButtonDrawable, null, null);
         }
     }
 
@@ -3260,6 +3289,7 @@ public class Launcher extends Activity
 
     public void showWorkspace(boolean animated) {
         showWorkspace(WorkspaceStateTransitionAnimation.SCROLL_TO_CURRENT_PAGE, animated, null);
+        allAppsBack();
     }
 
     public void showWorkspace(boolean animated, Runnable onCompleteRunnable) {
