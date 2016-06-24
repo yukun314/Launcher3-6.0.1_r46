@@ -143,9 +143,10 @@ public class Hotseat extends FrameLayout
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         // We don't want any clicks to go through to the hotseat unless the workspace is in
         // the normal state.
-        if (mLauncher.getWorkspace().workspaceInModalState()) {
-            return true;
-        }
+        //zhuyk 在allapps界面也显示hotseat 所以也可以接收事件
+//        if (mLauncher.getWorkspace().workspaceInModalState()) {
+//            return true;
+//        }
         return false;
     }
 

@@ -2559,24 +2559,16 @@ public class Launcher extends Activity
             if (mLauncherCallbacks != null) {
                 mLauncherCallbacks.onClickAllAppsButton(v);
             }
-            if(mAllAppsButton instanceof TextView) {
-                if(mHomeButtonDrawable == null) {
-                    mHomeButtonDrawable = getResources().getDrawable(R.drawable.home_button_icon);
-                    resizeIconDrawable(mHomeButtonDrawable);
-                }
-                ((TextView)mAllAppsButton).setCompoundDrawables(null, mHomeButtonDrawable, null, null);
-            }
-
+            allAppsDrawable();
         } else {
             showWorkspace(true);
-//            allAppsBack();
         }
     }
 
     /**
      * 设置allapps返回时的drawable
      */
-    public void allAppsBack(){
+    public void homeDrawable(){
         if(mAllAppsButton instanceof TextView) {
             if(mAllAppsButtonDrawable == null) {
                 mAllAppsButtonDrawable = getResources().getDrawable(R.drawable.all_apps_button_icon);
@@ -2586,11 +2578,27 @@ public class Launcher extends Activity
         }
     }
 
+    public void allAppsDrawable(){
+        if(mAllAppsButton instanceof TextView) {
+            if(mHomeButtonDrawable == null) {
+                mHomeButtonDrawable = getResources().getDrawable(R.drawable.home_button_icon);
+                resizeIconDrawable(mHomeButtonDrawable);
+            }
+            ((TextView)mAllAppsButton).setCompoundDrawables(null, mHomeButtonDrawable, null, null);
+        }
+    }
+
     protected void onLongClickAllAppsButton(View v) {
         if (LOGD) Log.d(TAG, "onLongClickAllAppsButton");
         if (!isAppsViewVisible()) {
+//            showAppsView(true /* animated */, false /* resetListToTop */,
+//                    true /* updatePredictedApps */, true /* focusSearchBar */);
+            //zhuyk 准备屏蔽搜索框，focusSearchBar 传false
             showAppsView(true /* animated */, false /* resetListToTop */,
-                    true /* updatePredictedApps */, true /* focusSearchBar */);
+                    true /* updatePredictedApps */, false /* focusSearchBar */);
+            allAppsDrawable();
+        }else {
+            showWorkspace(true);
         }
     }
 
@@ -3155,12 +3163,14 @@ public class Launcher extends Activity
     public boolean onLongClick(View v) {
         if (!isDraggingEnabled()) return false;
         if (isWorkspaceLocked()) return false;
-        if (mState != State.WORKSPACE) return false;
+//        if (mState != State.WORKSPACE) return false;
 
         if (v == mAllAppsButton) {
             onLongClickAllAppsButton(v);
             return true;
         }
+        //zhuyk 在allapps界面也能使mAllAppsButton长按起作用
+        if (mState != State.WORKSPACE) return false;
 
         if (v instanceof Workspace) {
             if (!mWorkspace.isInOverviewMode()) {
@@ -3289,7 +3299,7 @@ public class Launcher extends Activity
 
     public void showWorkspace(boolean animated) {
         showWorkspace(WorkspaceStateTransitionAnimation.SCROLL_TO_CURRENT_PAGE, animated, null);
-        allAppsBack();
+        homeDrawable();
     }
 
     public void showWorkspace(boolean animated, Runnable onCompleteRunnable) {
