@@ -39,6 +39,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.TextView;
 import com.zyk.launcher3.AppInfo;
 import com.zyk.launcher3.BubbleTextView;
+import com.zyk.launcher3.DeviceProfile;
 import com.zyk.launcher3.Launcher;
 import com.zyk.launcher3.R;
 import com.zyk.launcher3.Utilities;
@@ -461,6 +462,10 @@ public class AllAppsGridAdapter extends RecyclerView.Adapter<AllAppsGridAdapter.
                 icon.setLongPressTimeout(ViewConfiguration.get(parent.getContext())
                         .getLongPressTimeout());
                 icon.setFocusable(true);
+                //zhuyk
+                //在布局文件里设置宽为match_parent 和下面的代码效果是一样的，itemWidthPx自己添加的
+//                DeviceProfile grid = mLauncher.getDeviceProfile();
+//                icon.setWidth(grid.itemWidthPx);
                 return new ViewHolder(icon);
             }
             case PREDICTION_ICON_VIEW_TYPE: {

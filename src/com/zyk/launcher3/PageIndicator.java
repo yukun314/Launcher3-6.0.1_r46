@@ -170,7 +170,7 @@ public class PageIndicator extends LinearLayout {
         mMarkers.add(index, m);
         offsetWindowCenterTo(mActiveMarkerIndex, allowAnimations);
     }
-    void addMarkers(ArrayList<PageMarkerResources> markers, boolean allowAnimations) {
+    public void addMarkers(ArrayList<PageMarkerResources> markers, boolean allowAnimations) {
         for (int i = 0; i < markers.size(); ++i) {
             addMarker(Integer.MAX_VALUE, markers.get(i), allowAnimations);
         }

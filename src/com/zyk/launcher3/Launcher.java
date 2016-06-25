@@ -3299,7 +3299,6 @@ public class Launcher extends Activity
 
     public void showWorkspace(boolean animated) {
         showWorkspace(WorkspaceStateTransitionAnimation.SCROLL_TO_CURRENT_PAGE, animated, null);
-        homeDrawable();
     }
 
     public void showWorkspace(boolean animated, Runnable onCompleteRunnable) {
@@ -3312,6 +3311,7 @@ public class Launcher extends Activity
     }
 
     void showWorkspace(int snapToPage, boolean animated, Runnable onCompleteRunnable) {
+        System.out.println("showWorkspace 三个参数");
         boolean changed = mState != State.WORKSPACE ||
                 mWorkspace.getState() != Workspace.State.NORMAL;
         if (changed) {
@@ -3337,6 +3337,7 @@ public class Launcher extends Activity
             getWindow().getDecorView()
                     .sendAccessibilityEvent(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
         }
+        homeDrawable();
     }
 
     void showOverviewMode(boolean animated) {

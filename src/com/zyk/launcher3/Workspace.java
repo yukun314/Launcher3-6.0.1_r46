@@ -1592,7 +1592,10 @@ public class Workspace extends PagedView
             // Reset our click listener
             setOnClickListener(mLauncher);
         }
-        mLauncher.getSearchDropTargetBar().enableAccessibleDrag(enable);
+        SearchDropTargetBar sdt = mLauncher.getSearchDropTargetBar();
+        if(sdt != null) {
+            sdt.enableAccessibleDrag(enable);
+        }
         mLauncher.getHotseat().getLayout()
             .enableAccessibleDrag(enable, CellLayout.WORKSPACE_ACCESSIBILITY_DRAG);
     }

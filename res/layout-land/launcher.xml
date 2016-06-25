@@ -31,7 +31,7 @@
         <com.zyk.launcher3.FocusIndicatorView
             android:id="@+id/focus_indicator"
             android:layout_width="52dp"
-            android:layout_height="52dp" />
+            android:layout_height="52dp"/>
 
         <!-- The workspace contains 5 screens of cells -->
         <!-- DO NOT CHANGE THE ID -->
@@ -64,10 +64,10 @@
             android:visibility="invisible" />
 
         <include layout="@layout/all_apps"
-            android:id="@+id/apps_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible" />
+        android:id="@+id/apps_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
     </com.zyk.launcher3.DragLayer>
 
     <ViewStub
@@ -75,5 +75,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inflatedId="@+id/launcher_overlay"
-        android:layout="@layout/launcher_overlay" />
+        android:layout="@layout/launcher_overlay"/>
 </com.zyk.launcher3.LauncherRootView>

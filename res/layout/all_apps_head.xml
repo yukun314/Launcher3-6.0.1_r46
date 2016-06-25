@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/all_apps_head_height">
+
+    <TextView
+        android:id="@+id/all_apps_head_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/all_apps_head_text_color"
+        android:text="应用程序"
+        android:background="@drawable/all_apps_head_bg"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/all_apps_dividingline_color"
+        android:layout_gravity="bottom"/>
+
+    <FrameLayout
+        android:id="@+id/search_box_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone"
+        android:layout_gravity="right"/>
+</FrameLayout>

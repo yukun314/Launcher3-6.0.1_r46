@@ -140,7 +140,6 @@ public class DeviceProfile {
 
         // AllApps uses the original non-scaled icon text size
         allAppsIconTextSizePx = Utilities.pxFromDp(inv.iconTextSize, dm);
-
         // AllApps uses the original non-scaled icon size
         allAppsIconSizePx = Utilities.pxFromDp(inv.iconSize, dm);
 
@@ -388,28 +387,30 @@ public class DeviceProfile {
 
         // Layout the search bar space
         View searchBar = launcher.getSearchDropTargetBar();
-        lp = (FrameLayout.LayoutParams) searchBar.getLayoutParams();
-        if (hasVerticalBarLayout) {
-            // Vertical search bar space -- The search bar is fixed in the layout to be on the left
-            //                              of the screen regardless of RTL
-            lp.gravity = Gravity.LEFT;
-            lp.width = searchBarSpaceHeightPx;
+        if(searchBar != null) {
+            lp = (FrameLayout.LayoutParams) searchBar.getLayoutParams();
+            if (hasVerticalBarLayout) {
+                // Vertical search bar space -- The search bar is fixed in the layout to be on the left
+                //                              of the screen regardless of RTL
+                lp.gravity = Gravity.LEFT;
+                lp.width = searchBarSpaceHeightPx;
 
-            LinearLayout targets = (LinearLayout) searchBar.findViewById(R.id.drag_target_bar);
-            targets.setOrientation(LinearLayout.VERTICAL);
-            FrameLayout.LayoutParams targetsLp = (FrameLayout.LayoutParams) targets.getLayoutParams();
-            targetsLp.gravity = Gravity.TOP;
-            targetsLp.height = LayoutParams.WRAP_CONTENT;
+                LinearLayout targets = (LinearLayout) searchBar.findViewById(R.id.drag_target_bar);
+                targets.setOrientation(LinearLayout.VERTICAL);
+                FrameLayout.LayoutParams targetsLp = (FrameLayout.LayoutParams) targets.getLayoutParams();
+                targetsLp.gravity = Gravity.TOP;
+                targetsLp.height = LayoutParams.WRAP_CONTENT;
 
-        } else {
-            // Horizontal search bar space
-            lp.gravity = Gravity.TOP;
-            lp.height = searchBarSpaceHeightPx;
+            } else {
+                // Horizontal search bar space
+                lp.gravity = Gravity.TOP;
+                lp.height = searchBarSpaceHeightPx;
 
-            LinearLayout targets = (LinearLayout) searchBar.findViewById(R.id.drag_target_bar);
-            targets.getLayoutParams().width = searchBarSpaceWidthPx;
+                LinearLayout targets = (LinearLayout) searchBar.findViewById(R.id.drag_target_bar);
+                targets.getLayoutParams().width = searchBarSpaceWidthPx;
+            }
+            searchBar.setLayoutParams(lp);
         }
-        searchBar.setLayoutParams(lp);
 
         // Layout the workspace
         PagedView workspace = (PagedView) launcher.findViewById(R.id.workspace);

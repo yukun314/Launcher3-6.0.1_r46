@@ -41,7 +41,7 @@
     <color name="quantum_panel_bg_color_dark">#FF374248</color>
 
     //all_apps.xml中id为all_apps_reveal的背景颜色
-    <color name="quantum_panel_bg_color">#00F5F5F5</color>
+    <color name="quantum_panel_bg_color">#F5F5F5</color>
 
     <color name="outline_color">#FFFFFFFF</color>
 
@@ -58,6 +58,8 @@
     <color name="all_apps_search_market_button_focused_bg_color">#DDDDDD</color>
     <!--add zhuyk-->
     <color name="all_apps_search_bg_color">#DDDDDD</color>
+    <color name="all_apps_dividingline_color">#e200a9f2</color>
+    <color name="all_apps_head_text_color">#FFFFFF</color>
 
     <!-- Widgets view -->
     <color name="widgets_view_section_text_color">#FFFFFF</color>

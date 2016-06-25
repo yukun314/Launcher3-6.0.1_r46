@@ -716,29 +716,37 @@ public class LauncherStateTransitionAnimation {
         System.out.println("startWorkspaceSearchBarAnimation");
         final SearchDropTargetBar.State toSearchBarState =
                 toWorkspaceState.getSearchDropTargetBarState();
-
+        final SearchDropTargetBar sdt = mLauncher.getSearchDropTargetBar();
         if (overlaySearchBar != null) {
             if ((toWorkspaceState == Workspace.State.NORMAL) &&
                     (fromWorkspaceState == Workspace.State.NORMAL_HIDDEN)) {
                 // If we are transitioning from the overlay to the workspace, then show the
                 // workspace search bar immediately and let the overlay search bar fade out on top
-                mLauncher.getSearchDropTargetBar().animateToState(toSearchBarState, 0);
+               if(sdt != null) {
+                   sdt.animateToState(toSearchBarState, 0);
+               }
             } else if (fromWorkspaceState == Workspace.State.NORMAL) {
                 // If we are transitioning from the workspace to the overlay, then keep the
                 // workspace search bar visible until the overlay search bar fades in on top
                 animation.addListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        mLauncher.getSearchDropTargetBar().animateToState(toSearchBarState, 0);
+                        if(sdt != null) {
+                            sdt.animateToState(toSearchBarState, 0);
+                        }
                     }
                 });
             } else {
                 // Otherwise, then just animate the workspace search bar normally
-                mLauncher.getSearchDropTargetBar().animateToState(toSearchBarState, duration);
+                if(sdt != null) {
+                    sdt.animateToState(toSearchBarState, duration);
+                }
             }
         } else {
             // If there is no overlay search bar, then just animate the workspace search bar
-            mLauncher.getSearchDropTargetBar().animateToState(toSearchBarState, duration);
+            if(sdt != null) {
+                sdt.animateToState(toSearchBarState, duration);
+            }
         }
     }
 
@@ -746,7 +754,7 @@ public class LauncherStateTransitionAnimation {
      * Dispatches the prepare-transition event to suitable views.
      */
     void dispatchOnLauncherTransitionPrepare(View v, boolean animated, boolean toWorkspace) {
-        System.out.println("dispatchOnLauncherTransitionPrepare 动画开始之前");
+//        System.out.println("dispatchOnLauncherTransitionPrepare 动画开始之前");
         if (v instanceof LauncherTransitionable) {
             ((LauncherTransitionable) v).onLauncherTransitionPrepare(mLauncher, animated,
                     toWorkspace);
@@ -757,7 +765,7 @@ public class LauncherStateTransitionAnimation {
      * Dispatches the start-transition event to suitable views.
      */
     void dispatchOnLauncherTransitionStart(View v, boolean animated, boolean toWorkspace) {
-        System.out.println("dispatchOnLauncherTransitionStart 动画开始");
+//        System.out.println("dispatchOnLauncherTransitionStart 动画开始");
         if (v instanceof LauncherTransitionable) {
             ((LauncherTransitionable) v).onLauncherTransitionStart(mLauncher, animated,
                     toWorkspace);
@@ -771,7 +779,7 @@ public class LauncherStateTransitionAnimation {
      * Dispatches the step-transition event to suitable views.
      */
     void dispatchOnLauncherTransitionStep(View v, float t) {
-        System.out.println("dispatchOnLauncherTransitionStep 动画停止");
+//        System.out.println("dispatchOnLauncherTransitionStep 动画停止");
         if (v instanceof LauncherTransitionable) {
             ((LauncherTransitionable) v).onLauncherTransitionStep(mLauncher, t);
         }
@@ -781,7 +789,7 @@ public class LauncherStateTransitionAnimation {
      * Dispatches the end-transition event to suitable views.
      */
     void dispatchOnLauncherTransitionEnd(View v, boolean animated, boolean toWorkspace) {
-        System.out.println("dispatchOnLauncherTransitionEnd 动画结束");
+//        System.out.println("dispatchOnLauncherTransitionEnd 动画结束");
         if (v instanceof LauncherTransitionable) {
             ((LauncherTransitionable) v).onLauncherTransitionEnd(mLauncher, animated,
                     toWorkspace);

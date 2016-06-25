@@ -282,7 +282,10 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
 
     @Override
     public void enableAccessibleDrag(boolean enable) {
-        mLauncher.getSearchDropTargetBar().enableAccessibleDrag(enable);
+        SearchDropTargetBar sdt = mLauncher.getSearchDropTargetBar();
+        if(sdt != null) {
+            sdt.enableAccessibleDrag(enable);
+        }
         for (int i = 0; i < mContent.getChildCount(); i++) {
             mContent.getPageAt(i).enableAccessibleDrag(enable, CellLayout.FOLDER_ACCESSIBILITY_DRAG);
         }

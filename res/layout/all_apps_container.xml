@@ -33,6 +33,8 @@
         android:layout_gravity="center_horizontal|top"
         android:clipToPadding="false"
         android:focusable="true"
-        android:descendantFocusability="afterDescendants" />
+        android:descendantFocusability="afterDescendants"
+        android:layout_margin="0dp"
+        android:padding="0dp"/>
 
 </com.zyk.launcher3.allapps.AllAppsRecyclerViewContainerView>

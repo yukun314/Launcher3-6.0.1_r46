@@ -18,6 +18,7 @@
      will bake the left/right padding into that view's background itself. -->
 <com.zyk.launcher3.allapps.AllAppsContainerView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
     android:id="@+id/apps_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,19 +27,22 @@
     <!-- Both android:focusable and android:focusableInTouchMode are needed for
          the view to get focus change events. -->
     <!--搜索的位置-->
-    <FrameLayout
-        android:id="@+id/search_box_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:visibility="gone"/>
+    <!--<FrameLayout-->
+        <!--android:id="@+id/search_box_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:focusable="true"-->
+        <!--android:focusableInTouchMode="true"-->
+        <!--android:visibility="gone"/>-->
+
+    <include
+        layout="@layout/all_apps_head"
+        android:id="@+id/all_apps_head"/>
 
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
         <FrameLayout
             android:id="@+id/all_apps_reveal"
             android:layout_width="match_parent"
@@ -55,4 +59,12 @@
             android:layout_gravity="center"
             android:visibility="gone" />
     </FrameLayout>
+    <!--<com.zyk.launcher3.PageIndicator-->
+        <!--android:id="@+id/all_apps_progress"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:animateLayoutChanges="true"-->
+        <!--launcher:windowSize="@integer/config_maxNumberOfPageIndicatorsToShow"-->
+        <!--android:layout_gravity="center_horizontal"/>-->
+
 </com.zyk.launcher3.allapps.AllAppsContainerView>

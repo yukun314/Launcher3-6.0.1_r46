@@ -32,7 +32,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import com.zyk.launcher3.AppInfo;
 import com.zyk.launcher3.BaseContainerView;
 import com.zyk.launcher3.CellLayout;
@@ -44,6 +45,7 @@ import com.zyk.launcher3.Folder;
 import com.zyk.launcher3.ItemInfo;
 import com.zyk.launcher3.Launcher;
 import com.zyk.launcher3.LauncherTransitionable;
+import com.zyk.launcher3.PageIndicator;
 import com.zyk.launcher3.R;
 import com.zyk.launcher3.Utilities;
 import com.zyk.launcher3.Workspace;
@@ -145,6 +147,9 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
     @Thunk AllAppsRecyclerView mAppsRecyclerView;
     @Thunk AllAppsSearchBarController mSearchBarController;
     private ViewGroup mSearchBarContainerView;
+    //zhuyk
+    private ViewGroup mAllAppsHead;
+
     private View mSearchBarView;
     private SpannableStringBuilder mSearchQueryBuilder = null;
 
@@ -156,6 +161,9 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
     private final Point mBoundsCheckLastTouchDownPos = new Point(-1, -1);
     // This coordinate is relative to its parent
     private final Point mIconLastTouchPos = new Point();
+
+    //zhuyk
+    private PageIndicator mPageIndicator;
 
     private View.OnClickListener mSearchClickListener = new View.OnClickListener() {
         @Override
@@ -239,6 +247,7 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
         // Add the new search view to the layout
         View searchBarView = searchController.getView(mSearchBarContainerView);
         mSearchBarContainerView.addView(searchBarView);
+        //zhuyk 搜索框 不显示
         mSearchBarContainerView.setVisibility(View.VISIBLE);
         mSearchBarView = searchBarView;
         setHasSearchBar();
@@ -307,8 +316,7 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
                 }
             }
         };
-        mSearchBarContainerView = (ViewGroup) findViewById(R.id.search_box_container);
-        mSearchBarContainerView.setOnFocusChangeListener(focusProxyListener);
+
         mContainerView = findViewById(R.id.all_apps_container);
         mContainerView.setOnFocusChangeListener(focusProxyListener);
         mRevealView = findViewById(R.id.all_apps_reveal);
@@ -322,6 +330,22 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
         if (mItemDecoration != null) {
             mAppsRecyclerView.addItemDecoration(mItemDecoration);
         }
+
+        mAllAppsHead = (ViewGroup) findViewById(R.id.all_apps_head);
+
+        mSearchBarContainerView = (ViewGroup) mAllAppsHead.findViewById(R.id.search_box_container);
+        mSearchBarContainerView.setOnFocusChangeListener(focusProxyListener);
+
+        DeviceProfile d = mLauncher.getDeviceProfile();
+        TextView mHeadTitle = (TextView) mAllAppsHead.findViewById(R.id.all_apps_head_title);
+        mHeadTitle.setWidth((int)(d.widthPx*0.382f));
+//        mPageIndicator = (PageIndicator) findViewById(R.id.all_apps_progress);
+//        ArrayList<PageIndicator.PageMarkerResources> markers =
+//                new ArrayList<PageIndicator.PageMarkerResources>();
+//        for (int i = 0; i < 10; i++) {
+//            markers.add(new PageIndicator.PageMarkerResources());
+//        }
+//        mPageIndicator.addMarkers(markers, true);
 
         updateBackgroundAndPaddings();
     }
@@ -369,8 +393,12 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
         boolean isRtl = Utilities.isRtl(getResources());
 
         // TODO: Use quantum_panel instead of quantum_panel_shape
+//        InsetDrawable background = new InsetDrawable(
+//                getResources().getDrawable(R.drawable.quantum_panel_shape), padding.left, 0,
+//                padding.right, 0);
+        //zhuyk 去掉左边的padding
         InsetDrawable background = new InsetDrawable(
-                getResources().getDrawable(R.drawable.quantum_panel_shape), padding.left, 0,
+                getResources().getDrawable(R.drawable.quantum_panel_shape), 0, 0,
                 padding.right, 0);
         Rect bgPadding = new Rect();
         background.getPadding(bgPadding);
@@ -382,7 +410,9 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
         // Hack: We are going to let the recycler view take the full width, so reset the padding on
         // the container to zero after setting the background and apply the top-bottom padding to
         // the content view instead so that the launcher transition clips correctly.
-        mContent.setPadding(0, padding.top, 0, padding.bottom);
+        //zhuyk
+//        mContent.setPadding(0, padding.top, 0, padding.bottom);
+        mContent.setPadding(0, padding.top, 0, 0);
         mContainerView.setPadding(0, 0, 0, 0);
 
         // Pad the recycler view by the background padding plus the start margin (for the section
@@ -403,12 +433,18 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
             if (mSearchBarView.getBackground() != null) {
                 mSearchBarView.getBackground().getPadding(backgroundPadding);
             }
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams)
-                    mSearchBarContainerView.getLayoutParams();
-            lp.leftMargin = searchBarBounds.left - backgroundPadding.left;
-            lp.topMargin = searchBarBounds.top - backgroundPadding.top;
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mSearchBarContainerView.getLayoutParams();
+//            lp.leftMargin = searchBarBounds.left - backgroundPadding.left;
+//            lp.topMargin = searchBarBounds.top - backgroundPadding.top;
             lp.rightMargin = (getMeasuredWidth() - searchBarBounds.right) - backgroundPadding.right;
+            lp.width = (int)(mLauncher.getDeviceProfile().widthPx*0.618f);
             mSearchBarContainerView.requestLayout();
+        }
+
+        if(mAllAppsHead != null) {
+            LayoutParams lp = (LayoutParams) mAllAppsHead.getLayoutParams();
+            lp.topMargin = searchBarBounds.top;
+            mAllAppsHead.requestLayout();
         }
     }
 
