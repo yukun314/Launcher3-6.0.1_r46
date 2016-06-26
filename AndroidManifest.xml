@@ -67,7 +67,7 @@
         android:allowBackup="@bool/enable_backup"
         android:backupAgent="com.zyk.launcher3.LauncherBackupAgentHelper"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher_home"
+        android:icon="@mipmap/icon"
         android:label="@string/application_name"
         android:largeHeap="@bool/config_largeHeap"
         android:restoreAnyVersion="true"

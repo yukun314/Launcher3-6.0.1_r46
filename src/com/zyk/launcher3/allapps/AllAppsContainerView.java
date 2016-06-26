@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.zyk.launcher3.AppInfo;
 import com.zyk.launcher3.BaseContainerView;
@@ -248,7 +249,7 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
         View searchBarView = searchController.getView(mSearchBarContainerView);
         mSearchBarContainerView.addView(searchBarView);
         //zhuyk 搜索框 不显示
-        mSearchBarContainerView.setVisibility(View.VISIBLE);
+        mSearchBarContainerView.setVisibility(View.GONE);
         mSearchBarView = searchBarView;
         setHasSearchBar();
 
@@ -346,6 +347,9 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
 //            markers.add(new PageIndicator.PageMarkerResources());
 //        }
 //        mPageIndicator.addMarkers(markers, true);
+        ImageView lockButton = (ImageView) mAllAppsHead.findViewById(R.id.all_apps_head_lock);
+        lockButton.setOnClickListener(mLauncher);
+        mLauncher.setLockButton(lockButton);
 
         updateBackgroundAndPaddings();
     }
@@ -398,7 +402,7 @@ public class AllAppsContainerView extends BaseContainerView implements DragSourc
 //                padding.right, 0);
         //zhuyk 去掉左边的padding
         InsetDrawable background = new InsetDrawable(
-                getResources().getDrawable(R.drawable.quantum_panel_shape), 0, 0,
+                getResources().getDrawable(R.drawable.all_apps_list_panel), 0, 0,
                 padding.right, 0);
         Rect bgPadding = new Rect();
         background.getPadding(bgPadding);

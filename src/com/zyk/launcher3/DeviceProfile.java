@@ -20,6 +20,8 @@ import android.appwidget.AppWidgetHostView;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Point;
@@ -96,6 +98,7 @@ public class DeviceProfile {
     // QSB
     private int searchBarSpaceWidthPx;
     private int searchBarSpaceHeightPx;
+
 
     public DeviceProfile(Context context, InvariantDeviceProfile inv,
             Point minSize, Point maxSize,

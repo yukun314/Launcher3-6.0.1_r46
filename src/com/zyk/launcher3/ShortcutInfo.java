@@ -21,12 +21,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.zyk.launcher3.LauncherSettings.Favorites;
 import com.zyk.launcher3.compat.LauncherActivityInfoCompat;
 import com.zyk.launcher3.compat.UserHandleCompat;
 import com.zyk.launcher3.compat.UserManagerCompat;
+import com.zyk.launcher3.config.Config;
+import com.zyk.launcher3.util.BitmapUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -156,6 +159,7 @@ public class ShortcutInfo extends ItemInfo {
         this.intent = intent;
         this.title = Utilities.trim(title);
         this.contentDescription = contentDescription;
+        System.out.println("ShortcutInfo 构造方法1 icon is null:"+(icon == null));
         mIcon = icon;
         this.user = user;
     }
@@ -169,6 +173,7 @@ public class ShortcutInfo extends ItemInfo {
             iconResource.packageName = info.iconResource.packageName;
             iconResource.resourceName = info.iconResource.resourceName;
         }
+        System.out.println("ShortcutInfo 构造方法2 icon is null:"+(info.mIcon == null));
         mIcon = info.mIcon; // TODO: should make a copy here.  maybe we don't need this ctor at all
         customIcon = info.customIcon;
         flags = info.flags;
@@ -188,11 +193,13 @@ public class ShortcutInfo extends ItemInfo {
     }
 
     public void setIcon(Bitmap b) {
-        mIcon = b;
+        Config config = Config.getInstance();
+        mIcon = BitmapUtil.cutPic(b, config.iconShape, config.iconBg);
     }
 
     public Bitmap getIcon(IconCache iconCache) {
         if (mIcon == null) {
+            System.out.println("ShortcutInfo getIcon mIcon is null updateIcon");
             updateIcon(iconCache);
         }
         return mIcon;
@@ -224,9 +231,11 @@ public class ShortcutInfo extends ItemInfo {
         if (customIcon) {
             values.put(LauncherSettings.BaseLauncherColumns.ICON_TYPE,
                     LauncherSettings.BaseLauncherColumns.ICON_TYPE_BITMAP);
+            System.out.println("ShortcutInfo onAddToDatabase customIcon");
             writeBitmap(values, mIcon);
         } else {
             if (!usingFallbackIcon) {
+                System.out.println("ShortcutInfo onAddToDatabase !usingFallbackIcon");
                 writeBitmap(values, mIcon);
             }
             if (iconResource != null) {

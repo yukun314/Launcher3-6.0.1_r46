@@ -65,4 +65,7 @@
     <color name="widgets_view_section_text_color">#FFFFFF</color>
     <color name="widgets_view_item_text_color">#C4C4C4</color>
     <color name="widgets_cell_color">#263238</color>
+
+    <!--add zhuyk icon的背景颜色-->
+    <color name="icon_bg_color">#a2c4c0</color>
 </resources>

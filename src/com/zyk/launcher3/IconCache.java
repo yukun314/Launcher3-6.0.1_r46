@@ -45,7 +45,9 @@ import com.zyk.launcher3.compat.LauncherActivityInfoCompat;
 import com.zyk.launcher3.compat.LauncherAppsCompat;
 import com.zyk.launcher3.compat.UserHandleCompat;
 import com.zyk.launcher3.compat.UserManagerCompat;
+import com.zyk.launcher3.config.Config;
 import com.zyk.launcher3.model.PackageItemInfo;
+import com.zyk.launcher3.util.BitmapUtil;
 import com.zyk.launcher3.util.ComponentKey;
 import com.zyk.launcher3.util.Thunk;
 
@@ -435,7 +437,15 @@ public class IconCache {
         CacheEntry entry = cacheLocked(application.componentName, info, user,
                 false, useLowResIcon);
         application.title = Utilities.trim(entry.title);
-        application.iconBitmap = getNonNullIcon(entry, user);
+        Bitmap icon = getNonNullIcon(entry, user);
+        //zhuyk
+        if(icon != null) {
+            Config config = Config.getInstance();
+            application.iconBitmap = BitmapUtil.cutPic(icon, config.iconShape, config.iconBg);
+        } else {
+            application.iconBitmap = null;
+        }
+//        application.iconBitmap = getNonNullIcon(entry, user);
         application.contentDescription = entry.contentDescription;
         application.usingLowResIcon = entry.isLowResIcon;
     }
@@ -448,7 +458,13 @@ public class IconCache {
                 false, application.usingLowResIcon);
         if (entry.icon != null && !isDefaultIcon(entry.icon, application.user)) {
             application.title = Utilities.trim(entry.title);
-            application.iconBitmap = entry.icon;
+            //zhuyk
+            if(entry.icon != null) {
+                Config config = Config.getInstance();
+                application.iconBitmap = BitmapUtil.cutPic(entry.icon, config.iconShape, config.iconBg);
+            }else {
+                application.iconBitmap = entry.icon;
+            }
             application.contentDescription = entry.contentDescription;
             application.usingLowResIcon = entry.isLowResIcon;
         }

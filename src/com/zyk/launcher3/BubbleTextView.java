@@ -185,6 +185,7 @@ public class BubbleTextView extends TextView
     }
 
     public void applyFromApplicationInfo(AppInfo info) {
+//        System.out.println("info title:"+info.title+"  iconBitmap is null:"+(info.iconBitmap == null)+"   mIconSize:"+mIconSize);
         setIcon(mLauncher.createIconDrawable(info.iconBitmap), mIconSize);
         setText(info.title);
         if (info.contentDescription != null) {

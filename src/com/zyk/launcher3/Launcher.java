@@ -103,6 +103,7 @@ import com.zyk.launcher3.compat.LauncherActivityInfoCompat;
 import com.zyk.launcher3.compat.LauncherAppsCompat;
 import com.zyk.launcher3.compat.UserHandleCompat;
 import com.zyk.launcher3.compat.UserManagerCompat;
+import com.zyk.launcher3.config.Config;
 import com.zyk.launcher3.model.WidgetsModel;
 import com.zyk.launcher3.util.ComponentKey;
 import com.zyk.launcher3.util.LongArrayMap;
@@ -327,6 +328,8 @@ public class Launcher extends Activity
     private Drawable mAllAppsButtonDrawable;
     private Drawable mHomeButtonDrawable;
 
+    private ImageView mLockButton;
+
     private final ArrayList<Integer> mSynchronouslyBoundPages = new ArrayList<Integer>();
     private static final boolean DISABLE_SYNCHRONOUS_BINDING_CURRENT_PAGE = false;
 
@@ -427,6 +430,7 @@ public class Launcher extends Activity
 
         super.onCreate(savedInstanceState);
 
+        Config.init(this);
         LauncherAppState.setApplicationContext(getApplicationContext());
         LauncherAppState app = LauncherAppState.getInstance();
 
@@ -1464,6 +1468,13 @@ public class Launcher extends Activity
         mAllAppsButton = allAppsButton;
     }
 
+    /**
+     * Sets the lock button. This method is called from {@link AllAppsContainerView}.
+     */
+    public void setLockButton(ImageView lockButton) {
+        mLockButton  = lockButton;
+    }
+
     public View getAllAppsButton() {
         return mAllAppsButton;
     }
@@ -1986,6 +1997,7 @@ public class Launcher extends Activity
     public void onDestroy() {
         super.onDestroy();
 
+        Config.close();
         // Remove all pending runnables
         mHandler.removeMessages(ADVANCE_MSG);
         mHandler.removeMessages(0);
@@ -2498,6 +2510,8 @@ public class Launcher extends Activity
             if (v instanceof PendingAppWidgetHostView) {
                 onClickPendingWidget((PendingAppWidgetHostView) v);
             }
+        } else if(v == mLockButton) {
+            Toast.makeText(Launcher.this,"点击了LockButton",Toast.LENGTH_SHORT).show();
         }
     }
 
