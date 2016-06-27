@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/activity_lock_item_rl"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="#51000000">
-
+	android:background="#84000000">
+	<!--一下两句是 当为进入式状态栏时 解决状态栏与布局重合-->
+	<!--在这里由于这个布局设置了透明，使用下面两句时 状态栏会显得特别亮-->
+	<!--在activity中设置paddingTop的值+获取到的状态栏的高度-->
+	<!--android:fitsSystemWindows="true"-->
+	<!--android:clipToPadding="true"-->
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/activity_lock_recyclerview"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:theme="@style/Theme.Light.CustomOverscroll"/>
-	<Button
-		android:id="@+id/activity_lock_button"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="button"/>
+		android:theme="@style/Theme.Light.CustomOverscroll"
+		android:paddingTop="@dimen/all_apps_list_top_bottom_padding"
+		android:paddingBottom="@dimen/all_apps_list_top_bottom_padding" />
+
 
 </RelativeLayout>

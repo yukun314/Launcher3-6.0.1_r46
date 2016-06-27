@@ -222,6 +222,7 @@
                        android:value="true" />
 
         <activity android:name=".safety.LockActivity"
-            android:theme="@style/BaseWallpaperTheme"/>
+            android:theme="@style/Theme"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 </manifest>

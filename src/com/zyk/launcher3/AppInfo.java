@@ -49,7 +49,7 @@ public class AppInfo extends ItemInfo {
     /**
      * Indicates whether we're using a low res icon
      */
-    boolean usingLowResIcon;
+    public boolean usingLowResIcon;
 
     /**
      * The time at which the app was first installed.

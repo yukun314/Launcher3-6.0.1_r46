@@ -47,6 +47,7 @@ import com.zyk.launcher3.compat.UserHandleCompat;
 import com.zyk.launcher3.compat.UserManagerCompat;
 import com.zyk.launcher3.config.Config;
 import com.zyk.launcher3.model.PackageItemInfo;
+import com.zyk.launcher3.safety.AppIconTextView;
 import com.zyk.launcher3.util.BitmapUtil;
 import com.zyk.launcher3.util.ComponentKey;
 import com.zyk.launcher3.util.Thunk;
@@ -396,6 +397,39 @@ public class IconCache {
      * @return a request ID that can be used to cancel the request.
      */
     public IconLoadRequest updateIconInBackground(final BubbleTextView caller, final ItemInfo info) {
+        Runnable request = new Runnable() {
+
+            @Override
+            public void run() {
+                if (info instanceof AppInfo) {
+                    getTitleAndIcon((AppInfo) info, null, false);
+                } else if (info instanceof ShortcutInfo) {
+                    ShortcutInfo st = (ShortcutInfo) info;
+                    getTitleAndIcon(st,
+                            st.promisedIntent != null ? st.promisedIntent : st.intent,
+                            st.user, false);
+                } else if (info instanceof PackageItemInfo) {
+                    PackageItemInfo pti = (PackageItemInfo) info;
+                    getTitleAndIconForApp(pti.packageName, pti.user, false, pti);
+                }
+                mMainThreadExecutor.execute(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        caller.reapplyItemInfo(info);
+                    }
+                });
+            }
+        };
+        mWorkerHandler.post(request);
+        return new IconLoadRequest(request, mWorkerHandler);
+    }
+
+    /**
+     * Fetches high-res icon for the provided ItemInfo and updates the caller when done.
+     * @return a request ID that can be used to cancel the request.
+     */
+    public IconLoadRequest updateIconInBackground(final AppIconTextView caller, final ItemInfo info) {
         Runnable request = new Runnable() {
 
             @Override

@@ -2,20 +2,26 @@
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="wrap_content"
+	android:paddingTop="@dimen/all_apps_icon_top_bottom_padding"
+	android:paddingBottom="@dimen/all_apps_icon_top_bottom_padding">
 
 	<com.zyk.launcher3.safety.AppIconTextView
 		android:id="@+id/activity_lock_item_appicon"
+		style="@style/Icon.AllApps"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"
+		android:singleLine="true"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:textSize="15sp"
 		android:gravity="center"/>
 
 	<TextView
 		android:id="@+id/activity_lock_item_bg"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:background="#92768493"/>
+		android:layout_height="match_parent"/>
 
 	<ImageView
 		android:id="@+id/activity_lock_item_select"
