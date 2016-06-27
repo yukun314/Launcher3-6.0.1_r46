@@ -121,6 +121,11 @@ public class ItemInfo {
 
     public UserHandleCompat user;
 
+	/**
+	 * 用于判定当前 app是否已经加密
+     */
+    public boolean isLock;
+
     public ItemInfo() {
         user = UserHandleCompat.myUserHandle();
     }

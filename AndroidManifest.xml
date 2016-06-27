@@ -220,5 +220,8 @@
 
         <meta-data android:name="android.nfc.disable_beam_default"
                        android:value="true" />
+
+        <activity android:name=".safety.LockActivity"
+            android:theme="@style/BaseWallpaperTheme"/>
     </application>
 </manifest>

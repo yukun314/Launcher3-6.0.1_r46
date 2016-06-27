@@ -105,6 +105,7 @@ import com.zyk.launcher3.compat.UserHandleCompat;
 import com.zyk.launcher3.compat.UserManagerCompat;
 import com.zyk.launcher3.config.Config;
 import com.zyk.launcher3.model.WidgetsModel;
+import com.zyk.launcher3.safety.LockActivity;
 import com.zyk.launcher3.util.ComponentKey;
 import com.zyk.launcher3.util.LongArrayMap;
 import com.zyk.launcher3.util.Thunk;
@@ -755,7 +756,7 @@ public class Launcher extends Activity
                 getOrCreateQsbBar();
             }
             return;
-        } else if (requestCode == REQUEST_PICK_WALLPAPER) {
+        } else if (requestCode == REQUEST_PICK_WALLPAPER) {//壁纸
             if (resultCode == RESULT_OK && mWorkspace.isInOverviewMode()) {
                 showWorkspace(false);
             }
@@ -2511,7 +2512,8 @@ public class Launcher extends Activity
                 onClickPendingWidget((PendingAppWidgetHostView) v);
             }
         } else if(v == mLockButton) {
-            Toast.makeText(Launcher.this,"点击了LockButton",Toast.LENGTH_SHORT).show();
+//            Toast.makeText(Launcher.this,"点击了LockButton",Toast.LENGTH_SHORT).show();
+            onClickLockButton(v);
         }
     }
 
@@ -2577,6 +2579,12 @@ public class Launcher extends Activity
         } else {
             showWorkspace(true);
         }
+    }
+
+    protected void onClickLockButton(View v){
+        Intent intent = new Intent();
+        intent.setClass(Launcher.this, LockActivity.class);
+        Launcher.this.startActivity(intent);
     }
 
     /**
@@ -4173,6 +4181,8 @@ public class Launcher extends Activity
         }
     };
 
+
+    private ArrayList<AppInfo> mAllAppsList;
     /**
      * Add the icons for all apps.
      *
@@ -4184,12 +4194,17 @@ public class Launcher extends Activity
             return;
         }
 
+        mAllAppsList = apps;
         if (mAppsView != null) {
             mAppsView.setApps(apps);
         }
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.bindAllApplications(apps);
         }
+    }
+
+    public List<AppInfo> getAllAppsList(){
+        return mAllAppsList;
     }
 
     /**

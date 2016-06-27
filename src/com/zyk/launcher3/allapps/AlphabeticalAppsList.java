@@ -106,6 +106,10 @@ public class AlphabeticalAppsList {
         // The index of this app not including sections
         public int appIndex = -1;
 
+        //add zhuyk 用于lock界面 apps选择加密
+        public boolean isSelect ;
+
+
         public static AdapterItem asSectionBreak(int pos, SectionInfo section) {
             AdapterItem item = new AdapterItem();
             item.viewType = AllAppsGridAdapter.SECTION_BREAK_VIEW_TYPE;

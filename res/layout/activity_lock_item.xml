@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<com.zyk.launcher3.safety.AppIconTextView
+		android:id="@+id/activity_lock_item_appicon"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:gravity="center"/>
+
+	<TextView
+		android:id="@+id/activity_lock_item_bg"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="#92768493"/>
+
+	<ImageView
+		android:id="@+id/activity_lock_item_select"
+		android:layout_width="20dp"
+		android:layout_height="20dp"
+		android:layout_gravity="center"/>
+</FrameLayout>
