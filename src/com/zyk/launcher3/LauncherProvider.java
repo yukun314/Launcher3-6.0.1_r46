@@ -74,6 +74,7 @@ public class LauncherProvider extends ContentProvider {
 
     static final String TABLE_FAVORITES = LauncherSettings.Favorites.TABLE_NAME;
     static final String TABLE_WORKSPACE_SCREENS = LauncherSettings.WorkspaceScreens.TABLE_NAME;
+    static final String TABLE_LOCK = LauncherSettings.Lock.TABLE_NAME;
     static final String EMPTY_DATABASE_CREATED = "EMPTY_DATABASE_CREATED";
 
     private static final String RESTRICTION_PACKAGE_NAME = "workspace.configuration.package.name";
@@ -541,7 +542,8 @@ public class LauncherProvider extends ContentProvider {
                     "options INTEGER NOT NULL DEFAULT 0" +
                     ");");
             addWorkspacesTable(db);
-
+            //zhuyk
+            addLockTable(db);
             // Database was just created, so wipe any previous widgets
             if (mAppWidgetHost != null) {
                 mAppWidgetHost.deleteHost();
@@ -576,6 +578,15 @@ public class LauncherProvider extends ContentProvider {
                     LauncherSettings.WorkspaceScreens._ID + " INTEGER PRIMARY KEY," +
                     LauncherSettings.WorkspaceScreens.SCREEN_RANK + " INTEGER," +
                     LauncherSettings.ChangeLogColumns.MODIFIED + " INTEGER NOT NULL DEFAULT 0" +
+                    ");");
+        }
+
+        private void addLockTable(SQLiteDatabase db) {
+            db.execSQL("CREATE TABLE " + TABLE_LOCK + " (" +
+                    LauncherSettings.Lock._ID + " INTEGER ," +
+                    LauncherSettings.Lock.NAME + " TEXT NOT NULL PRIMARY KEY, " +
+                    LauncherSettings.Lock.PASSWORD + " TEXT NOT NULL, " +
+                    LauncherSettings.ChangeLogColumns.MODIFIED + " INTEGER NOT NULL DEFAULT 0 "+
                     ");");
         }
 
@@ -743,6 +754,7 @@ public class LauncherProvider extends ContentProvider {
         public void createEmptyDB(SQLiteDatabase db) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_FAVORITES);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORKSPACE_SCREENS);
+            db.execSQL("DROP TABLE IF EXISTS "+TABLE_LOCK);
             onCreate(db);
         }
 

@@ -57,6 +57,7 @@ import com.zyk.launcher3.compat.UserHandleCompat;
 import com.zyk.launcher3.compat.UserManagerCompat;
 import com.zyk.launcher3.model.MigrateFromRestoreTask;
 import com.zyk.launcher3.model.WidgetsModel;
+import com.zyk.launcher3.safety.LockInfo;
 import com.zyk.launcher3.util.ComponentKey;
 import com.zyk.launcher3.util.CursorIconInfo;
 import com.zyk.launcher3.util.LongArrayMap;
@@ -75,6 +76,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -3728,4 +3730,78 @@ public class LauncherModel extends BroadcastReceiver
     public static Looper getWorkerLooper() {
         return sWorkerThread.getLooper();
     }
+
+    //zhuyk lock表的插入操作
+    public static void addLockToDatabase(Context context, String name, String password){
+        final ContentValues values = new ContentValues();
+        final ContentResolver cr = context.getContentResolver();
+        values.put(LauncherSettings.Lock._ID, 0);
+        values.put(LauncherSettings.Lock.NAME, name);
+        values.put(LauncherSettings.Lock.PASSWORD,password);
+        Runnable r = new Runnable() {
+            public void run() {
+                cr.insert( LauncherSettings.Lock.CONTENT_URI, values);
+            }
+        };
+        runOnWorkerThread(r);
+    }
+
+    //zhuyk lock表的删除操作
+    public static void deleteLockFromDatabase(Context context, final String name, final String password){
+        final ContentResolver cr = context.getContentResolver();
+        Runnable r = new Runnable() {
+            public void run() {
+                String where = LauncherSettings.Lock.NAME+"="+name+" and "+LauncherSettings.Lock.PASSWORD+"="+password;
+                cr.delete(LauncherSettings.Lock.CONTENT_URI, where,null);
+            }
+        };
+        runOnWorkerThread(r);
+    }
+
+    //zhuyk lock表的修改操作
+	/**
+     * 根据 name 修改 password
+     */
+    public static void updateLockFromDatabase(Context context, final String name, String password){
+        final ContentValues values = new ContentValues();
+        final ContentResolver cr = context.getContentResolver();
+        values.put(LauncherSettings.Lock.PASSWORD,password);
+        Runnable r = new Runnable() {
+            public void run() {
+                String where = LauncherSettings.Lock.NAME + "= "+name;
+                cr.update(LauncherSettings.Lock.CONTENT_URI, values,where,null);
+            }
+        };
+        runOnWorkerThread(r);
+    }
+
+    //zhuyk lock表的修改操作
+    /**
+     * 根据 name 修改 password
+     */
+    public static List<LockInfo> loadLockFromDatabase(Context context){
+        final ContentResolver contentResolver = context.getContentResolver();
+        final Cursor sc = contentResolver.query(LauncherSettings.Lock.CONTENT_URI, null, null, null, null);
+        List<LockInfo> lockInfos = new ArrayList<LockInfo>();
+        try {
+            final int idIndex = sc.getColumnIndex(LauncherSettings.Lock._ID);
+            final int nameIndex = sc.getColumnIndex(LauncherSettings.Lock.NAME);
+            final int passwordIndex = sc.getColumnIndex(LauncherSettings.Lock.PASSWORD);
+            while (sc.moveToNext()) {
+                try {
+                    LockInfo info = new LockInfo();
+                    info.Id = sc.getLong(idIndex);
+                    info.name = sc.getString(nameIndex);
+                    info.password = sc.getString(passwordIndex);
+                    lockInfos.add(info);
+                } catch (Exception e) {
+
+                }
+            }
+        } finally {
+            sc.close();
+        }
+        return lockInfos;
+    }
+
 }

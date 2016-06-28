@@ -101,6 +101,21 @@ public class LauncherSettings {
         public static final String ICON = "icon";
     }
 
+	/**
+     * lock
+     */
+    public static final class Lock implements ChangeLogColumns{
+        public static final String TABLE_NAME = "lock";
+        /**
+         * The content:// style URL for this table
+         */
+        static final Uri CONTENT_URI = Uri.parse("content://" +
+                ProviderConfig.AUTHORITY + "/" + TABLE_NAME);
+
+        public static final String NAME = "name";
+        public static final String PASSWORD = "password";
+    }
+
     /**
      * Workspace Screens.
      *
