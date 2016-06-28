@@ -3751,7 +3751,7 @@ public class LauncherModel extends BroadcastReceiver
         final ContentResolver cr = context.getContentResolver();
         Runnable r = new Runnable() {
             public void run() {
-                String where = LauncherSettings.Lock.NAME+"="+name+" and "+LauncherSettings.Lock.PASSWORD+"="+password;
+                String where = LauncherSettings.Lock.NAME+"='"+name+"' and "+LauncherSettings.Lock.PASSWORD+"='"+password+"'";
                 cr.delete(LauncherSettings.Lock.CONTENT_URI, where,null);
             }
         };
@@ -3768,7 +3768,7 @@ public class LauncherModel extends BroadcastReceiver
         values.put(LauncherSettings.Lock.PASSWORD,password);
         Runnable r = new Runnable() {
             public void run() {
-                String where = LauncherSettings.Lock.NAME + "= "+name;
+                String where = LauncherSettings.Lock.NAME + "= '"+name+"'";
                 cr.update(LauncherSettings.Lock.CONTENT_URI, values,where,null);
             }
         };

@@ -1,6 +1,7 @@
 package com.zyk.launcher3.safety;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.zyk.launcher3.LauncherSettings;
 import com.zyk.launcher3.R;
 import com.zyk.launcher3.allapps.AlphabeticalAppsList;
 import com.zyk.launcher3.config.Config;
+import com.zyk.launcher3.safety.lock.PatternLockActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -118,6 +120,9 @@ public class LockActivity extends Activity {
 //		mAdapterItems.remove(position);
 //		mAdapterItems.add(appInfo);
 		System.out.println("positon:"+position);
+		Intent intent = new Intent();
+		intent.setClass(LockActivity.this, PatternLockActivity.class);
+		LockActivity.this.startActivity(intent);
 	}
 
 	private void init(){

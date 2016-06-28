@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#403f3f">
+    
+    <com.zyk.launcher3.safety.lock.LockPatternView
+		xmlns:app="http://schemas.android.com/apk/res/com.wgs.jiesuo"
+		android:id="@+id/activity_lock_lpv"
+		android:background="#00ff0000"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="14dp"
+		android:layout_marginRight="14dp"
+		android:layout_centerInParent="true"/>
+    
+    <TextView 
+        android:id="@+id/activity_lock_msg1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/activity_lock_lpv"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:layout_marginTop="20dp"/>
+    
+    <TextView 
+        android:id="@+id/activity_lock_msg2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/activity_lock_lpv"
+        android:layout_marginBottom="2dp"/>
+    
+    <TextView 
+        android:id="@+id/activity_lock_msg3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/activity_lock_msg2"
+        android:layout_marginBottom="10dp"/>
+
+</RelativeLayout>
