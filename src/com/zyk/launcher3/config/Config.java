@@ -5,7 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.zyk.launcher3.Launcher;
+import com.zyk.launcher3.LauncherModel;
 import com.zyk.launcher3.R;
+import com.zyk.launcher3.safety.LockInfo;
+import com.zyk.launcher3.util.BitmapUtil;
+
+import java.util.List;
 
 /**
  * Created by zyk on 2016/6/26.
@@ -32,13 +37,16 @@ public class Config {
     public Launcher mLauncher;
     public Bitmap iconShape;
     public int iconBg;
+    public List<LockInfo> mLockList;
 
     private Config(Launcher launcher){
         mLauncher = launcher;
         Resources res = launcher.getResources();
         //FIXME 这里的所有变量 都是可以设置的
 //        iconBg = res.getColor(R.color.icon_bg_color);
-//        iconShape = BitmapFactory.decodeResource(res,R.drawable.shape_rectangle1);
+//        iconShape = BitmapUtil.getBitmapFromResources(launcher,R.drawable.shape_rectangle1,launcher.getDeviceProfile().iconSizePx);
+
+        mLockList = LauncherModel.loadLockFromDatabase(mLauncher);
     }
 
 

@@ -224,6 +224,7 @@
         <activity android:name=".safety.LockActivity"
             android:theme="@style/Theme"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".safety.lock.PatternLockActivity"/>
+        <activity android:name=".safety.lock.PatternLockActivity"
+                  android:theme="@style/Theme"/>
     </application>
 </manifest>

@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zyk.launcher3.AppInfo;
 import com.zyk.launcher3.BubbleTextView;
@@ -45,6 +46,13 @@ public class LockActivity extends Activity {
 	private int mIconSize;
 	private int statusBarHeight = -1;
 
+	public static final int newPassword = 101;//新建密码
+	public static final int alterPassword = 102;//修改密码
+	public final static int deletePassword = 103;//删除密码
+
+	private int position = -1;//用于记录当前点击的Item的下标
+	private ImageView mImageView;//点击Item的imageView
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,45 +67,45 @@ public class LockActivity extends Activity {
 	}
 
 	private void init1(){
-		Button button = (Button) findViewById(R.id.activity_lock_button);
-		button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				LauncherModel.addLockToDatabase(LockActivity.this,"zhangsan","123456789");
-				LauncherModel.addLockToDatabase(LockActivity.this,"lisi","234567890");
-				LauncherModel.addLockToDatabase(LockActivity.this,"wangwu","345678901");
-				LauncherModel.addLockToDatabase(LockActivity.this,"liuliu","456789012");
-				LauncherModel.addLockToDatabase(LockActivity.this,"sunqi","567890123");
-			}
-		});
-
-		Button button1 = (Button) findViewById(R.id.activity_lock_button1);
-		button1.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				LauncherModel.deleteLockFromDatabase(LockActivity.this,"sunqi","567890123");
-			}
-		});
-
-		Button button2 = (Button) findViewById(R.id.activity_lock_button2);
-		button2.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				LauncherModel.updateLockFromDatabase(LockActivity.this,"liuliu","asdfeasdfgasdg");
-			}
-		});
-
-		Button button3 = (Button) findViewById(R.id.activity_lock_button3);
-		button3.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				List<LockInfo> list = LauncherModel.loadLockFromDatabase(LockActivity.this);
-				for(LockInfo info:list){
-					System.out.println("name="+info.name+" password="+info.password);
-				}
-
-			}
-		});
+//		Button button = (Button) findViewById(R.id.activity_lock_button);
+//		button.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				LauncherModel.addLockToDatabase(LockActivity.this,"zhangsan","123456789");
+//				LauncherModel.addLockToDatabase(LockActivity.this,"lisi","234567890");
+//				LauncherModel.addLockToDatabase(LockActivity.this,"wangwu","345678901");
+//				LauncherModel.addLockToDatabase(LockActivity.this,"liuliu","456789012");
+//				LauncherModel.addLockToDatabase(LockActivity.this,"sunqi","567890123");
+//			}
+//		});
+//
+//		Button button1 = (Button) findViewById(R.id.activity_lock_button1);
+//		button1.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				LauncherModel.deleteLockFromDatabase(LockActivity.this,"sunqi","567890123");
+//			}
+//		});
+//
+//		Button button2 = (Button) findViewById(R.id.activity_lock_button2);
+//		button2.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				LauncherModel.updateLockFromDatabase(LockActivity.this,"liuliu","asdfeasdfgasdg");
+//			}
+//		});
+//
+//		Button button3 = (Button) findViewById(R.id.activity_lock_button3);
+//		button3.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				List<LockInfo> list = LauncherModel.loadLockFromDatabase(LockActivity.this);
+//				for(LockInfo info:list){
+//					System.out.println("name="+info.name+" password="+info.password);
+//				}
+//
+//			}
+//		});
 	}
 
 	@Override
@@ -112,17 +120,40 @@ public class LockActivity extends Activity {
 		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if(resultCode == newPassword){
+			String password = data.getStringExtra(PatternLockActivity.DATA);
+			System.out.println("password md5之前:"+password);
+			password = MD5.md5(password);
+			System.out.println("password md5之后:"+password);
+			AppInfo appInfo = mAdapterItems.get(position);
+			String name = appInfo.intent.toString();
+			System.out.println("name md5之前:"+name);
+			name = MD5.md5(name);
+			System.out.println("name md5之后:"+name);
+			LauncherModel.addLockToDatabase(this, name, password);
+			mImageView.setImageResource(R.drawable.select);
+			appInfo.isLock = true;
+			Toast.makeText(this,"设置密码成功",Toast.LENGTH_SHORT).show();
+		}
+	}
+
 	private void onItemClick(View v, int position, ImageView imageView) {
-		mAdapterItems.get(position).isLock = true;
-		imageView.setImageResource(R.drawable.select);
-//		AppInfo appInfo = mAdapterItems.get(position);
-//		appInfo.isLock = true;
-//		mAdapterItems.remove(position);
-//		mAdapterItems.add(appInfo);
-		System.out.println("positon:"+position);
+		mImageView = imageView;
+		this.position = position;
+		AppInfo appinfo = mAdapterItems.get(position);
 		Intent intent = new Intent();
 		intent.setClass(LockActivity.this, PatternLockActivity.class);
-		LockActivity.this.startActivity(intent);
+		if(appinfo.isLock) {
+			intent.putExtra(PatternLockActivity.STYPE, PatternLockActivity.RESETORDELETE);
+			intent.putExtra(PatternLockActivity.KEY, SafetyUtils.getPassword(appinfo));
+		} else {
+			intent.putExtra(PatternLockActivity.STYPE,PatternLockActivity.SETTING);
+			LockActivity.this.startActivityForResult(intent, newPassword);
+		}
+
 	}
 
 	private void init(){
@@ -140,6 +171,8 @@ public class LockActivity extends Activity {
 		mRecyclerView.addItemDecoration(new SpaceItemDecoration(itemSpacePx));
 
 	}
+
+
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
 

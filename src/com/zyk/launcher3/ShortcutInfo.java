@@ -199,7 +199,6 @@ public class ShortcutInfo extends ItemInfo {
 
     public Bitmap getIcon(IconCache iconCache) {
         if (mIcon == null) {
-            System.out.println("ShortcutInfo getIcon mIcon is null updateIcon");
             updateIcon(iconCache);
         }
         return mIcon;

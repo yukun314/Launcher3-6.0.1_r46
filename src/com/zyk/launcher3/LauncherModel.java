@@ -3009,7 +3009,7 @@ public class LauncherModel extends BroadcastReceiver
                 return;
             }
             final Context context = mApp.getContext();
-
+            System.out.println("mPackages:"+mPackages[0]);
             final String[] packages = mPackages;
             final int N = packages.length;
             switch (mOp) {

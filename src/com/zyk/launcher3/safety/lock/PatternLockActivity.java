@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.zyk.launcher3.R;
+import com.zyk.launcher3.safety.LockActivity;
 import com.zyk.launcher3.safety.lock.LockPatternView.Cell;
 
 /**
@@ -33,7 +34,9 @@ public class PatternLockActivity extends Activity{
 	private int type;
 	public static final String STYPE = "stype";
 	public static final String KEY = "password";
-	public static final String PARENTID = "parentId";
+	public static final String PARENTID = "parentId";//忘记密码时使用
+	public static final String DATA = "data";//返回的数据
+	public static final String RESULTCODE = "resultCode";//当用于解锁时(UNLOCK) 此值必须有
 	private int parentId ;
 	/**
 	 * 用于设置密码
@@ -48,6 +51,11 @@ public class PatternLockActivity extends Activity{
 	 * 用于重置密码
 	 */
 	public static final int RESETPASSWORD = 3;
+
+	/**
+	 * 重置 或 删除密码
+	 */
+	public static final int RESETORDELETE = 4;
 	
 	private Handler handler = new Handler(){
 
@@ -62,9 +70,7 @@ public class PatternLockActivity extends Activity{
 	};
 	
 	private Timer timer = new Timer();
-	
-	
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if(keyCode == KeyEvent.KEYCODE_BACK){
@@ -191,8 +197,12 @@ public class PatternLockActivity extends Activity{
 		}else{
 			String str = LockPatternUtils.patternToString(pattern);
 			if(str == firstPassword || str.equals(firstPassword)){//两次输入的密码一样
-				lockPatternUtils.saveLockPattern(pattern);
-				setResult(1);
+				String password = LockPatternUtils.patternToString(pattern);
+//				lockPatternUtils.saveLockPattern(pattern);
+				Intent intent = new Intent();
+				System.out.println("两次密码一致:"+password);
+				intent.putExtra(DATA,password);
+				setResult(LockActivity.newPassword, intent);
 				finish();
 			}else{
 				msg2.setTextColor(Color.rgb(250, 118, 118));

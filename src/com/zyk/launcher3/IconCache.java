@@ -475,7 +475,7 @@ public class IconCache {
         //zhuyk
         if(icon != null) {
             Config config = Config.getInstance();
-            application.iconBitmap = BitmapUtil.cutPic(icon, config.iconShape, config.iconBg);
+            application.iconBitmap =  BitmapUtil.cutPic(icon, config.iconShape, config.iconBg);
         } else {
             application.iconBitmap = null;
         }
