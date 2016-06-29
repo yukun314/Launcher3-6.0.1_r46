@@ -2720,7 +2720,7 @@ public class Launcher extends Activity
         } else {
             throw new IllegalArgumentException("Input must be a Shortcut or AppInfo");
         }
-
+//FIXME 在这里调用密码验证
         boolean success = startActivitySafely(v, intent, tag);
         mStats.recordLaunch(v, intent, shortcut);
 
