@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,6 +54,16 @@ public class LockActivity extends Activity {
 
 	private int position = -1;//用于记录当前点击的Item的下标
 	private ImageView mImageView;//点击Item的imageView
+
+	private Handler mHandler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			if(msg.what == 1){
+				mAdapter.notifyDataSetChanged();
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,18 +137,60 @@ public class LockActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if(resultCode == newPassword){
 			String password = data.getStringExtra(PatternLockActivity.DATA);
-			System.out.println("password md5之前:"+password);
 			password = MD5.md5(password);
-			System.out.println("password md5之后:"+password);
 			AppInfo appInfo = mAdapterItems.get(position);
-			String name = appInfo.intent.toString();
-			System.out.println("name md5之前:"+name);
+			String name = appInfo.intent.getComponent().getPackageName();
 			name = MD5.md5(name);
-			System.out.println("name md5之后:"+name);
 			LauncherModel.addLockToDatabase(this, name, password);
+			mImageView.setVisibility(View.VISIBLE);
 			mImageView.setImageResource(R.drawable.select);
 			appInfo.isLock = true;
+			LockInfo info = new LockInfo();
+			info.name = name;
+			info.password = password;
+			Config.getInstance().mLockList.add(info);
 			Toast.makeText(this,"设置密码成功",Toast.LENGTH_SHORT).show();
+		}else if(resultCode == alterPassword) {
+			String password = data.getStringExtra(PatternLockActivity.DATA);
+			password = MD5.md5(password);
+			AppInfo appInfo = mAdapterItems.get(position);
+			String name = appInfo.intent.getComponent().getPackageName();
+			name = MD5.md5(name);
+			LauncherModel.updateLockFromDatabase(this, name, password);
+			mImageView.setVisibility(View.VISIBLE);
+			mImageView.setImageResource(R.drawable.select);
+			appInfo.isLock = true;
+			LockInfo info = new LockInfo();
+			info.name = name;
+			info.password = password;
+			List<LockInfo> list = Config.getInstance().mLockList;
+			for(LockInfo lockInfo:list) {
+				if(lockInfo.name.equals(name)){
+					lockInfo.password = password;
+					break;
+				}
+			}
+			Toast.makeText(this,"修改密码成功",Toast.LENGTH_SHORT).show();
+		}else if(resultCode == deletePassword){
+			AppInfo appInfo = mAdapterItems.get(position);
+			String name = appInfo.intent.getComponent().getPackageName();
+			name = MD5.md5(name);
+			LauncherModel.deleteLockFromDatabase(this, name);
+			LockInfo li = null;
+			List<LockInfo> list = Config.getInstance().mLockList;
+			for(LockInfo lockInfo:list) {
+				if(lockInfo.name.equals(name)){
+					li = lockInfo;
+					break;
+				}
+			}
+			if(li != null){
+				Config.getInstance().mLockList.remove(li);
+			}
+			appInfo.isLock = false;
+			mImageView.setImageBitmap(null);
+			mImageView.setVisibility(View.GONE);
+			Toast.makeText(this,"删除密码成功",Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -149,6 +203,7 @@ public class LockActivity extends Activity {
 		if(appinfo.isLock) {
 			intent.putExtra(PatternLockActivity.STYPE, PatternLockActivity.RESETORDELETE);
 			intent.putExtra(PatternLockActivity.KEY, SafetyUtils.getPassword(appinfo));
+			LockActivity.this.startActivityForResult(intent, alterPassword);
 		} else {
 			intent.putExtra(PatternLockActivity.STYPE,PatternLockActivity.SETTING);
 			LockActivity.this.startActivityForResult(intent, newPassword);
@@ -157,7 +212,6 @@ public class LockActivity extends Activity {
 	}
 
 	private void init(){
-		mAdapterItems = mLauncher.getAllAppsList();
 		rl = (RelativeLayout) findViewById(R.id.activity_lock_item_rl);
 
 		mRecyclerView = (RecyclerView) findViewById(R.id.activity_lock_recyclerview);
@@ -169,10 +223,25 @@ public class LockActivity extends Activity {
 		mRecyclerView.setLayoutManager(grid);
 		int itemSpacePx = getResources().getDimensionPixelSize(R.dimen.all_apps_icon_top_bottom_padding);
 		mRecyclerView.addItemDecoration(new SpaceItemDecoration(itemSpacePx));
-
+		new Thread(){
+			@Override
+			public void run() {
+				super.run();
+				mAdapterItems = mLauncher.getAllAppsList();
+				List<LockInfo> list = Config.getInstance().mLockList;
+				for(AppInfo appInfo:mAdapterItems){
+					String name = MD5.md5(appInfo.intent.getComponent().getPackageName());
+					for(LockInfo lockInfo:list){
+						if(lockInfo.name.equals(name) | lockInfo.name == name){
+							appInfo.isLock = true;
+							break;
+						}
+					}
+				}
+				mHandler.sendEmptyMessage(1);
+			}
+		}.start();
 	}
-
-
 
 	private class ViewHolder extends RecyclerView.ViewHolder {
 

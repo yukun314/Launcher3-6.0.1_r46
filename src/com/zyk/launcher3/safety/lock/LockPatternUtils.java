@@ -8,20 +8,22 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+import com.zyk.launcher3.safety.MD5;
+
 public class LockPatternUtils {
 
 	// private static final String TAG = "LockPatternUtils";
-	private  String KEY_LOCK_PWD = "lock_pwd";
+	private  String KEY_LOCK_PWD = null;
 
 	private static Context mContext;
 
-	private static SharedPreferences preference;
+//	private static SharedPreferences preference;
 
 	// private final ContentResolver mContentResolver;
 
 	public LockPatternUtils(Context context) {
 		mContext = context;
-		preference = PreferenceManager.getDefaultSharedPreferences(mContext);
+//		preference = PreferenceManager.getDefaultSharedPreferences(mContext);
 		// mContentResolver = context.getContentResolver();
 	}
 
@@ -64,37 +66,40 @@ public class LockPatternUtils {
 		return Arrays.toString(res);
 	}
 
-	public void saveLockPattern(List<LockPatternView.Cell> pattern) {
-		Editor editor = preference.edit();
-		editor.putString(KEY_LOCK_PWD, patternToString(pattern));
-		editor.commit();
-	}
+//	public void saveLockPattern(List<LockPatternView.Cell> pattern) {
+//		Editor editor = preference.edit();
+//		editor.putString(KEY_LOCK_PWD, patternToString(pattern));
+//		editor.commit();
+//	}
 	
-	public static void remove(String key){
-		if(preference != null){
-			Editor editor = preference.edit();
-			editor.remove(key);
-			editor.commit();
-		}
-		
-		
-	}
+//	public static void remove(String key){
+//		if(preference != null){
+//			Editor editor = preference.edit();
+//			editor.remove(key);
+//			editor.commit();
+//		}
+//
+//
+//	}
 
-	public String getLockPaternString() {
-		return preference.getString(KEY_LOCK_PWD, "");
-	}
+//	public String getLockPaternString() {
+//		return preference.getString(KEY_LOCK_PWD, "");
+//	}
 
 	public int checkPattern(List<LockPatternView.Cell> pattern) {
-		String stored = getLockPaternString();
-		if (!stored.equals("")) {
-			return stored.equals(patternToString(pattern)) ? 1 : 0;
+//		String stored = getLockPaternString();
+		String newPassword = MD5.md5(patternToString(pattern));
+		System.out.println("KEY_LOCK_PWD:"+KEY_LOCK_PWD);
+		System.out.println("newPassword:"+newPassword);
+		if (KEY_LOCK_PWD != null && KEY_LOCK_PWD.length() > 0) {
+			return KEY_LOCK_PWD.equals(newPassword) ? 1 : 0;
 		}
 		return -1;
 	}
 
-	public void clearLock() {
-		saveLockPattern(null);
-	}
+//	public void clearLock() {
+//		saveLockPattern(null);
+//	}
 
 	public void setKEY_LOCK_PWD(String kEY_LOCK_PWD) {
 		KEY_LOCK_PWD = kEY_LOCK_PWD;

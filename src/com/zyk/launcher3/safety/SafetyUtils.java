@@ -25,8 +25,7 @@ public class SafetyUtils {
 	}
 
 	public static String getPassword(AppInfo appInfo){
-		String intentStr = appInfo.intent.toString();
-		System.out.println("intentStr:"+intentStr);
+		String intentStr = appInfo.intent.getComponent().getPackageName();
 		return getPassword(MD5.md5(intentStr));
 	}
 }

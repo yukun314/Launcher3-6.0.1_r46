@@ -18,30 +18,30 @@
 		android:paddingTop="@dimen/all_apps_list_top_bottom_padding"
 		android:paddingBottom="@dimen/all_apps_list_top_bottom_padding" />
 
-	<Button
-		android:id="@+id/activity_lock_button"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="add"/>
+	<!--<Button-->
+		<!--android:id="@+id/activity_lock_button"-->
+		<!--android:layout_width="match_parent"-->
+		<!--android:layout_height="wrap_content"-->
+		<!--android:text="add"/>-->
 
-	<Button
-		android:id="@+id/activity_lock_button1"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="delete"
-		android:layout_below="@id/activity_lock_button"/>
+	<!--<Button-->
+		<!--android:id="@+id/activity_lock_button1"-->
+		<!--android:layout_width="match_parent"-->
+		<!--android:layout_height="wrap_content"-->
+		<!--android:text="delete"-->
+		<!--android:layout_below="@id/activity_lock_button"/>-->
 
-	<Button
-		android:id="@+id/activity_lock_button2"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="update"
-		android:layout_below="@id/activity_lock_button1"/>
-	<Button
-		android:id="@+id/activity_lock_button3"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="select"
-		android:layout_below="@id/activity_lock_button2"/>
+	<!--<Button-->
+		<!--android:id="@+id/activity_lock_button2"-->
+		<!--android:layout_width="match_parent"-->
+		<!--android:layout_height="wrap_content"-->
+		<!--android:text="update"-->
+		<!--android:layout_below="@id/activity_lock_button1"/>-->
+	<!--<Button-->
+		<!--android:id="@+id/activity_lock_button3"-->
+		<!--android:layout_width="match_parent"-->
+		<!--android:layout_height="wrap_content"-->
+		<!--android:text="select"-->
+		<!--android:layout_below="@id/activity_lock_button2"/>-->
 
 </RelativeLayout>

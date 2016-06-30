@@ -6,12 +6,15 @@ import java.util.TimerTask;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.RadialGradient;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.zyk.launcher3.R;
@@ -24,6 +27,9 @@ import com.zyk.launcher3.safety.lock.LockPatternView.Cell;
  */
 public class PatternLockActivity extends Activity{
 	private LockPatternView lockPatternView;
+	private RadioGroup mRadioGroup;
+	private RadioButton mUpdateRadioButton,mDeleteRadioButton;
+
 	private boolean isFirst = true;
 	private boolean isReset = true;
 	private String firstPassword = "";
@@ -32,6 +38,7 @@ public class PatternLockActivity extends Activity{
 	private LockPatternUtils lockPatternUtils;
 	private TextView msg1,msg2,msg3;
 	private int type;
+	private int resultCode;
 	public static final String STYPE = "stype";
 	public static final String KEY = "password";
 	public static final String PARENTID = "parentId";//忘记密码时使用
@@ -96,11 +103,15 @@ public class PatternLockActivity extends Activity{
 		type = intent.getIntExtra(STYPE,0);
 		String password = intent.getStringExtra(KEY);
 		parentId = intent.getIntExtra(PARENTID, 0);
+		resultCode = intent.getIntExtra(RESULTCODE,0);
 		setContentView(R.layout.activity_pattern_lock);
 		lockPatternUtils = new LockPatternUtils(this);
 		lockPatternUtils.setKEY_LOCK_PWD(password);
 		lockPatternView = (LockPatternView) findViewById(R.id.activity_lock_lpv);
-		
+		mRadioGroup = (RadioGroup) findViewById(R.id.activity_pattern_lock_rg);
+		mUpdateRadioButton = (RadioButton) findViewById(R.id.activity_pattern_lock_rb1);
+		mDeleteRadioButton = (RadioButton) findViewById(R.id.activity_pattern_lock_rb2);
+
 		msg1 = (TextView) findViewById(R.id.activity_lock_msg1);
 		msg1.setTextSize(18);
 		msg1.setOnClickListener(new OnClickListener() {
@@ -151,6 +162,8 @@ public class PatternLockActivity extends Activity{
 						unlock(pattern);
 					}else if(type == RESETPASSWORD){
 						resetPassword(pattern);
+					} else if(type == RESETORDELETE) {
+						resetPassword(pattern);
 					}
 				}else{
 					msg2.setTextColor(Color.rgb(250, 118, 118));
@@ -171,22 +184,30 @@ public class PatternLockActivity extends Activity{
 			msg2.setText("绘制解锁图案");
 			
 			msg1.setText(null);
+			mRadioGroup.setVisibility(View.GONE);
 		}else if(type == UNLOCK || type == RESETPASSWORD){
 			msg3.setTextColor(Color.rgb(232, 232, 232));
 			msg3.setText("请解锁");
 			
 			msg2.setTextColor(Color.rgb(255, 255, 255));
 			msg2.setText("绘制解锁图案");
-			
-			msg1.setTextColor(Color.rgb(250, 118, 118));
-			msg1.setText(wjmm);
+			mRadioGroup.setVisibility(View.GONE);
+//			msg1.setTextColor(Color.rgb(250, 118, 118));
+//			msg1.setText(wjmm);
+		}else if(type == RESETORDELETE) {
+			msg3.setTextColor(Color.rgb(232, 232, 232));
+			msg3.setText("请解锁");
+
+			msg2.setTextColor(Color.rgb(255, 255, 255));
+			msg2.setText("绘制解锁图案");
+			mRadioGroup.setVisibility(View.VISIBLE);
 		}
 	}
 
 	private void setting(List<Cell> pattern){
 		if(isFirst){
 			firstPassword = LockPatternUtils.patternToString(pattern);
-			System.out.println("firstPassword:"+firstPassword);
+//			System.out.println("firstPassword:"+firstPassword);
 			isFirst = false;
 			msg2.setTextColor(Color.rgb(255, 255, 255));
 			msg2.setText("请再次绘制解锁图案");
@@ -202,7 +223,11 @@ public class PatternLockActivity extends Activity{
 				Intent intent = new Intent();
 				System.out.println("两次密码一致:"+password);
 				intent.putExtra(DATA,password);
-				setResult(LockActivity.newPassword, intent);
+				if(type == SETTING) {
+					setResult(LockActivity.newPassword, intent);
+				} else if(type == RESETORDELETE) {
+					setResult(LockActivity.alterPassword,intent);
+				}
 				finish();
 			}else{
 				msg2.setTextColor(Color.rgb(250, 118, 118));
@@ -215,7 +240,7 @@ public class PatternLockActivity extends Activity{
 	private void unlock(List<Cell> pattern){
 		int result = lockPatternUtils.checkPattern(pattern);
 		if(result == 1){//密码正确
-			setResult(1);
+			setResult(resultCode);
 			finish();
 		}else{
 			msg2.setTextColor(Color.rgb(250, 118, 118));
@@ -229,14 +254,19 @@ public class PatternLockActivity extends Activity{
 		if(isReset){
 			int result = lockPatternUtils.checkPattern(pattern);
 			if(result == 1){//密码正确
-				lockPatternView.clearPattern();
-				isReset = false;
-				msg3.setTextColor(Color.rgb(232, 232, 232));
-				msg3.setText("请设置手势密码");
-				
-				msg2.setTextColor(Color.rgb(255, 255, 255));
-				msg2.setText("绘制解锁图案");
-				timer.schedule(new MyTimerTask(), 500);
+				if(mDeleteRadioButton.isChecked()){
+					setResult(LockActivity.deletePassword);
+					finish();
+				}else {
+					lockPatternView.clearPattern();
+					isReset = false;
+					msg3.setTextColor(Color.rgb(232, 232, 232));
+					msg3.setText("请设置手势密码");
+
+					msg2.setTextColor(Color.rgb(255, 255, 255));
+					msg2.setText("绘制解锁图案");
+					timer.schedule(new MyTimerTask(), 500);
+				}
 			}else{
 				msg2.setTextColor(Color.rgb(250, 118, 118));
 				msg2.setText("密码输入错误");

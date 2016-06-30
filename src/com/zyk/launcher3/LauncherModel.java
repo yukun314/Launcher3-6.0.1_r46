@@ -3747,11 +3747,11 @@ public class LauncherModel extends BroadcastReceiver
     }
 
     //zhuyk lock表的删除操作
-    public static void deleteLockFromDatabase(Context context, final String name, final String password){
+    public static void deleteLockFromDatabase(Context context, final String name){
         final ContentResolver cr = context.getContentResolver();
         Runnable r = new Runnable() {
             public void run() {
-                String where = LauncherSettings.Lock.NAME+"='"+name+"' and "+LauncherSettings.Lock.PASSWORD+"='"+password+"'";
+                String where = LauncherSettings.Lock.NAME+"='"+name+"'";
                 cr.delete(LauncherSettings.Lock.CONTENT_URI, where,null);
             }
         };

@@ -68,4 +68,7 @@
 
     <!--add zhuyk icon的背景颜色-->
     <color name="icon_bg_color">#a2c4c0</color>
+    <color name="lock_update_password_text_color">#14cf8e</color>
+    <color name="lock_delete_password_text_color">#f2061a</color>
+    <color name="lock_uncheck_text_color">#828486</color>
 </resources>

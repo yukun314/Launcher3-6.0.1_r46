@@ -106,6 +106,9 @@ import com.zyk.launcher3.compat.UserManagerCompat;
 import com.zyk.launcher3.config.Config;
 import com.zyk.launcher3.model.WidgetsModel;
 import com.zyk.launcher3.safety.LockActivity;
+import com.zyk.launcher3.safety.MD5;
+import com.zyk.launcher3.safety.SafetyUtils;
+import com.zyk.launcher3.safety.lock.PatternLockActivity;
 import com.zyk.launcher3.util.ComponentKey;
 import com.zyk.launcher3.util.LongArrayMap;
 import com.zyk.launcher3.util.Thunk;
@@ -865,6 +868,7 @@ public class Launcher extends Activity
 
     }
 
+    private final int unLock = 100;
     @Override
     protected void onActivityResult(
             final int requestCode, final int resultCode, final Intent data) {
@@ -872,6 +876,10 @@ public class Launcher extends Activity
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.onActivityResult(requestCode, resultCode, data);
         }
+        if(resultCode == unLock) {
+            startAppShortcutOrInfoActivity(mTempView,false);
+        }
+
     }
 
     /** @Override for MNC */
@@ -2702,7 +2710,12 @@ public class Launcher extends Activity
         }
     }
 
-    @Thunk void startAppShortcutOrInfoActivity(View v) {
+    @Thunk void startAppShortcutOrInfoActivity(View v){
+        startAppShortcutOrInfoActivity(v,true);
+    }
+
+    private View mTempView;
+    @Thunk void startAppShortcutOrInfoActivity(View v, boolean isVerification) {
         Object tag = v.getTag();
         final ShortcutInfo shortcut;
         final Intent intent;
@@ -2720,7 +2733,19 @@ public class Launcher extends Activity
         } else {
             throw new IllegalArgumentException("Input must be a Shortcut or AppInfo");
         }
-//FIXME 在这里调用密码验证
+
+        String name = MD5.md5(intent.getComponent().getPackageName());
+        String password = SafetyUtils.getPassword(name);
+        if(isVerification && password != null && password.length() >0){
+            mTempView = v;
+            Intent intent1 = new Intent();
+            intent1.setClass(Launcher.this, PatternLockActivity.class);
+            intent1.putExtra(PatternLockActivity.KEY,password);
+            intent1.putExtra(PatternLockActivity.STYPE, PatternLockActivity.UNLOCK);
+            intent1.putExtra(PatternLockActivity.RESULTCODE, unLock);
+            Launcher.this.startActivityForResult(intent1,unLock);
+            return;
+        }
         boolean success = startActivitySafely(v, intent, tag);
         mStats.recordLaunch(v, intent, shortcut);
 

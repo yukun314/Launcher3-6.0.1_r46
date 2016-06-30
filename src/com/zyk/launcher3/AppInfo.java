@@ -27,13 +27,14 @@ import com.zyk.launcher3.compat.UserHandleCompat;
 import com.zyk.launcher3.compat.UserManagerCompat;
 import com.zyk.launcher3.util.ComponentKey;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * Represents an app in AllAppsView.
  */
-public class AppInfo extends ItemInfo {
+public class AppInfo extends ItemInfo implements Serializable{
     private static final String TAG = "Launcher3.AppInfo";
 
     /**

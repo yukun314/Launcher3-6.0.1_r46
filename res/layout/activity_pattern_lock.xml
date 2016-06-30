@@ -1,42 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
-    <com.zyk.launcher3.safety.lock.LockPatternView
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:clipToPadding="true"
+	android:fitsSystemWindows="true">
+
+	<RadioGroup
+		android:id="@+id/activity_pattern_lock_rg"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="10dp"
+		android:orientation="horizontal">
+		<RadioButton
+			android:id="@+id/activity_pattern_lock_rb1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="8dp"
+			android:checked="true"
+			android:text="@string/lock_update_password"
+			android:textColor="@color/lock_update_password_text_color"
+			android:textSize="20sp"/>
+		<RadioButton
+			android:id="@+id/activity_pattern_lock_rb2"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="8dp"
+			android:text="@string/lock_delete_password"
+			android:textColor="@color/lock_delete_password_text_color"
+			android:textSize="20sp"/>
+	</RadioGroup>
+
+	<com.zyk.launcher3.safety.lock.LockPatternView
 		xmlns:app="http://schemas.android.com/apk/res/com.wgs.jiesuo"
 		android:id="@+id/activity_lock_lpv"
-		android:background="#00ff0000"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
 		android:layout_marginLeft="14dp"
 		android:layout_marginRight="14dp"
-		android:layout_centerInParent="true"/>
-    
-    <TextView 
-        android:id="@+id/activity_lock_msg1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/activity_lock_lpv"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:layout_marginTop="20dp"/>
-    
-    <TextView 
-        android:id="@+id/activity_lock_msg2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/activity_lock_lpv"
-        android:layout_marginBottom="2dp"/>
-    
-    <TextView 
-        android:id="@+id/activity_lock_msg3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/activity_lock_msg2"
-        android:layout_marginBottom="10dp"/>
+		android:background="#00ff0000"/>
+
+	<TextView
+		android:id="@+id/activity_lock_msg1"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/activity_lock_lpv"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="20dp"
+		android:paddingBottom="6dp"
+		android:paddingTop="6dp"/>
+
+	<TextView
+		android:id="@+id/activity_lock_msg2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_above="@id/activity_lock_lpv"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="2dp"/>
+
+	<TextView
+		android:id="@+id/activity_lock_msg3"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_above="@id/activity_lock_msg2"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="10dp"/>
 
 </RelativeLayout>
