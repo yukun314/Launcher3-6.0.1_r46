@@ -978,8 +978,8 @@ public class LockPatternView extends View {
 
 //        float radius = (squareWidth * mDiameterFactor * 0.5f);
         //线的宽
-        float radius = mSquaresize/5.0f;
-        mPathPaint.setStrokeWidth(radius);
+        float radius = mSquaresize/10.0f;
+		mPathPaint.setStrokeWidth(radius);
 
         final Path currentPath = mCurrentPath;
         currentPath.rewind();
@@ -998,6 +998,13 @@ public class LockPatternView extends View {
         boolean oldFlag = (mPaint.getFlags() & Paint.FILTER_BITMAP_FLAG) != 0;
         mPaint.setFilterBitmap(true); // draw with higher quality since we render with transforms
 
+		if(mPatternDisplayMode == DisplayMode.Wrong){
+			mPathPaint.setColor(Color.rgb(227, 108, 113));
+			mPathPaint.setAlpha(mStrokeAlpha);
+		} else {
+			mPathPaint.setColor(Color.rgb(113, 228, 124));
+			mPathPaint.setAlpha(mStrokeAlpha);
+		}
         if (drawPath) {
             boolean anyCircles = false;
             for (int i = 0; i < count; i++) {

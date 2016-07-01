@@ -232,6 +232,7 @@ public class PatternLockActivity extends Activity{
 			}else{
 				msg2.setTextColor(Color.rgb(250, 118, 118));
 				msg2.setText("两次密码输入不一致，请重新输入");
+				lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
 				timer.schedule(new MyTimerTask(), 500);
 			}
 		}
@@ -270,6 +271,7 @@ public class PatternLockActivity extends Activity{
 			}else{
 				msg2.setTextColor(Color.rgb(250, 118, 118));
 				msg2.setText("密码输入错误");
+				lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
 				timer.schedule(new MyTimerTask(), 500);
 			}
 		}else{
