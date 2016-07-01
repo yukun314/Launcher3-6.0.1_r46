@@ -2733,18 +2733,20 @@ public class Launcher extends Activity
         } else {
             throw new IllegalArgumentException("Input must be a Shortcut or AppInfo");
         }
-
-        String name = MD5.md5(intent.getComponent().getPackageName());
-        String password = SafetyUtils.getPassword(name);
-        if(isVerification && password != null && password.length() >0){
-            mTempView = v;
-            Intent intent1 = new Intent();
-            intent1.setClass(Launcher.this, PatternLockActivity.class);
-            intent1.putExtra(PatternLockActivity.KEY,password);
-            intent1.putExtra(PatternLockActivity.STYPE, PatternLockActivity.UNLOCK);
-            intent1.putExtra(PatternLockActivity.RESULTCODE, unLock);
-            Launcher.this.startActivityForResult(intent1,unLock);
-            return;
+        ComponentName cn = intent.getComponent();
+        if(cn != null) {
+            String name = MD5.md5(cn.getPackageName());
+            String password = SafetyUtils.getPassword(name);
+            if (isVerification && password != null && password.length() > 0) {
+                mTempView = v;
+                Intent intent1 = new Intent();
+                intent1.setClass(Launcher.this, PatternLockActivity.class);
+                intent1.putExtra(PatternLockActivity.KEY, password);
+                intent1.putExtra(PatternLockActivity.STYPE, PatternLockActivity.UNLOCK);
+                intent1.putExtra(PatternLockActivity.RESULTCODE, unLock);
+                Launcher.this.startActivityForResult(intent1, unLock);
+                return;
+            }
         }
         boolean success = startActivitySafely(v, intent, tag);
         mStats.recordLaunch(v, intent, shortcut);

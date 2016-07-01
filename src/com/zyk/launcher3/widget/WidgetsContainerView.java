@@ -338,15 +338,19 @@ public class WidgetsContainerView extends BaseContainerView
     protected void onUpdateBackgroundAndPaddings(Rect searchBarBounds, Rect padding) {
         // Apply the top-bottom padding to the content itself so that the launcher transition is
         // clipped correctly
-        mContent.setPadding(0, padding.top, 0, padding.bottom);
+        //zhuyk
+//        mContent.setPadding(0, padding.top, 0, padding.bottom);
+        mContent.setPadding(0, padding.top - padding.bottom, 0, 0);
 
         // TODO: Use quantum_panel_dark instead of quantum_panel_shape_dark.
+//        InsetDrawable background = new InsetDrawable(
+//                getResources().getDrawable(R.drawable.quantum_panel_shape_dark), padding.left, 0,
+//                padding.right, 0);
         InsetDrawable background = new InsetDrawable(
-                getResources().getDrawable(R.drawable.quantum_panel_shape_dark), padding.left, 0,
-                padding.right, 0);
+                getResources().getDrawable(R.drawable.quantum_panel_shape_dark), 0, 0, 0, 0);
         Rect bgPadding = new Rect();
         background.getPadding(bgPadding);
-        mView.setBackground(background);
+//        mView.setBackground(background);
         getRevealView().setBackground(background.getConstantState().newDrawable());
         mView.updateBackgroundPadding(bgPadding);
     }

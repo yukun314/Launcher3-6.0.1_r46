@@ -50,6 +50,30 @@ public class InvariantDeviceProfile {
     float minWidthDps;
     float minHeightDps;
 
+    @Override
+    public String toString() {
+        return "InvariantDeviceProfile{" +
+                "name='" + name + '\'' +
+                ", minWidthDps=" + minWidthDps +
+                ", minHeightDps=" + minHeightDps +
+                ", numRows=" + numRows +
+                ", numColumns=" + numColumns +
+                ", minAllAppsPredictionColumns=" + minAllAppsPredictionColumns +
+                ", numFolderRows=" + numFolderRows +
+                ", numFolderColumns=" + numFolderColumns +
+                ", iconSize=" + iconSize +
+                ", iconBitmapSize=" + iconBitmapSize +
+                ", fillResIconDpi=" + fillResIconDpi +
+                ", iconTextSize=" + iconTextSize +
+                ", numHotseatIcons=" + numHotseatIcons +
+                ", hotseatIconSize=" + hotseatIconSize +
+                ", defaultLayoutId=" + defaultLayoutId +
+                ", hotseatAllAppsRank=" + hotseatAllAppsRank +
+                ", landscapeProfile=" + landscapeProfile +
+                ", portraitProfile=" + portraitProfile +
+                '}';
+    }
+
     /**
      * Number of icons per row and column in the workspace.
      */
@@ -135,8 +159,9 @@ public class InvariantDeviceProfile {
                 findClosestDeviceProfiles(minWidthDps, minHeightDps, getPredefinedDeviceProfiles());
         InvariantDeviceProfile interpolatedDeviceProfileOut =
                 invDistWeightedInterpolate(minWidthDps,  minHeightDps, closestProfiles);
-
+//        System.out.println("interpolatedDeviceProfileOut:"+interpolatedDeviceProfileOut.toString());
         InvariantDeviceProfile closestProfile = closestProfiles.get(0);
+//        System.out.println("closestProfile:"+closestProfile.toString());
         numRows = closestProfile.numRows;
         numColumns = closestProfile.numColumns;
         numHotseatIcons = closestProfile.numHotseatIcons;
@@ -187,8 +212,10 @@ public class InvariantDeviceProfile {
                 335, 567,     4, 4, 4, 4, 4, DEFAULT_ICON_SIZE_DP, 13, 5, 56, R.xml.default_workspace_4x4));
         predefinedDeviceProfiles.add(new InvariantDeviceProfile("Nexus 5",
                 359, 567,     4, 4, 4, 4, 4, DEFAULT_ICON_SIZE_DP, 13, 5, 56, R.xml.default_workspace_4x4));
+//        predefinedDeviceProfiles.add(new InvariantDeviceProfile("Large Phone",
+//                406, 694,     5, 5, 4, 4, 4, 64, 14.4f,  5, 56, R.xml.default_workspace_5x5));
         predefinedDeviceProfiles.add(new InvariantDeviceProfile("Large Phone",
-                406, 694,     5, 5, 4, 4, 4, 64, 14.4f,  5, 56, R.xml.default_workspace_5x5));
+                406, 694,     5, 5, 4, 4, 4, 56, 14.4f,  5, 48, R.xml.default_workspace_5x5));
         // The tablet profile is odd in that the landscape orientation
         // also includes the nav bar on the side
         predefinedDeviceProfiles.add(new InvariantDeviceProfile("Nexus 7",

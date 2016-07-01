@@ -38,7 +38,7 @@
     <!--<color name="quantum_panel_text_color">#FF666666</color>-->
     <color name="quantum_panel_text_color">#FFFFFFFF</color>
     <!--<color name="quantum_panel_bg_color">#FFF5F5F5</color>-->
-    <color name="quantum_panel_bg_color_dark">#FF374248</color>
+    <color name="quantum_panel_bg_color_dark">#99374248</color>
 
     //all_apps.xml中id为all_apps_reveal的背景颜色
     <color name="quantum_panel_bg_color">#F5F5F5</color>
@@ -64,7 +64,7 @@
     <!-- Widgets view -->
     <color name="widgets_view_section_text_color">#FFFFFF</color>
     <color name="widgets_view_item_text_color">#C4C4C4</color>
-    <color name="widgets_cell_color">#263238</color>
+    <color name="widgets_cell_color">#99263238</color>
 
     <!--add zhuyk icon的背景颜色-->
     <color name="icon_bg_color">#a2c4c0</color>

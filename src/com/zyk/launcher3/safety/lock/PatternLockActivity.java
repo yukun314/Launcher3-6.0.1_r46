@@ -168,6 +168,7 @@ public class PatternLockActivity extends Activity{
 				}else{
 					msg2.setTextColor(Color.rgb(250, 118, 118));
 					msg2.setText("至少链接4个点，请重新输入");
+					lockPatternView.setDisplayMode(LockPatternView.DisplayMode.Wrong);
 					timer.schedule(new MyTimerTask(), 500);
 				}
 			}

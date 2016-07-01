@@ -45,7 +45,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:elevation="15dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:background="#000a79e9"/>
     </FrameLayout>
 
 </com.zyk.launcher3.widget.WidgetsContainerView>
