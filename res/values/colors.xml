@@ -71,4 +71,6 @@
     <color name="lock_update_password_text_color">#14cf8e</color>
     <color name="lock_delete_password_text_color">#f2061a</color>
     <color name="lock_uncheck_text_color">#828486</color>
+    <color name="setting_bg_color">#99374248</color>
+    <color name="setting_item_bg_color">#99263238</color>
 </resources>

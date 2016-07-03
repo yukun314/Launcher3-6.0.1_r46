@@ -62,6 +62,7 @@ public interface LauncherCallbacks {
     public void onClickPagedViewIcon(View v);
     public void onClickWallpaperPicker(View v);
     public void onClickSettingsButton(View v);
+    public void onClickHelpButton(View v);
     public void onClickAddWidgetButton(View v);
     public void onPageSwitch(View newPage, int newPageIndex);
     public void onWorkspaceLockedChanged();

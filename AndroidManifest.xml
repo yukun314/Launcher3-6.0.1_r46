@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 **
 ** Copyright 2008, The Android Open Source Project
@@ -17,33 +16,34 @@
 ** limitations under the License.
 */
 -->
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zyk.launcher3">
-    <uses-sdk android:targetSdkVersion="23" android:minSdkVersion="16"/>
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="23" />
 
     <permission
         android:name="com.android.launcher.permission.INSTALL_SHORTCUT"
-        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="dangerous"
+        android:description="@string/permdesc_install_shortcut"
         android:label="@string/permlab_install_shortcut"
-        android:description="@string/permdesc_install_shortcut" />
+        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+        android:protectionLevel="dangerous" />
     <permission
         android:name="com.zyk.launcher3.permission.READ_SETTINGS"
-        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="normal"
+        android:description="@string/permdesc_read_settings"
         android:label="@string/permlab_read_settings"
-        android:description="@string/permdesc_read_settings"/>
+        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+        android:protectionLevel="normal" />
     <permission
         android:name="com.zyk.launcher3.permission.WRITE_SETTINGS"
-        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
-        android:protectionLevel="signatureOrSystem"
+        android:description="@string/permdesc_write_settings"
         android:label="@string/permlab_write_settings"
-        android:description="@string/permdesc_write_settings"/>
+        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+        android:protectionLevel="signatureOrSystem" />
     <permission
         android:name="com.zyk.launcher3.permission.RECEIVE_LAUNCH_BROADCASTS"
-        android:protectionLevel="signature"
-        />
+        android:protectionLevel="signature" />
     <permission
         android:name="com.zyk.launcher3.permission.RECEIVE_FIRST_LOAD_BROADCAST"
         android:protectionLevel="signatureOrSystem" />
@@ -54,7 +54,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BIND_APPWIDGET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
@@ -63,37 +63,41 @@
     <uses-permission android:name="com.zyk.launcher3.permission.RECEIVE_LAUNCH_BROADCASTS" />
     <uses-permission android:name="com.zyk.launcher3.permission.RECEIVE_FIRST_LOAD_BROADCAST" />
 
+    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- <uses-permission android:name="android.permission.SET_PREFERRED_APPLICATIONS"/> -->
     <application
         android:allowBackup="@bool/enable_backup"
-        android:backupAgent="com.zyk.launcher3.LauncherBackupAgentHelper"
+        android:backupAgent=".LauncherBackupAgentHelper"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/icon"
         android:label="@string/application_name"
         android:largeHeap="@bool/config_largeHeap"
         android:restoreAnyVersion="true"
-        android:supportsRtl="true" >
-
+        android:supportsRtl="true">
         <activity
-            android:name="com.zyk.launcher3.Launcher"
-            android:launchMode="singleTask"
+            android:name=".Launcher"
             android:clearTaskOnLaunch="true"
-            android:stateNotNeeded="true"
-            android:theme="@style/Theme"
-            android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="nosensor"
+            android:enabled="true"
+            android:launchMode="singleTask"
             android:resumeWhilePausing="true"
+            android:screenOrientation="nosensor"
+            android:stateNotNeeded="true"
             android:taskAffinity=""
-            android:enabled="true">
+            android:theme="@style/Theme"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.MONKEY"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.MONKEY" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- ENABLE_FOR_TESTING
+        <!--
+        ENABLE_FOR_TESTING
 
         <activity
             android:name="com.zyk.launcher3.testing.LauncherExtension"
@@ -111,78 +115,75 @@
                 <category android:name="android.intent.category.MONKEY"/>
             </intent-filter>
         </activity>
-
         -->
 
-        <!--<activity-->
-            <!--android:name="com.zyk.launcher3.ToggleWeightWatcher"-->
-            <!--android:label="@string/toggle_weight_watcher"-->
-            <!--android:enabled="@bool/debug_memory_enabled"-->
-            <!--android:icon="@mipmap/ic_launcher_home">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-
         <activity
-            android:name="com.zyk.launcher3.WallpaperPickerActivity"
-            android:theme="@style/Theme.WallpaperPicker"
-            android:label="@string/pick_wallpaper"
-            android:icon="@mipmap/ic_launcher_wallpaper"
+            android:name=".ToggleWeightWatcher"
+            android:enabled="@bool/debug_memory_enabled"
+            android:icon="@mipmap/ic_launcher_home"
+            android:label="@string/toggle_weight_watcher">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".WallpaperPickerActivity"
             android:finishOnCloseSystemDialogs="true"
-            android:process=":wallpaper_chooser">
+            android:icon="@mipmap/ic_launcher_wallpaper"
+            android:label="@string/pick_wallpaper"
+            android:process=":wallpaper_chooser"
+            android:theme="@style/Theme.WallpaperPicker">
             <intent-filter>
                 <action android:name="android.intent.action.SET_WALLPAPER" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.zyk.launcher3.WallpaperCropActivity"
-            android:theme="@style/Theme.WallpaperCropper"
-            android:label="@string/crop_wallpaper"
-            android:icon="@mipmap/ic_launcher_wallpaper"
+            android:name=".WallpaperCropActivity"
             android:finishOnCloseSystemDialogs="true"
-            android:process=":wallpaper_chooser">
+            android:icon="@mipmap/ic_launcher_wallpaper"
+            android:label="@string/crop_wallpaper"
+            android:process=":wallpaper_chooser"
+            android:theme="@style/Theme.WallpaperCropper">
             <intent-filter>
                 <action android:name="android.service.wallpaper.CROP_AND_SET_WALLPAPER" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.zyk.launcher3.SettingsActivity"
-            android:label="@string/settings_button_text"
+            android:name=".SettingsActivity"
             android:autoRemoveFromRecents="true"
-            android:process=":settings_process">
-        </activity>
+            android:label="@string/settings_button_text"
+            android:process=":settings_process"></activity>
 
         <!-- Debugging tools -->
-        <!--<activity-->
-            <!--android:name="com.zyk.launcher3.MemoryDumpActivity"-->
-            <!--android:theme="@android:style/Theme.NoDisplay"-->
-            <!--android:label="@string/debug_memory_activity"-->
-            <!--android:enabled="@bool/debug_memory_enabled"-->
-            <!--android:excludeFromRecents="true"-->
-            <!--android:icon="@mipmap/ic_launcher_home"-->
-            <!--&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+        <!-- <activity -->
+        <!-- android:name="com.zyk.launcher3.MemoryDumpActivity" -->
+        <!-- android:theme="@android:style/Theme.NoDisplay" -->
+        <!-- android:label="@string/debug_memory_activity" -->
+        <!-- android:enabled="@bool/debug_memory_enabled" -->
+        <!-- android:excludeFromRecents="true" -->
+        <!-- android:icon="@mipmap/ic_launcher_home" -->
+        <!-- &gt; -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
 
-        <service android:name="com.zyk.launcher3.MemoryTracker"
-            android:enabled="@bool/debug_memory_enabled"
-            >
-        </service>
+        <service
+            android:name=".MemoryTracker"
+            android:enabled="@bool/debug_memory_enabled"></service>
 
-        <receiver
-            android:name="com.zyk.launcher3.WallpaperChangedReceiver">
+        <receiver android:name=".WallpaperChangedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.WALLPAPER_CHANGED" />
             </intent-filter>
@@ -190,7 +191,7 @@
 
         <!-- Intent received used to install shortcuts from other applications -->
         <receiver
-            android:name="com.zyk.launcher3.InstallShortcutReceiver"
+            android:name=".InstallShortcutReceiver"
             android:permission="com.android.launcher.permission.INSTALL_SHORTCUT">
             <intent-filter>
                 <action android:name="com.android.launcher.action.INSTALL_SHORTCUT" />
@@ -198,13 +199,12 @@
         </receiver>
 
         <!-- Intent received used to initialize a restored widget -->
-        <receiver android:name="com.zyk.launcher3.AppWidgetsRestoredReceiver" >
+        <receiver android:name=".AppWidgetsRestoredReceiver">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_HOST_RESTORED"/>
+                <action android:name="android.appwidget.action.APPWIDGET_HOST_RESTORED" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name="com.zyk.launcher3.StartupReceiver" >
+        <receiver android:name=".StartupReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -212,19 +212,29 @@
 
         <!-- The settings provider contains Home's data, like the workspace favorites -->
         <provider
-            android:name="com.zyk.launcher3.LauncherProvider"
+            android:name=".LauncherProvider"
             android:authorities="com.zyk.launcher3.settings"
             android:exported="true"
-            android:writePermission="com.zyk.launcher3.permission.WRITE_SETTINGS"
-            android:readPermission="com.zyk.launcher3.permission.READ_SETTINGS" />
+            android:readPermission="com.zyk.launcher3.permission.READ_SETTINGS"
+            android:writePermission="com.zyk.launcher3.permission.WRITE_SETTINGS" />
 
-        <meta-data android:name="android.nfc.disable_beam_default"
-                       android:value="true" />
+        <meta-data
+            android:name="android.nfc.disable_beam_default"
+            android:value="true" />
 
-        <activity android:name=".safety.LockActivity"
+        <activity
+            android:name=".safety.LockActivity"
             android:theme="@style/Theme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".safety.lock.PatternLockActivity"
-                  android:theme="@style/Theme"/>
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".safety.lock.PatternLockActivity"
+            android:theme="@style/Theme" />
+        <activity
+            android:name=".setting.SettingActivity"
+            android:theme="@style/Theme" />
+        <activity
+            android:name=".setting.HelpFeedbackActivity"
+            android:theme="@style/Theme" />
     </application>
+
 </manifest>

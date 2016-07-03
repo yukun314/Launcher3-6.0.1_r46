@@ -109,6 +109,8 @@ import com.zyk.launcher3.safety.LockActivity;
 import com.zyk.launcher3.safety.MD5;
 import com.zyk.launcher3.safety.SafetyUtils;
 import com.zyk.launcher3.safety.lock.PatternLockActivity;
+import com.zyk.launcher3.setting.HelpFeedbackActivity;
+import com.zyk.launcher3.setting.SettingActivity;
 import com.zyk.launcher3.util.ComponentKey;
 import com.zyk.launcher3.util.LongArrayMap;
 import com.zyk.launcher3.util.Thunk;
@@ -1407,6 +1409,15 @@ public class Launcher extends Activity
             }
         });
         wallpaperButton.setOnTouchListener(getHapticFeedbackTouchListener());
+
+        //帮助与反馈
+        View helpFeedback = findViewById(R.id.help_button);
+        helpFeedback.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCllickHelpButton(v);
+            }
+        });
 
         View settingsButton = findViewById(R.id.settings_button);
         if (hasSettings()) {
@@ -2846,7 +2857,21 @@ public class Launcher extends Activity
         if (mLauncherCallbacks != null) {
             mLauncherCallbacks.onClickSettingsButton(v);
         } else {
-            startActivity(new Intent(this, SettingsActivity.class));
+//            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, SettingActivity.class));
+        }
+    }
+
+    /**
+     * Event handler for a click on the helpFeedback button that appears after a long press
+     * on the home screen.
+     */
+    protected void onCllickHelpButton(View v) {
+        if (mLauncherCallbacks != null) {
+            mLauncherCallbacks.onClickSettingsButton(v);
+        } else {
+//            startActivity(new Intent(this, SettingsActivity.class));
+            startActivity(new Intent(this, HelpFeedbackActivity.class));
         }
     }
 
