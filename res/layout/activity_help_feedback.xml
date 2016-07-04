@@ -4,12 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:clipToPadding="true">
+    android:clipToPadding="true"
+    android:background="@color/setting_bg_color">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:text="帮助与反馈"/>
+    <WebView
+        android:id="@+id/activity_help_feedback_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+    android:background="#00000000"/>
 
 </RelativeLayout>
