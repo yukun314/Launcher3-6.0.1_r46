@@ -47,7 +47,6 @@ import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -65,7 +64,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Stack;
 
-public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
+public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
     public static final int WORKSPACE_ACCESSIBILITY_DRAG = 2;
     public static final int FOLDER_ACCESSIBILITY_DRAG = 1;
 
@@ -139,8 +138,6 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
 
     private TimeInterpolator mEaseOutInterpolator;
     private ShortcutAndWidgetContainer mShortcutsAndWidgets;
-    //zhuyk
-    private RelativeLayout mDefaultScreenLayout;
 
     private boolean mIsHotseat = false;
     private float mHotseatScale = 1f;
@@ -286,12 +283,7 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
         mTouchFeedbackView = new ClickShadowView(context);
         addView(mTouchFeedbackView);
         addView(mShortcutsAndWidgets);
-//        mShortcutsAndWidgets.setVisibility(View.INVISIBLE);
 
-        //zhuyk
-        mDefaultScreenLayout = (RelativeLayout) mLauncher.getLayoutInflater().inflate(
-                R.layout.image_view, null, false /* attachToRoot */);
-        addView(mDefaultScreenLayout);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -357,12 +349,10 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
 
     public void enableHardwareLayer(boolean hasLayer) {
         mShortcutsAndWidgets.setLayerType(hasLayer ? LAYER_TYPE_HARDWARE : LAYER_TYPE_NONE, sPaint);
-        mDefaultScreenLayout.setLayerType(hasLayer ? LAYER_TYPE_HARDWARE : LAYER_TYPE_NONE, sPaint);
     }
 
     public void buildHardwareLayer() {
         mShortcutsAndWidgets.buildLayer();
-        mDefaultScreenLayout.buildLayer();
     }
 
     public float getChildrenScale() {
@@ -670,28 +660,24 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
 
     @Override
     public void removeView(View view) {
-        System.out.println("removeView");
         markCellsAsUnoccupiedForView(view);
         mShortcutsAndWidgets.removeView(view);
     }
 
     @Override
     public void removeViewAt(int index) {
-        System.out.println("removeViewAt");
         markCellsAsUnoccupiedForView(mShortcutsAndWidgets.getChildAt(index));
         mShortcutsAndWidgets.removeViewAt(index);
     }
 
     @Override
     public void removeViewInLayout(View view) {
-        System.out.println("removeViewInLayout");
         markCellsAsUnoccupiedForView(view);
         mShortcutsAndWidgets.removeViewInLayout(view);
     }
 
     @Override
     public void removeViews(int start, int count) {
-        System.out.println("removeViews");
         for (int i = start; i < start + count; i++) {
             markCellsAsUnoccupiedForView(mShortcutsAndWidgets.getChildAt(i));
         }
@@ -903,9 +889,6 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
         mShortcutsAndWidgets.layout(left, top,
                 left + r - l,
                 top + b - t);
-        mDefaultScreenLayout.layout(left, top,
-                left + mDefaultScreenLayout.getMeasuredWidth(),
-                top + mDefaultScreenLayout.getMeasuredHeight());
     }
 
     @Override
@@ -2722,7 +2705,7 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
     }
 
     public void markCellsAsUnoccupiedForView(View view) {
-//        if (view == null || view.getParent() != mShortcutsAndWidgets) return;
+        if (view == null || view.getParent() != mShortcutsAndWidgets) return;
         LayoutParams lp = (LayoutParams) view.getLayoutParams();
         markCellsForView(lp.cellX, lp.cellY, lp.cellHSpan, lp.cellVSpan, mOccupied, false);
     }
@@ -2756,7 +2739,7 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
     }
 
     @Override
-    public FrameLayout.LayoutParams generateLayoutParams(AttributeSet attrs) {
+    public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new CellLayout.LayoutParams(getContext(), attrs);
     }
 
@@ -2770,8 +2753,7 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
         return new CellLayout.LayoutParams(p);
     }
 
-    //public static class LayoutParams extends ViewGroup.MarginLayoutParams {
-    public static class LayoutParams extends FrameLayout.LayoutParams {
+    public static class LayoutParams extends ViewGroup.MarginLayoutParams {
         /**
          * Horizontal location of the item in the grid.
          */

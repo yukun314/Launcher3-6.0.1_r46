@@ -790,6 +790,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
             // disallowing padding in paged view (just pass 0)
             final View child = getPageAt(i);
             if (child.getVisibility() != GONE) {
+                //zhuyk
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
                 int childWidthMode;
