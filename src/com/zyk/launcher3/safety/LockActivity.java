@@ -2,13 +2,18 @@ package com.zyk.launcher3.safety;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +27,7 @@ import android.widget.Toast;
 import com.zyk.launcher3.AppInfo;
 import com.zyk.launcher3.BubbleTextView;
 import com.zyk.launcher3.DeviceProfile;
+import com.zyk.launcher3.FastBitmapDrawable;
 import com.zyk.launcher3.Launcher;
 import com.zyk.launcher3.LauncherModel;
 import com.zyk.launcher3.LauncherSettings;
@@ -73,6 +79,7 @@ public class LockActivity extends Activity {
 		mLauncher = Config.getInstance().mLauncher;
 
 		init();
+		initNavigation();
 		init1();
 //		//进到壁纸的设置界面
 //		startActivityForResult(new Intent(Intent.ACTION_SET_WALLPAPER).setPackage(getPackageName()), 12);
@@ -200,6 +207,8 @@ public class LockActivity extends Activity {
 		AppInfo appinfo = mAdapterItems.get(position);
 		Intent intent = new Intent();
 		intent.setClass(LockActivity.this, PatternLockActivity.class);
+		intent.putExtra("appicon",appinfo.iconBitmap);
+		intent.putExtra("appname",appinfo.title.toString());
 		if(appinfo.isLock) {
 			intent.putExtra(PatternLockActivity.STYPE, PatternLockActivity.RESETORDELETE);
 			intent.putExtra(PatternLockActivity.KEY, SafetyUtils.getPassword(appinfo));
@@ -241,6 +250,20 @@ public class LockActivity extends Activity {
 				mHandler.sendEmptyMessage(1);
 			}
 		}.start();
+	}
+
+	private void initNavigation(){
+		View view = findViewById(R.id.activity_lock_navigation);
+		ImageView back = (ImageView) view.findViewById(R.id.activity_navigation_back);
+		back.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+
+		TextView message = (TextView) view.findViewById(R.id.activity_navigation_message);
+		message.setText(R.string.application_lock);
 	}
 
 	private class ViewHolder extends RecyclerView.ViewHolder {

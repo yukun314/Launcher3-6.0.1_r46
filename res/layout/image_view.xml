@@ -13,11 +13,19 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
-<com.zyk.launcher3.CellLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:launcher="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hapticFeedbackEnabled="false"
-    launcher:maxGap="@dimen/workspace_max_gap" />
+    android:background="#123">
+
+    <ImageView
+        android:id="@+id/image_view_imageview"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:src="@drawable/back_button"/>
+</RelativeLayout>
+

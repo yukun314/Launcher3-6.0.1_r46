@@ -30,7 +30,7 @@
     <string name="receive_first_load_broadcast_permission" translatable="false">com.zyk.launcher3.permission.RECEIVE_FIRST_LOAD_BROADCAST</string>
 
     <!-- Application name -->
-    <string name="application_name">Launcher3Launcher3Launcher3Launcher3Launcher3Launcher3Launcher3Launcher3Launcher3</string>
+    <string name="application_name">ISLauncher</string>
     <!-- Default folder name -->
     <string name="folder_name"></string>
     <!-- Work folder name -->
@@ -273,4 +273,5 @@
     <string name="lock_delete_password">Remove password</string>
 
     <string name="setting_default_launcher">Setting the default desktop</string>
+    <string name="application_lock">Application Lock</string>
 </resources>

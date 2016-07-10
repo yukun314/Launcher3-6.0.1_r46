@@ -8,10 +8,16 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.zyk.launcher3.R;
 
 /**
@@ -19,6 +25,7 @@ import com.zyk.launcher3.R;
  */
 public class HelpFeedbackActivity extends Activity {
 
+    private ProgressBar progressbar;
     WebView mWebView;
 
     @Override
@@ -26,6 +33,10 @@ public class HelpFeedbackActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_feedback);
         mWebView = (WebView) findViewById(R.id.activity_help_feedback_webview);
+        progressbar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        progressbar.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 3));
+        mWebView.addView(progressbar);
+        initNavigation();
         setWebView();
         mWebView.loadUrl("https://yukun314.github.io/launcher3/help.html");
     }
@@ -37,6 +48,20 @@ public class HelpFeedbackActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void initNavigation(){
+        View view = findViewById(R.id.activity_help_feedback_navigation);
+        ImageView back = (ImageView) view.findViewById(R.id.activity_navigation_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        TextView message = (TextView) view.findViewById(R.id.activity_navigation_message);
+        message.setText(R.string.help_button_text);
     }
 
     private void setWebView() {
@@ -107,6 +132,18 @@ public class HelpFeedbackActivity extends Activity {
      * 辅助 WebView 处理 Javascript 的对话框,网站图标,网站 title
      */
     private class MyWebChromeClient extends WebChromeClient {
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            if (newProgress == 100) {
+                progressbar.setVisibility(View.GONE);
+            } else {
+                if (progressbar.getVisibility() == View.GONE)
+                    progressbar.setVisibility(View.VISIBLE);
+                progressbar.setProgress(newProgress);
+            }
+            super.onProgressChanged(view, newProgress);
+        }
+
 
     }
 }

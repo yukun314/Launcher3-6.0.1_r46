@@ -121,7 +121,7 @@
         <activity
             android:name=".ToggleWeightWatcher"
             android:enabled="@bool/debug_memory_enabled"
-            android:icon="@mipmap/ic_launcher_home"
+            android:icon="@mipmap/icon"
             android:label="@string/toggle_weight_watcher">
 
             <!-- <intent-filter> -->
@@ -171,7 +171,7 @@
         <!-- android:label="@string/debug_memory_activity" -->
         <!-- android:enabled="@bool/debug_memory_enabled" -->
         <!-- android:excludeFromRecents="true" -->
-        <!-- android:icon="@mipmap/ic_launcher_home" -->
+        <!-- android:icon="@mipmap/icon" -->
         <!-- &gt; -->
         <!-- <intent-filter> -->
         <!-- <action android:name="android.intent.action.MAIN" /> -->

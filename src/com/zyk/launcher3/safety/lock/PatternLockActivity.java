@@ -5,19 +5,31 @@ import java.util.Timer;
 import java.util.TimerTask;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.RadialGradient;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.zyk.launcher3.AppInfo;
+import com.zyk.launcher3.FastBitmapDrawable;
+import com.zyk.launcher3.ItemInfo;
+import com.zyk.launcher3.LauncherAppState;
 import com.zyk.launcher3.R;
+import com.zyk.launcher3.ShortcutInfo;
+import com.zyk.launcher3.config.Config;
 import com.zyk.launcher3.safety.LockActivity;
 import com.zyk.launcher3.safety.lock.LockPatternView.Cell;
 
@@ -44,6 +56,7 @@ public class PatternLockActivity extends Activity{
 	public static final String PARENTID = "parentId";//忘记密码时使用
 	public static final String DATA = "data";//返回的数据
 	public static final String RESULTCODE = "resultCode";//当用于解锁时(UNLOCK) 此值必须有
+	public static final String APPINFO = "appinfo";
 	private int parentId ;
 	/**
 	 * 用于设置密码
@@ -112,6 +125,8 @@ public class PatternLockActivity extends Activity{
 		mUpdateRadioButton = (RadioButton) findViewById(R.id.activity_pattern_lock_rb1);
 		mDeleteRadioButton = (RadioButton) findViewById(R.id.activity_pattern_lock_rb2);
 
+		initNavigation();
+
 		msg1 = (TextView) findViewById(R.id.activity_lock_msg1);
 		msg1.setTextSize(18);
 		msg1.setOnClickListener(new OnClickListener() {
@@ -175,7 +190,32 @@ public class PatternLockActivity extends Activity{
 			
 		});
 	}
-	
+
+	private void initNavigation(){
+		View view = findViewById(R.id.activity_pattern_lock_navigation);
+		ImageView back = (ImageView) view.findViewById(R.id.activity_navigation_back);
+		back.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setResult(0);
+				finish();
+			}
+		});
+
+		TextView message = (TextView) view.findViewById(R.id.activity_navigation_message);
+		Intent intent =getIntent();
+		String title = intent.getStringExtra("appname");
+		Bitmap bitmap = (Bitmap)intent.getParcelableExtra("appicon");
+		FastBitmapDrawable drawable = new FastBitmapDrawable(bitmap);
+		drawable.setFilterBitmap(true);
+		Resources res = this.getResources();
+		DisplayMetrics dm = res.getDisplayMetrics();
+		int w = (int)(32*dm.density);
+		drawable.setBounds(0, 0,w, w);
+		message.setText(title);
+		message.setCompoundDrawables(drawable, null, null, null);
+	}
+
 	private void init(int type){
 		if(type == SETTING){
 			msg3.setTextColor(Color.rgb(232, 232, 232));

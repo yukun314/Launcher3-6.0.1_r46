@@ -15,7 +15,9 @@ import android.os.PatternMatcher;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.zyk.launcher3.R;
 
@@ -42,7 +44,7 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_setting);
         pm = getPackageManager();
         init();
-
+        initNavigation();
     }
 
     private void init(){
@@ -52,6 +54,20 @@ public class SettingActivity extends Activity implements View.OnClickListener{
 
 
         initValue();
+    }
+
+    private void initNavigation(){
+        View view = findViewById(R.id.activity_setting_navigation);
+        ImageView back = (ImageView) view.findViewById(R.id.activity_navigation_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        TextView message = (TextView) view.findViewById(R.id.activity_navigation_message);
+        message.setText(R.string.settings_button_text);
     }
 
     private void initValue(){

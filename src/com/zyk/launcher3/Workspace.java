@@ -57,6 +57,7 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zyk.launcher3.FolderIcon.FolderRingAnimator;
@@ -553,11 +554,16 @@ public class Workspace extends PagedView
         if (mWorkspaceScreens.containsKey(screenId)) {
             throw new RuntimeException("Screen id " + screenId + " already exists!");
         }
-
         // Inflate the cell layout, but do not add it automatically so that we can get the newly
         // created CellLayout.
         CellLayout newScreen = (CellLayout) mLauncher.getLayoutInflater().inflate(
                         R.layout.workspace_screen, this, false /* attachToRoot */);
+
+        //zhuyk
+//        ImageView imageView = (ImageView) mLauncher.getLayoutInflater().inflate(R.layout.image_view, newScreen, false);
+//        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
+//
+//        newScreen.addView(imageView, lp);
 
         newScreen.setOnLongClickListener(mLongClickListener);
         newScreen.setOnClickListener(mLauncher);
@@ -575,9 +581,15 @@ public class Workspace extends PagedView
     }
 
     public void createCustomContentContainer() {
+        System.out.println("createCustomContentContainer");
         CellLayout customScreen = (CellLayout)
                 mLauncher.getLayoutInflater().inflate(R.layout.workspace_screen, this, false);
         customScreen.disableDragTarget();
+
+//        //zhuyk
+//        ImageView imageView = (ImageView) mLauncher.getLayoutInflater().inflate(R.layout.image_view, customScreen, false);
+//        customScreen.addView(imageView);
+
 
         mWorkspaceScreens.put(CUSTOM_CONTENT_SCREEN_ID, customScreen);
         mScreenOrder.add(0, CUSTOM_CONTENT_SCREEN_ID);
@@ -4483,6 +4495,15 @@ public class Workspace extends PagedView
     public void fillInLaunchSourceData(Bundle sourceData) {
         sourceData.putString(Stats.SOURCE_EXTRA_CONTAINER, Stats.CONTAINER_HOMESCREEN);
         sourceData.putInt(Stats.SOURCE_EXTRA_CONTAINER_PAGE, getCurrentPage());
+    }
+
+    //add by zhuyk
+    public void setDefaultScreen(int defaultPage){
+        mDefaultPage = defaultPage;
+    }
+
+    public int getDefaultScreen(){
+        return mDefaultPage;
     }
 
     /**

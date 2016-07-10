@@ -10,10 +10,16 @@
 	<!--在activity中设置paddingTop的值+获取到的状态栏的高度-->
 	<!--android:fitsSystemWindows="true"-->
 	<!--android:clipToPadding="true"-->
+
+	<include
+		android:id="@+id/activity_lock_navigation"
+		layout="@layout/activity_navigation"/>
+
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/activity_lock_recyclerview"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:layout_below="@id/activity_lock_navigation"
 		android:theme="@style/Theme.Light.CustomOverscroll"
 		android:paddingTop="@dimen/all_apps_list_top_bottom_padding"
 		android:paddingBottom="@dimen/all_apps_list_top_bottom_padding" />

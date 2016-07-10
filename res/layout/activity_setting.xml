@@ -8,6 +8,10 @@
     android:clipToPadding="true"
     android:background="@color/setting_bg_color">
 
+    <include
+        android:id="@+id/activity_setting_navigation"
+        layout="@layout/activity_navigation"/>
+
     <RelativeLayout
         android:id="@+id/activity_setting_default_launcher"
         android:layout_width="match_parent"

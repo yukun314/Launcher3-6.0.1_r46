@@ -1581,6 +1581,7 @@ public class Launcher extends Activity
         LauncherModel.addItemToDatabase(this, info, container, screenId, cellXY[0], cellXY[1]);
 
         if (!mRestoring) {
+            System.out.println("completeAddShortcut ");
             mWorkspace.addInScreen(view, container, screenId, cellXY[0], cellXY[1], 1, 1,
                     isWorkspaceLocked());
         }
@@ -3417,9 +3418,13 @@ public class Launcher extends Activity
 
     void showOverviewMode(boolean animated) {
         mWorkspace.setVisibility(View.VISIBLE);
+//        mStateTransitionAnimation.startAnimationToWorkspace(mState, mWorkspace.getState(),
+//                Workspace.State.OVERVIEW,
+//                WorkspaceStateTransitionAnimation.SCROLL_TO_CURRENT_PAGE, animated,
+//                null /* onCompleteRunnable */);
         mStateTransitionAnimation.startAnimationToWorkspace(mState, mWorkspace.getState(),
                 Workspace.State.OVERVIEW,
-                WorkspaceStateTransitionAnimation.SCROLL_TO_CURRENT_PAGE, animated,
+                mWorkspace.getDefaultScreen(), animated,
                 null /* onCompleteRunnable */);
         mState = State.WORKSPACE;
     }

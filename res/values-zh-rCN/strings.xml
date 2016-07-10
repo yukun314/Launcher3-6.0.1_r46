@@ -19,7 +19,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="application_name" msgid="5181331383435256801">"Launcher3Launcher3Launcher3Launcher3Launcher3Launcher3Launcher3Launcher3Launcher3Launcher3"</string>
+    <string name="application_name" msgid="5181331383435256801">"IS桌面"</string>
     <string name="folder_name" msgid="7371454440695724752"></string>
     <string name="work_folder_name" msgid="3753320833950115786">"Work"</string>
     <string name="activity_not_found" msgid="8071924732094499514">"未安装该应用。"</string>
@@ -111,4 +111,5 @@
     <string name="lock_update_password">修改密码</string>
     <string name="lock_delete_password">删除密码</string>
     <string name="setting_default_launcher">设置默认桌面</string>
+    <string name="application_lock">应用锁</string>
 </resources>
