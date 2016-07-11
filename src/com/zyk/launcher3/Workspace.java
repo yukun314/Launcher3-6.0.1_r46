@@ -4506,6 +4506,11 @@ public class Workspace extends PagedView
         return mDefaultPage;
     }
 
+    public LongArrayMap getWorkspaceScreens(){
+        return mWorkspaceScreens;
+    }
+
+
     /**
      * Used as a workaround to ensure that the AppWidgetService receives the
      * PACKAGE_ADDED broadcast before updating widgets.

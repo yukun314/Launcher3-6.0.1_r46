@@ -112,5 +112,6 @@
     <string name="lock_update_password">修改密碼</string>
     <string name="lock_delete_password">刪除密碼</string>
     <string name="setting_default_launcher">設置默認桌面</string>
+    <string name="setting_default_screen">設置默認屏幕</string>
     <string name="application_lock">應用鎖</string>
 </resources>

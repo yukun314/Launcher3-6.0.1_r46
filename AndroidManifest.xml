@@ -235,7 +235,7 @@
             android:theme="@style/Theme" />
         <activity
             android:name=".setting.HelpFeedbackActivity"
-            android:theme="@style/Theme" />
+            android:theme="@style/SettingTheme" />
     </application>
 
 </manifest>
