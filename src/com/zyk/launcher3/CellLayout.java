@@ -140,7 +140,7 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
     private TimeInterpolator mEaseOutInterpolator;
     private ShortcutAndWidgetContainer mShortcutsAndWidgets;
     //zhuyk
-    private RelativeLayout mDefaultScreenLayout;
+    private ImageView mDefaultScreenButton;
 
     private boolean mIsHotseat = false;
     private float mHotseatScale = 1f;
@@ -289,9 +289,20 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
 //        mShortcutsAndWidgets.setVisibility(View.INVISIBLE);
 
         //zhuyk
-        mDefaultScreenLayout = (RelativeLayout) mLauncher.getLayoutInflater().inflate(
-                R.layout.image_view, null, false /* attachToRoot */);
-        addView(mDefaultScreenLayout);
+        mDefaultScreenButton = (ImageView) mLauncher.getLayoutInflater().inflate(
+                R.layout.image_view, this, false /* attachToRoot */);
+        mDefaultScreenButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLauncher.getWorkspace().DefaultScreenButtonOnclick();
+            }
+        });
+        mDefaultScreenButton.setVisibility(View.GONE);
+        addView(mDefaultScreenButton);
+    }
+
+    public void setDefaultScreenButtonVisibility(int visibility){
+        mDefaultScreenButton.setVisibility(visibility);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -357,12 +368,10 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
 
     public void enableHardwareLayer(boolean hasLayer) {
         mShortcutsAndWidgets.setLayerType(hasLayer ? LAYER_TYPE_HARDWARE : LAYER_TYPE_NONE, sPaint);
-        mDefaultScreenLayout.setLayerType(hasLayer ? LAYER_TYPE_HARDWARE : LAYER_TYPE_NONE, sPaint);
     }
 
     public void buildHardwareLayer() {
         mShortcutsAndWidgets.buildLayer();
-        mDefaultScreenLayout.buildLayer();
     }
 
     public float getChildrenScale() {
@@ -624,7 +633,6 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
 
     public boolean addViewToCellLayout(View child, int index, int childId, LayoutParams params,
             boolean markCells) {
-        System.out.println("addViewToCellLayout");
         final LayoutParams lp = params;
 
         // Hotseat icons - remove text
@@ -670,28 +678,24 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
 
     @Override
     public void removeView(View view) {
-        System.out.println("removeView");
         markCellsAsUnoccupiedForView(view);
         mShortcutsAndWidgets.removeView(view);
     }
 
     @Override
     public void removeViewAt(int index) {
-        System.out.println("removeViewAt");
         markCellsAsUnoccupiedForView(mShortcutsAndWidgets.getChildAt(index));
         mShortcutsAndWidgets.removeViewAt(index);
     }
 
     @Override
     public void removeViewInLayout(View view) {
-        System.out.println("removeViewInLayout");
         markCellsAsUnoccupiedForView(view);
         mShortcutsAndWidgets.removeViewInLayout(view);
     }
 
     @Override
     public void removeViews(int start, int count) {
-        System.out.println("removeViews");
         for (int i = start; i < start + count; i++) {
             markCellsAsUnoccupiedForView(mShortcutsAndWidgets.getChildAt(i));
         }
@@ -881,10 +885,13 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
                 MeasureSpec.makeMeasureSpec(newWidth, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(newHeight, MeasureSpec.EXACTLY));
 
+
+        mDefaultScreenButton.measure(newWidth,newHeight);
+
         int maxWidth = mShortcutsAndWidgets.getMeasuredWidth();
         int maxHeight = mShortcutsAndWidgets.getMeasuredHeight();
         if (mFixedWidth > 0 && mFixedHeight > 0) {
-            setMeasuredDimension(maxWidth, maxHeight);
+            setMeasuredDimension(maxWidth, maxHeight + 100);
         } else {
             setMeasuredDimension(widthSize, heightSize);
         }
@@ -897,15 +904,17 @@ public class CellLayout extends FrameLayout implements BubbleTextShadowHandler {
         int left = getPaddingLeft() + (int) Math.ceil(offset / 2f);
         int top = getPaddingTop();
 
-        mTouchFeedbackView.layout(left, top,
+        mTouchFeedbackView.layout(left, top ,
                 left + mTouchFeedbackView.getMeasuredWidth(),
                 top + mTouchFeedbackView.getMeasuredHeight());
-        mShortcutsAndWidgets.layout(left, top,
+        mShortcutsAndWidgets.layout(left, top ,
                 left + r - l,
                 top + b - t);
-        mDefaultScreenLayout.layout(left, top,
-                left + mDefaultScreenLayout.getMeasuredWidth(),
-                top + mDefaultScreenLayout.getMeasuredHeight());
+        int center = (r - l)/2;
+        int buttonHeight = mDefaultScreenButton.getMeasuredHeight()/2;
+        int buttonWidth = mDefaultScreenButton.getMeasuredWidth()/2;
+        mDefaultScreenButton.layout(center - buttonWidth, top - buttonHeight,center + buttonWidth,
+                top+ buttonHeight);
     }
 
     @Override

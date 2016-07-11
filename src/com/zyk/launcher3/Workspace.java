@@ -580,6 +580,19 @@ public class Workspace extends PagedView
         return screenId;
     }
 
+    //FIXME 待实现 DefaultScreenButton的点击事件
+    public void DefaultScreenButtonOnclick(){
+        System.out.println("mCurrentScreen:"+mCurrentPage);
+    }
+
+    public void setDefaultScreenButtonVisibility(int visibility){
+        int childNum = getChildCount();
+        for(int i = 0; i<childNum;i++) {
+            CellLayout cl = (CellLayout) getChildAt(i);
+            cl.setDefaultScreenButtonVisibility(visibility);
+        }
+    }
+
     public void createCustomContentContainer() {
         System.out.println("createCustomContentContainer");
         CellLayout customScreen = (CellLayout)
