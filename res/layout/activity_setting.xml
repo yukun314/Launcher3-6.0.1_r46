@@ -40,35 +40,4 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:background="@color/setting_item_bg_color"
-        android:layout_marginTop="10dp"
-        android:clickable="true">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_centerVertical="true"
-            android:textSize="20sp"
-            android:textColor="@color/widgets_view_item_text_color"
-            android:text="@string/setting_default_screen"/>
-
-        <Spinner
-            android:id="@+id/activity_setting_default_screen_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:spinnerMode="dropdown"
-            android:dropDownWidth="80dp"
-            android:gravity="center"
-            android:background="@color/setting_item_bg_color"/>
-    </RelativeLayout>
-
 </LinearLayout>
