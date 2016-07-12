@@ -206,12 +206,15 @@ public class PatternLockActivity extends Activity{
 		Intent intent =getIntent();
 		String title = intent.getStringExtra("appname");
 		Bitmap bitmap = (Bitmap)intent.getParcelableExtra("appicon");
-		FastBitmapDrawable drawable = new FastBitmapDrawable(bitmap);
-		drawable.setFilterBitmap(true);
-		Resources res = this.getResources();
-		DisplayMetrics dm = res.getDisplayMetrics();
-		int w = (int)(32*dm.density);
-		drawable.setBounds(0, 0,w, w);
+		FastBitmapDrawable drawable = null;
+		if(bitmap != null) {
+			drawable = new FastBitmapDrawable(bitmap);
+			drawable.setFilterBitmap(true);
+			Resources res = this.getResources();
+			DisplayMetrics dm = res.getDisplayMetrics();
+			int w = (int) (32 * dm.density);
+			drawable.setBounds(0, 0, w, w);
+		}
 		message.setText(title);
 		message.setCompoundDrawables(drawable, null, null, null);
 	}
