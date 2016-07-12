@@ -14,15 +14,27 @@ import android.os.Bundle;
 import android.os.PatternMatcher;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.zyk.launcher3.CellLayout;
+import com.zyk.launcher3.Launcher;
 import com.zyk.launcher3.R;
+import com.zyk.launcher3.config.Config;
+import com.zyk.launcher3.util.LongArrayMap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +46,8 @@ import java.util.Set;
 public class SettingActivity extends Activity implements View.OnClickListener{
 
     private Switch mDefaultLauncherSwitch;
+    private Spinner mDefaultScreenSpinner;
+
     private PackageManager pm;
     private boolean isDefault;
     private ResolveInfo mResolveInfo;
@@ -51,7 +65,7 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         View SettingDL = findViewById(R.id.activity_setting_default_launcher);
         SettingDL.setOnClickListener(this);
         mDefaultLauncherSwitch = (Switch) findViewById(R.id.activity_setting_default_launcher_switch);
-
+        mDefaultScreenSpinner = (Spinner) findViewById(R.id.activity_setting_default_screen_spinner);
 
         initValue();
     }
@@ -80,6 +94,31 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         } else {
             mDefaultLauncherSwitch.setChecked(false);
         }
+
+        Launcher launcher = Config.getInstance().getLauncher();
+        int currentScreen = launcher.getCurrentWorkspaceScreen();
+        int totalNum = launcher.getWorkspace().getWorkspaceScreens().size();
+        List<String> list = new ArrayList<String>();
+        for(int i=0;i<totalNum;i++){
+            list.add((i+1)+"");
+        }
+        // 第二个参数表示填充的样式
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, list);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        MySpinnerAdapter adapter = new MySpinnerAdapter(list);
+        mDefaultScreenSpinner.setAdapter(adapter);
+        mDefaultScreenSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("position:"+position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        mDefaultScreenSpinner.setSelection(currentScreen);
     }
 
     @Override
@@ -134,6 +173,49 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         return resolveInfoList;
     }
 
+
+    private class MySpinnerAdapter extends BaseAdapter{
+
+        private List<String> mList;
+        public MySpinnerAdapter(List<String> list){
+            mList = list;
+        }
+        @Override
+        public int getCount() {
+            return mList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if(convertView == null) {
+                convertView = LayoutInflater.from(SettingActivity.this).inflate(R.layout.activity_setting_spinner_item, null);
+                holder = new ViewHolder();
+                holder.mTextView = (TextView) convertView.findViewById(R.id.activity_setting_spinner_item_tv);
+                convertView.setTag(holder);
+            }else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.mTextView.setText(mList.get(position));
+
+            return convertView;
+        }
+    }
+
+    private class ViewHolder{
+        public TextView mTextView;
+    }
 //    /**
 //     * 清除默认桌面（采用先设置一个空的桌面为默认然后在将该空桌面禁用的方式来实现）
 //     * 在网上查的，结果没鸟用

@@ -273,5 +273,6 @@
     <string name="lock_delete_password">Remove password</string>
 
     <string name="setting_default_launcher">Setting the default desktop</string>
+    <string name="setting_default_screen">Setting the default screen</string>
     <string name="application_lock">Application Lock</string>
 </resources>

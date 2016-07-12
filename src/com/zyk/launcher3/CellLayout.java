@@ -139,6 +139,9 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
     private TimeInterpolator mEaseOutInterpolator;
     private ShortcutAndWidgetContainer mShortcutsAndWidgets;
 
+    //zhuyk
+    private ImageView mDefaultScreenButton;
+
     private boolean mIsHotseat = false;
     private float mHotseatScale = 1f;
 
@@ -284,6 +287,21 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
         addView(mTouchFeedbackView);
         addView(mShortcutsAndWidgets);
 
+        //zhuyk
+        mDefaultScreenButton = (ImageView) mLauncher.getLayoutInflater().inflate(
+                R.layout.image_view, this, false /* attachToRoot */);
+        mDefaultScreenButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLauncher.getWorkspace().DefaultScreenButtonOnclick();
+            }
+        });
+        mDefaultScreenButton.setVisibility(View.GONE);
+        addView(mDefaultScreenButton);
+    }
+
+    public void setDefaultScreenButtonVisibility(int visibility){
+        mDefaultScreenButton.setVisibility(visibility);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -614,7 +632,6 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
 
     public boolean addViewToCellLayout(View child, int index, int childId, LayoutParams params,
             boolean markCells) {
-        System.out.println("addViewToCellLayout");
         final LayoutParams lp = params;
 
         // Hotseat icons - remove text
@@ -867,10 +884,13 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
                 MeasureSpec.makeMeasureSpec(newWidth, MeasureSpec.EXACTLY),
                 MeasureSpec.makeMeasureSpec(newHeight, MeasureSpec.EXACTLY));
 
+
+        mDefaultScreenButton.measure(newWidth,newHeight);
+
         int maxWidth = mShortcutsAndWidgets.getMeasuredWidth();
         int maxHeight = mShortcutsAndWidgets.getMeasuredHeight();
         if (mFixedWidth > 0 && mFixedHeight > 0) {
-            setMeasuredDimension(maxWidth, maxHeight);
+            setMeasuredDimension(maxWidth, maxHeight + 100);
         } else {
             setMeasuredDimension(widthSize, heightSize);
         }
@@ -883,12 +903,18 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
         int left = getPaddingLeft() + (int) Math.ceil(offset / 2f);
         int top = getPaddingTop();
 
-        mTouchFeedbackView.layout(left, top,
+        mTouchFeedbackView.layout(left, top ,
                 left + mTouchFeedbackView.getMeasuredWidth(),
                 top + mTouchFeedbackView.getMeasuredHeight());
-        mShortcutsAndWidgets.layout(left, top,
+        mShortcutsAndWidgets.layout(left, top ,
                 left + r - l,
                 top + b - t);
+
+        int center = (r - l)/2;
+        int buttonHeight = mDefaultScreenButton.getMeasuredHeight()/2;
+        int buttonWidth = mDefaultScreenButton.getMeasuredWidth()/2;
+        mDefaultScreenButton.layout(center - buttonWidth, top - buttonHeight,center + buttonWidth,
+                top+ buttonHeight);
     }
 
     @Override

@@ -27,7 +27,7 @@ import com.zyk.launcher3.model.PackageItemInfo;
 public class AppIconTextView extends TextView {
 
 	private IconCache.IconLoadRequest mIconLoadRequest;
-	private Launcher mLauncher = Config.getInstance().mLauncher;
+	private Launcher mLauncher = Config.getInstance().getLauncher();
 	private DeviceProfile mDeviceProfile = mLauncher.getDeviceProfile();
 	private Drawable mIcon;
 
