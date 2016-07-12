@@ -10,6 +10,7 @@ import com.zyk.launcher3.R;
 import com.zyk.launcher3.safety.LockInfo;
 import com.zyk.launcher3.util.BitmapUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
@@ -34,20 +35,23 @@ public class Config {
         mConfig = new Config(launcher);
     }
 
-    public Launcher mLauncher;
+    private WeakReference<Launcher> mLauncherReference;
     public Bitmap iconShape;
     public int iconBg;
     public List<LockInfo> mLockList;
 
     private Config(Launcher launcher){
-        mLauncher = launcher;
+        mLauncherReference = new WeakReference<Launcher>(launcher);
         Resources res = launcher.getResources();
         //FIXME 这里的所有变量 都是可以设置的
 //        iconBg = res.getColor(R.color.icon_bg_color);
 //        iconShape = BitmapUtil.getBitmapFromResources(launcher,R.drawable.shape_rectangle1,launcher.getDeviceProfile().iconSizePx);
 
-        mLockList = LauncherModel.loadLockFromDatabase(mLauncher);
+        mLockList = LauncherModel.loadLockFromDatabase(launcher);
     }
 
+    public Launcher getLauncher(){
+        return mLauncherReference.get();
+    }
 
 }

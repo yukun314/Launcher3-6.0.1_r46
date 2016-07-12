@@ -76,7 +76,7 @@ public class LockActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lock);
 		mInflater = LayoutInflater.from(LockActivity.this);
-		mLauncher = Config.getInstance().mLauncher;
+		mLauncher = Config.getInstance().getLauncher();
 
 		init();
 		initNavigation();

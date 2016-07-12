@@ -72,7 +72,6 @@ import com.zyk.launcher3.compat.UserHandleCompat;
 import com.zyk.launcher3.util.LongArrayMap;
 import com.zyk.launcher3.util.Thunk;
 import com.zyk.launcher3.util.WallpaperUtils;
-import com.zyk.launcher3.widget.MyFrameLayout;
 import com.zyk.launcher3.widget.PendingAddShortcutInfo;
 import com.zyk.launcher3.widget.PendingAddWidgetInfo;
 
@@ -359,7 +358,7 @@ public class Workspace extends PagedView
         int[] size = new int[2];
         if (getChildCount() > 0) {
             // Use the first non-custom page to estimate the child position
-            CellLayout cl = (CellLayout) getChildAt(numCustomPages(), true);
+            CellLayout cl = (CellLayout) getChildAt(numCustomPages());
             Rect r = estimateItemPosition(cl, itemInfo, 0, 0, itemInfo.spanX, itemInfo.spanY);
             size[0] = r.width();
             size[1] = r.height();
@@ -376,7 +375,7 @@ public class Workspace extends PagedView
     }
 
     public Rect estimateItemPosition(CellLayout cl, ItemInfo pendingInfo,
-            int hCell, int vCell, int hSpan, int vSpan) {
+                                     int hCell, int vCell, int hSpan, int vSpan) {
         Rect r = new Rect();
         cl.cellToRect(hCell, vCell, hSpan, vSpan, r);
         return r;
@@ -477,10 +476,6 @@ public class Workspace extends PagedView
 
     @Override
     public void onChildViewAdded(View parent, View child) {
-        if(child instanceof MyFrameLayout){
-            MyFrameLayout mfl = (MyFrameLayout)child;
-            child = mfl.getView();
-        }
         if (!(child instanceof CellLayout)) {
             throw new IllegalArgumentException("A Workspace can only have CellLayout children.");
         }
@@ -492,15 +487,11 @@ public class Workspace extends PagedView
     }
 
     protected boolean shouldDrawChild(View child) {
-        if(child instanceof MyFrameLayout){
-            MyFrameLayout mfl = (MyFrameLayout)child;
-            child = mfl.getView();
-        }
         final CellLayout cl = (CellLayout) child;
         return super.shouldDrawChild(child) &&
-            (mIsSwitchingState ||
-             cl.getShortcutsAndWidgets().getAlpha() > 0 ||
-             cl.getBackgroundAlpha() > 0);
+                (mIsSwitchingState ||
+                        cl.getShortcutsAndWidgets().getAlpha() > 0 ||
+                        cl.getBackgroundAlpha() > 0);
     }
 
     /**
@@ -565,12 +556,9 @@ public class Workspace extends PagedView
         }
         // Inflate the cell layout, but do not add it automatically so that we can get the newly
         // created CellLayout.
-        MyFrameLayout view = (MyFrameLayout) mLauncher.getLayoutInflater().inflate(
-                R.layout.workspace_screen, null, false);
-//        CellLayout newScreen = (CellLayout) mLauncher.getLayoutInflater().inflate(
-//                        R.layout.workspace_screen, this, false /* attachToRoot */);
-        CellLayout newScreen = (CellLayout) view.findViewById(R.id.workspace_screen_celllayout);
-        view.setView(newScreen);
+        CellLayout newScreen = (CellLayout) mLauncher.getLayoutInflater().inflate(
+                R.layout.workspace_screen, this, false /* attachToRoot */);
+
         //zhuyk
 //        ImageView imageView = (ImageView) mLauncher.getLayoutInflater().inflate(R.layout.image_view, newScreen, false);
 //        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
@@ -582,9 +570,7 @@ public class Workspace extends PagedView
         newScreen.setSoundEffectsEnabled(false);
         mWorkspaceScreens.put(screenId, newScreen);
         mScreenOrder.add(insertIndex, screenId);
-        //zhuyk
-//        addView(newScreen, insertIndex);
-        addView(view, insertIndex);
+        addView(newScreen, insertIndex);
 
         LauncherAccessibilityDelegate delegate =
                 LauncherAppState.getInstance().getAccessibilityDelegate();
@@ -594,14 +580,23 @@ public class Workspace extends PagedView
         return screenId;
     }
 
+    //FIXME 待实现 DefaultScreenButton的点击事件
+    public void DefaultScreenButtonOnclick(){
+        System.out.println("mCurrentScreen:"+mCurrentPage);
+    }
+
+    public void setDefaultScreenButtonVisibility(int visibility){
+        int childNum = getChildCount();
+        for(int i = 0; i<childNum;i++) {
+            CellLayout cl = (CellLayout) getChildAt(i);
+            cl.setDefaultScreenButtonVisibility(visibility);
+        }
+    }
+
     public void createCustomContentContainer() {
         System.out.println("createCustomContentContainer");
-        MyFrameLayout view = (MyFrameLayout) mLauncher.getLayoutInflater().inflate(
-                R.layout.workspace_screen, null, false);
-
-//        CellLayout customScreen = (CellLayout)
-//                mLauncher.getLayoutInflater().inflate(R.layout.workspace_screen, this, false);
-        CellLayout customScreen = (CellLayout) view.findViewById(R.id.workspace_screen_celllayout);
+        CellLayout customScreen = (CellLayout)
+                mLauncher.getLayoutInflater().inflate(R.layout.workspace_screen, this, false);
         customScreen.disableDragTarget();
 
 //        //zhuyk
@@ -615,9 +610,7 @@ public class Workspace extends PagedView
         // We want no padding on the custom content
         customScreen.setPadding(0, 0, 0, 0);
 
-        //zhuyk
-//        addFullScreenPage(customScreen);
-        addFullScreenPage(view);
+        addFullScreenPage(customScreen);
 
         // Ensure that the current page and default page are maintained.
         mDefaultPage = mOriginalDefaultPage + 1;
@@ -659,7 +652,7 @@ public class Workspace extends PagedView
     }
 
     public void addToCustomContentPage(View customContent, CustomContentCallbacks callbacks,
-            String description) {
+                                       String description) {
         if (getPageIndexForScreenId(CUSTOM_CONTENT_SCREEN_ID) < 0) {
             throw new RuntimeException("Expected custom content screen to exist");
         }
@@ -754,7 +747,7 @@ public class Workspace extends PagedView
     }
 
     public void removeExtraEmptyScreenDelayed(final boolean animate, final Runnable onComplete,
-            final int delay, final boolean stripEmptyScreens) {
+                                              final int delay, final boolean stripEmptyScreens) {
         if (mLauncher.isWorkspaceLoading()) {
             // Don't strip empty screens if the workspace is still loading
             Launcher.addDumpLog(TAG, "    - workspace loading, skip", true);
@@ -796,7 +789,7 @@ public class Workspace extends PagedView
     }
 
     private void fadeAndRemoveEmptyScreen(int delay, int duration, final Runnable onComplete,
-            final boolean stripEmptyScreens) {
+                                          final boolean stripEmptyScreens) {
         // XXX: Do we need to update LM workspace screens below?
         PropertyValuesHolder alpha = PropertyValuesHolder.ofFloat("alpha", 0f);
         PropertyValuesHolder bgAlpha = PropertyValuesHolder.ofFloat("backgroundAlpha", 0f);
@@ -962,20 +955,20 @@ public class Workspace extends PagedView
 
     // See implementation for parameter definition.
     void addInScreen(View child, long container, long screenId,
-            int x, int y, int spanX, int spanY) {
+                     int x, int y, int spanX, int spanY) {
         addInScreen(child, container, screenId, x, y, spanX, spanY, false, false);
     }
 
     // At bind time, we use the rank (screenId) to compute x and y for hotseat items.
     // See implementation for parameter definition.
     void addInScreenFromBind(View child, long container, long screenId, int x, int y,
-            int spanX, int spanY) {
+                             int spanX, int spanY) {
         addInScreen(child, container, screenId, x, y, spanX, spanY, false, true);
     }
 
     // See implementation for parameter definition.
     void addInScreen(View child, long container, long screenId, int x, int y, int spanX, int spanY,
-            boolean insert) {
+                     boolean insert) {
         addInScreen(child, container, screenId, x, y, spanX, spanY, insert, false);
     }
 
@@ -995,7 +988,7 @@ public class Workspace extends PagedView
      *                          we use the x and y position to compute the rank.
      */
     void addInScreen(View child, long container, long screenId, int x, int y, int spanX, int spanY,
-            boolean insert, boolean computeXYFromRank) {
+                     boolean insert, boolean computeXYFromRank) {
         if (container == LauncherSettings.Favorites.CONTAINER_DESKTOP) {
             if (getScreenWithId(screenId) == null) {
                 Log.e(TAG, "Skipping child, screenId " + screenId + " not found");
@@ -1109,19 +1102,19 @@ public class Workspace extends PagedView
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getAction() & MotionEvent.ACTION_MASK) {
-        case MotionEvent.ACTION_DOWN:
-            mXDown = ev.getX();
-            mYDown = ev.getY();
-            mTouchDownTime = System.currentTimeMillis();
-            break;
-        case MotionEvent.ACTION_POINTER_UP:
-        case MotionEvent.ACTION_UP:
-            if (mTouchState == TOUCH_STATE_REST) {
-                final CellLayout currentPage = (CellLayout) getChildAt(mCurrentPage, true);
-                if (currentPage != null) {
-                    onWallpaperTap(ev);
+            case MotionEvent.ACTION_DOWN:
+                mXDown = ev.getX();
+                mYDown = ev.getY();
+                mTouchDownTime = System.currentTimeMillis();
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+            case MotionEvent.ACTION_UP:
+                if (mTouchState == TOUCH_STATE_REST) {
+                    final CellLayout currentPage = (CellLayout) getChildAt(mCurrentPage);
+                    if (currentPage != null) {
+                        onWallpaperTap(ev);
+                    }
                 }
-            }
         }
         return super.onInterceptTouchEvent(ev);
     }
@@ -1140,7 +1133,7 @@ public class Workspace extends PagedView
     protected void reinflateWidgetsIfNecessary() {
         final int clCount = getChildCount();
         for (int i = 0; i < clCount; i++) {
-            CellLayout cl = (CellLayout) getChildAt(i, true);
+            CellLayout cl = (CellLayout) getChildAt(i);
             ShortcutAndWidgetContainer swc = cl.getShortcutsAndWidgets();
             final int itemCount = swc.getChildCount();
             for (int j = 0; j < itemCount; j++) {
@@ -1320,7 +1313,7 @@ public class Workspace extends PagedView
 
     @Override
     protected void getEdgeVerticalPostion(int[] pos) {
-        View child = getChildAt(getPageCount() - 1, true);
+        View child = getChildAt(getPageCount() - 1);
         pos[0] = child.getTop();
         pos[1] = child.getBottom();
     }
@@ -1599,7 +1592,7 @@ public class Workspace extends PagedView
                 !workspaceInModalState() &&
                 !mIsSwitchingState) {
             for (int i = numCustomPages(); i < getChildCount(); i++) {
-                CellLayout child = (CellLayout) getChildAt(i, true);
+                CellLayout child = (CellLayout) getChildAt(i);
                 if (child != null) {
                     float scrollProgress = getScrollProgress(screenCenter, child, i);
                     float alpha = 1 - Math.abs(scrollProgress);
@@ -1613,7 +1606,7 @@ public class Workspace extends PagedView
     @Override
     public void enableAccessibleDrag(boolean enable) {
         for (int i = 0; i < getChildCount(); i++) {
-            CellLayout child = (CellLayout) getChildAt(i, true);
+            CellLayout child = (CellLayout) getChildAt(i);
             child.enableAccessibleDrag(enable, CellLayout.WORKSPACE_ACCESSIBILITY_DRAG);
         }
 
@@ -1629,7 +1622,7 @@ public class Workspace extends PagedView
             sdt.enableAccessibleDrag(enable);
         }
         mLauncher.getHotseat().getLayout()
-            .enableAccessibleDrag(enable, CellLayout.WORKSPACE_ACCESSIBILITY_DRAG);
+                .enableAccessibleDrag(enable, CellLayout.WORKSPACE_ACCESSIBILITY_DRAG);
     }
 
     public boolean hasCustomContent() {
@@ -1815,7 +1808,7 @@ public class Workspace extends PagedView
         toPage = Math.min(toPage, screenCount - 1);
 
         for (int i = fromPage; i <= toPage; i++) {
-            final CellLayout layout = (CellLayout) getChildAt(i, true);
+            final CellLayout layout = (CellLayout) getChildAt(i);
             layout.setChildrenDrawnWithCacheEnabled(true);
             layout.setChildrenDrawingCacheEnabled(true);
         }
@@ -1824,7 +1817,7 @@ public class Workspace extends PagedView
     void clearChildrenCache() {
         final int screenCount = getChildCount();
         for (int i = 0; i < screenCount; i++) {
-            final CellLayout layout = (CellLayout) getChildAt(i, true);
+            final CellLayout layout = (CellLayout) getChildAt(i);
             layout.setChildrenDrawnWithCacheEnabled(false);
             // In software mode, we don't want the items to continue to be drawn into bitmaps
             if (!isHardwareAccelerated()) {
@@ -1843,7 +1836,7 @@ public class Workspace extends PagedView
                 enableHwLayersOnVisiblePages();
             } else {
                 for (int i = 0; i < getPageCount(); i++) {
-                    final CellLayout cl = (CellLayout) getChildAt(i, true);
+                    final CellLayout cl = (CellLayout) getChildAt(i);
                     cl.enableHardwareLayer(false);
                 }
             }
@@ -1867,7 +1860,7 @@ public class Workspace extends PagedView
 
             final CellLayout customScreen = mWorkspaceScreens.get(CUSTOM_CONTENT_SCREEN_ID);
             for (int i = 0; i < screenCount; i++) {
-                final CellLayout layout = (CellLayout) getPageAt(i,true);
+                final CellLayout layout = (CellLayout) getPageAt(i);
 
                 // enable layers between left and right screen inclusive, except for the
                 // customScreen, which may animate its content during transitions.
@@ -1878,22 +1871,13 @@ public class Workspace extends PagedView
         }
     }
 
-    private View getPageAt(int index,boolean b){
-        View view = getPageAt(index);
-        if(view instanceof MyFrameLayout){
-            MyFrameLayout mfl = (MyFrameLayout)view;
-            view = mfl.getView();
-        }
-        return view;
-    }
-
     public void buildPageHardwareLayers() {
         // force layers to be enabled just for the call to buildLayer
         updateChildrenLayersEnabled(true);
         if (getWindowToken() != null) {
             final int childCount = getChildCount();
             for (int i = 0; i < childCount; i++) {
-                CellLayout cl = (CellLayout) getPageAt(i,true);
+                CellLayout cl = (CellLayout) getChildAt(i);
                 cl.buildHardwareLayer();
             }
         }
@@ -2006,7 +1990,7 @@ public class Workspace extends PagedView
         mScreenOrder.clear();
         int count = getChildCount();
         for (int i = 0; i < count; i++) {
-            CellLayout cl = ((CellLayout) getPageAt(i,true));
+            CellLayout cl = ((CellLayout) getChildAt(i));
             mScreenOrder.add(getIdForScreen(cl));
         }
 
@@ -2040,7 +2024,7 @@ public class Workspace extends PagedView
      * to that new state.
      */
     public Animator setStateWithAnimation(State toState, int toPage, boolean animated,
-            HashMap<View, Integer> layerViews) {
+                                          HashMap<View, Integer> layerViews) {
         // Create the animation to the new state
         Animator workspaceAnim =  mStateTransitionAnimation.getAnimationToState(mState,
                 toState, toPage, animated, layerViews);
@@ -2060,15 +2044,15 @@ public class Workspace extends PagedView
         if (Utilities.ATLEAST_LOLLIPOP) {
             int total = getPageCount();
             for (int i = numCustomPages(); i < total; i++) {
-                updateAccessibilityFlags((CellLayout) getPageAt(i,true), i);
+                updateAccessibilityFlags((CellLayout) getPageAt(i), i);
             }
             setImportantForAccessibility((mState == State.NORMAL || mState == State.OVERVIEW)
                     ? IMPORTANT_FOR_ACCESSIBILITY_AUTO
-                            : IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+                    : IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
         } else {
             int accessible = mState == State.NORMAL ?
                     IMPORTANT_FOR_ACCESSIBILITY_AUTO :
-                        IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS;
+                    IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS;
             setImportantForAccessibility(accessible);
         }
     }
@@ -2087,7 +2071,7 @@ public class Workspace extends PagedView
         } else {
             int accessible = mState == State.NORMAL ?
                     IMPORTANT_FOR_ACCESSIBILITY_AUTO :
-                        IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS;
+                    IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS;
             page.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
             page.getShortcutsAndWidgets().setImportantForAccessibility(accessible);
             page.setContentDescription(null);
@@ -2248,7 +2232,7 @@ public class Workspace extends PagedView
      * Responsibility for the bitmap is transferred to the caller.
      */
     private Bitmap createDragOutline(Bitmap orig, int padding, int w, int h,
-            boolean clipAlpha) {
+                                     boolean clipAlpha) {
         final int outlineColor = getResources().getColor(R.color.outline_color);
         final Bitmap b = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         mCanvas.setBitmap(b);
@@ -2297,7 +2281,7 @@ public class Workspace extends PagedView
     }
 
     public void beginDragShared(View child, Point relativeTouchPos, DragSource source,
-            boolean accessible) {
+                                boolean accessible) {
         child.clearFocus();
         child.setPressed(false);
 
@@ -2315,7 +2299,7 @@ public class Workspace extends PagedView
         float scale = mLauncher.getDragLayer().getLocationInDragLayer(child, mTempXY);
         int dragLayerX = Math.round(mTempXY[0] - (bmpWidth - scale * child.getWidth()) / 2);
         int dragLayerY = Math.round(mTempXY[1] - (bmpHeight - scale * bmpHeight) / 2
-                        - padding.get() / 2);
+                - padding.get() / 2);
 
         DeviceProfile grid = mLauncher.getDeviceProfile();
         Point dragVisualizeOffset = null;
@@ -2537,13 +2521,13 @@ public class Workspace extends PagedView
         boolean aboveShortcut = (dropOverView.getTag() instanceof ShortcutInfo);
         boolean willBecomeShortcut =
                 (info.itemType == LauncherSettings.Favorites.ITEM_TYPE_APPLICATION ||
-                info.itemType == LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT);
+                        info.itemType == LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT);
 
         return (aboveShortcut && willBecomeShortcut);
     }
 
     boolean willAddToExistingUserFolder(Object dragInfo, CellLayout target, int[] targetCell,
-            float distance) {
+                                        float distance) {
         if (distance > mMaxDistanceForFolderCreation) return false;
         View dropOverView = target.getChildAt(targetCell[0], targetCell[1]);
 
@@ -2564,8 +2548,8 @@ public class Workspace extends PagedView
     }
 
     boolean createUserFolderIfNecessary(View newView, long container, CellLayout target,
-            int[] targetCell, float distance, boolean external, DragView dragView,
-            Runnable postAnimationRunnable) {
+                                        int[] targetCell, float distance, boolean external, DragView dragView,
+                                        Runnable postAnimationRunnable) {
         if (distance > mMaxDistanceForFolderCreation) return false;
         View v = target.getChildAt(targetCell[0], targetCell[1]);
 
@@ -2596,7 +2580,7 @@ public class Workspace extends PagedView
             target.removeView(v);
 
             FolderIcon fi =
-                mLauncher.addFolder(target, container, screenId, targetCell[0], targetCell[1]);
+                    mLauncher.addFolder(target, container, screenId, targetCell[0], targetCell[1]);
             destInfo.cellX = -1;
             destInfo.cellY = -1;
             sourceInfo.cellX = -1;
@@ -2617,7 +2601,7 @@ public class Workspace extends PagedView
     }
 
     boolean addToExistingFolderIfNecessary(View newView, CellLayout target, int[] targetCell,
-            float distance, DragObject d, boolean external) {
+                                           float distance, DragObject d, boolean external) {
         if (distance > mMaxDistanceForFolderCreation) return false;
 
         View dropOverView = target.getChildAt(targetCell[0], targetCell[1]);
@@ -2818,7 +2802,7 @@ public class Workspace extends PagedView
                 } else {
                     int duration = snapScreen < 0 ?
                             WorkspaceStateTransitionAnimation.SCROLL_TO_CURRENT_PAGE :
-                                    ADJACENT_SCREEN_DROP_DURATION;
+                            ADJACENT_SCREEN_DROP_DURATION;
                     mLauncher.getDragLayer().animateViewIntoPosition(d.dragView, cell, duration,
                             onCompleteRunnable, this);
                 }
@@ -2834,7 +2818,7 @@ public class Workspace extends PagedView
      * Computes the area relative to dragLayer which is used to display a page.
      */
     public void getPageAreaRelativeToDragLayer(Rect outArea) {
-        CellLayout child = (CellLayout) getChildAt(getNextPage(), true);
+        CellLayout child = (CellLayout) getChildAt(getNextPage());
         if (child == null) {
             return;
         }
@@ -2935,7 +2919,7 @@ public class Workspace extends PagedView
             if (isPageMoving()) {
                 // If the user drops while the page is scrolling, we should use that page as the
                 // destination instead of the page that is being hovered over.
-                mDropToLayout = (CellLayout) getChildAt(getNextPage(), true);
+                mDropToLayout = (CellLayout) getPageAt(getNextPage());
             } else {
                 mDropToLayout = mDragOverlappingLayout;
             }
@@ -2962,7 +2946,7 @@ public class Workspace extends PagedView
     private void enfoceDragParity(String event, int update, int expectedValue) {
         enfoceDragParity(this, event, update, expectedValue);
         for (int i = 0; i < getChildCount(); i++) {
-            enfoceDragParity(getChildAt(i, true), event, update, expectedValue);
+            enfoceDragParity(getChildAt(i), event, update, expectedValue);
         }
     }
 
@@ -3057,63 +3041,63 @@ public class Workspace extends PagedView
         mLastReorderY = -1;
     }
 
-   /*
-    *
-    * Convert the 2D coordinate xy from the parent View's coordinate space to this CellLayout's
-    * coordinate space. The argument xy is modified with the return result.
-    *
-    * if cachedInverseMatrix is not null, this method will just use that matrix instead of
-    * computing it itself; we use this to avoid redundant matrix inversions in
-    * findMatchingPageForDragOver
-    *
-    */
-   void mapPointFromSelfToChild(View v, float[] xy, Matrix cachedInverseMatrix) {
-       xy[0] = xy[0] - v.getLeft();
-       xy[1] = xy[1] - v.getTop();
-   }
+    /*
+	 *
+	 * Convert the 2D coordinate xy from the parent View's coordinate space to this CellLayout's
+	 * coordinate space. The argument xy is modified with the return result.
+	 *
+	 * if cachedInverseMatrix is not null, this method will just use that matrix instead of
+	 * computing it itself; we use this to avoid redundant matrix inversions in
+	 * findMatchingPageForDragOver
+	 *
+	 */
+    void mapPointFromSelfToChild(View v, float[] xy, Matrix cachedInverseMatrix) {
+        xy[0] = xy[0] - v.getLeft();
+        xy[1] = xy[1] - v.getTop();
+    }
 
-   boolean isPointInSelfOverHotseat(int x, int y, Rect r) {
-       if (r == null) {
-           r = new Rect();
-       }
-       mTempPt[0] = x;
-       mTempPt[1] = y;
-       mLauncher.getDragLayer().getDescendantCoordRelativeToSelf(this, mTempPt, true);
+    boolean isPointInSelfOverHotseat(int x, int y, Rect r) {
+        if (r == null) {
+            r = new Rect();
+        }
+        mTempPt[0] = x;
+        mTempPt[1] = y;
+        mLauncher.getDragLayer().getDescendantCoordRelativeToSelf(this, mTempPt, true);
 
-       DeviceProfile grid = mLauncher.getDeviceProfile();
-       r = grid.getHotseatRect();
-       if (r.contains(mTempPt[0], mTempPt[1])) {
-           return true;
-       }
-       return false;
-   }
+        DeviceProfile grid = mLauncher.getDeviceProfile();
+        r = grid.getHotseatRect();
+        if (r.contains(mTempPt[0], mTempPt[1])) {
+            return true;
+        }
+        return false;
+    }
 
-   void mapPointFromSelfToHotseatLayout(Hotseat hotseat, float[] xy) {
-       mTempPt[0] = (int) xy[0];
-       mTempPt[1] = (int) xy[1];
-       mLauncher.getDragLayer().getDescendantCoordRelativeToSelf(this, mTempPt, true);
-       mLauncher.getDragLayer().mapCoordInSelfToDescendent(hotseat.getLayout(), mTempPt);
+    void mapPointFromSelfToHotseatLayout(Hotseat hotseat, float[] xy) {
+        mTempPt[0] = (int) xy[0];
+        mTempPt[1] = (int) xy[1];
+        mLauncher.getDragLayer().getDescendantCoordRelativeToSelf(this, mTempPt, true);
+        mLauncher.getDragLayer().mapCoordInSelfToDescendent(hotseat.getLayout(), mTempPt);
 
-       xy[0] = mTempPt[0];
-       xy[1] = mTempPt[1];
-   }
+        xy[0] = mTempPt[0];
+        xy[1] = mTempPt[1];
+    }
 
-   /*
-    *
-    * Convert the 2D coordinate xy from this CellLayout's coordinate space to
-    * the parent View's coordinate space. The argument xy is modified with the return result.
-    *
-    */
-   void mapPointFromChildToSelf(View v, float[] xy) {
-       xy[0] += v.getLeft();
-       xy[1] += v.getTop();
-   }
+    /*
+	 *
+	 * Convert the 2D coordinate xy from this CellLayout's coordinate space to
+	 * the parent View's coordinate space. The argument xy is modified with the return result.
+	 *
+	 */
+    void mapPointFromChildToSelf(View v, float[] xy) {
+        xy[0] += v.getLeft();
+        xy[1] += v.getTop();
+    }
 
-   static private float squaredDistance(float[] point1, float[] point2) {
+    static private float squaredDistance(float[] point1, float[] point2) {
         float distanceX = point1[0] - point2[0];
         float distanceY = point2[1] - point2[1];
         return distanceX * distanceX + distanceY * distanceY;
-   }
+    }
 
     /*
      *
@@ -3138,7 +3122,7 @@ public class Workspace extends PagedView
                 continue;
             }
 
-            CellLayout cl = (CellLayout) getChildAt(i, true);
+            CellLayout cl = (CellLayout) getChildAt(i);
 
             final float[] touchXy = {originX, originY};
             // Transform the touch coordinates to the CellLayout's local coordinates
@@ -3276,7 +3260,7 @@ public class Workspace extends PagedView
                     targetCellDistance, dragOverView, d.accessibleDrag);
 
             boolean nearestDropOccupied = mDragTargetLayout.isNearestDropLocationOccupied((int)
-                    mDragViewVisualCenter[0], (int) mDragViewVisualCenter[1], item.spanX,
+                            mDragViewVisualCenter[0], (int) mDragViewVisualCenter[1], item.spanX,
                     item.spanY, child, mTargetCell);
 
             if (!nearestDropOccupied) {
@@ -3311,7 +3295,7 @@ public class Workspace extends PagedView
     }
 
     private void manageFolderFeedback(ItemInfo info, CellLayout targetLayout,
-            int[] targetCell, float distance, View dragOverView, boolean accessibleDrag) {
+                                      int[] targetCell, float distance, View dragOverView, boolean accessibleDrag) {
         boolean userFolderPending = willCreateUserFolder(info, targetLayout, targetCell, distance,
                 false);
         if (mDragMode == DRAG_MODE_NONE && userFolderPending &&
@@ -3385,7 +3369,7 @@ public class Workspace extends PagedView
         View child;
 
         public ReorderAlarmListener(float[] dragViewCenter, int minSpanX, int minSpanY, int spanX,
-                int spanY, DragView dragView, View child) {
+                                    int spanY, DragView dragView, View child) {
             this.dragViewCenter = dragViewCenter;
             this.minSpanX = minSpanX;
             this.minSpanY = minSpanY;
@@ -3404,8 +3388,8 @@ public class Workspace extends PagedView
             mLastReorderY = mTargetCell[1];
 
             mTargetCell = mDragTargetLayout.performReorder((int) mDragViewVisualCenter[0],
-                (int) mDragViewVisualCenter[1], minSpanX, minSpanY, spanX, spanY,
-                child, mTargetCell, resultSpan, CellLayout.MODE_DRAG_OVER);
+                    (int) mDragViewVisualCenter[1], minSpanX, minSpanY, spanX, spanY,
+                    child, mTargetCell, resultSpan, CellLayout.MODE_DRAG_OVER);
 
             if (mTargetCell[0] < 0 || mTargetCell[1] < 0) {
                 mDragTargetLayout.revertTempState();
@@ -3415,9 +3399,9 @@ public class Workspace extends PagedView
 
             boolean resize = resultSpan[0] != spanX || resultSpan[1] != spanY;
             mDragTargetLayout.visualizeDropLocation(child, mDragOutline,
-                (int) mDragViewVisualCenter[0], (int) mDragViewVisualCenter[1],
-                mTargetCell[0], mTargetCell[1], resultSpan[0], resultSpan[1], resize,
-                dragView.getDragVisualizeOffset(), dragView.getDragRegion());
+                    (int) mDragViewVisualCenter[0], (int) mDragViewVisualCenter[1],
+                    mTargetCell[0], mTargetCell[1], resultSpan[0], resultSpan[1], resize,
+                    dragView.getDragVisualizeOffset(), dragView.getDragRegion());
         }
     }
 
@@ -3442,7 +3426,7 @@ public class Workspace extends PagedView
     }
 
     private void onDropExternal(int[] touchXY, Object dragInfo,
-            CellLayout cellLayout, boolean insertAtFirst) {
+                                CellLayout cellLayout, boolean insertAtFirst) {
         onDropExternal(touchXY, dragInfo, cellLayout, insertAtFirst, null);
     }
 
@@ -3455,7 +3439,7 @@ public class Workspace extends PagedView
      * to add an item to one of the workspace screens.
      */
     private void onDropExternal(final int[] touchXY, final Object dragInfo,
-            final CellLayout cellLayout, boolean insertAtFirst, DragObject d) {
+                                final CellLayout cellLayout, boolean insertAtFirst, DragObject d) {
         final Runnable exitSpringLoadedRunnable = new Runnable() {
             @Override
             public void run() {
@@ -3474,7 +3458,7 @@ public class Workspace extends PagedView
 
         final long container = mLauncher.isHotseatLayout(cellLayout) ?
                 LauncherSettings.Favorites.CONTAINER_HOTSEAT :
-                    LauncherSettings.Favorites.CONTAINER_DESKTOP;
+                LauncherSettings.Favorites.CONTAINER_DESKTOP;
         final long screenId = getIdForScreen(cellLayout);
         if (!mLauncher.isHotseatLayout(cellLayout)
                 && screenId != getScreenIdForPageIndex(mCurrentPage)
@@ -3493,7 +3477,7 @@ public class Workspace extends PagedView
                         mDragViewVisualCenter[1], mTargetCell);
                 if (willCreateUserFolder((ItemInfo) d.dragInfo, cellLayout, mTargetCell,
                         distance, true) || willAddToExistingUserFolder((ItemInfo) d.dragInfo,
-                                cellLayout, mTargetCell, distance)) {
+                        cellLayout, mTargetCell, distance)) {
                     findNearestVacantCell = false;
                 }
             }
@@ -3556,20 +3540,20 @@ public class Workspace extends PagedView
             View view = null;
 
             switch (info.itemType) {
-            case LauncherSettings.Favorites.ITEM_TYPE_APPLICATION:
-            case LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT:
-                if (info.container == NO_ID && info instanceof AppInfo) {
-                    // Came from all apps -- make a copy
-                    info = ((AppInfo) info).makeShortcut();
-                }
-                view = mLauncher.createShortcut(cellLayout, (ShortcutInfo) info);
-                break;
-            case LauncherSettings.Favorites.ITEM_TYPE_FOLDER:
-                view = FolderIcon.fromXml(R.layout.folder_icon, mLauncher, cellLayout,
-                        (FolderInfo) info, mIconCache);
-                break;
-            default:
-                throw new IllegalStateException("Unknown item type: " + info.itemType);
+                case LauncherSettings.Favorites.ITEM_TYPE_APPLICATION:
+                case LauncherSettings.Favorites.ITEM_TYPE_SHORTCUT:
+                    if (info.container == NO_ID && info instanceof AppInfo) {
+                        // Came from all apps -- make a copy
+                        info = ((AppInfo) info).makeShortcut();
+                    }
+                    view = mLauncher.createShortcut(cellLayout, (ShortcutInfo) info);
+                    break;
+                case LauncherSettings.Favorites.ITEM_TYPE_FOLDER:
+                    view = FolderIcon.fromXml(R.layout.folder_icon, mLauncher, cellLayout,
+                            (FolderInfo) info, mIconCache);
+                    break;
+                default:
+                    throw new IllegalStateException("Unknown item type: " + info.itemType);
             }
 
             // First we find the cell nearest to point at which the item is
@@ -3640,8 +3624,8 @@ public class Workspace extends PagedView
     }
 
     private void getFinalPositionForDropAnimation(int[] loc, float[] scaleXY,
-            DragView dragView, CellLayout layout, ItemInfo info, int[] targetCell,
-            boolean external, boolean scale) {
+                                                  DragView dragView, CellLayout layout, ItemInfo info, int[] targetCell,
+                                                  boolean external, boolean scale) {
         // Now we animate the dragView, (ie. the widget or shortcut preview) into its final
         // location and size on the home screen.
         int spanX = info.spanX;
@@ -3676,8 +3660,8 @@ public class Workspace extends PagedView
     }
 
     public void animateWidgetDrop(ItemInfo info, CellLayout cellLayout, DragView dragView,
-            final Runnable onCompleteRunnable, int animationType, final View finalView,
-            boolean external) {
+                                  final Runnable onCompleteRunnable, int animationType, final View finalView,
+                                  boolean external) {
         Rect from = new Rect();
         mLauncher.getDragLayer().getViewRectRelativeToSelf(dragView, from);
 
@@ -3753,7 +3737,7 @@ public class Workspace extends PagedView
      * screen while a scroll is in progress.
      */
     public CellLayout getCurrentDropLayout() {
-        return (CellLayout) getChildAt(getNextPage(), true);
+        return (CellLayout) getChildAt(getNextPage());
     }
 
     /**
@@ -3776,7 +3760,7 @@ public class Workspace extends PagedView
      * pixelX and pixelY should be in the coordinate system of layout
      */
     @Thunk int[] findNearestArea(int pixelX, int pixelY,
-            int spanX, int spanY, CellLayout layout, int[] recycle) {
+                                 int spanX, int spanY, CellLayout layout, int[] recycle) {
         return layout.findNearestArea(
                 pixelX, pixelY, spanX, spanY, recycle);
     }
@@ -3794,7 +3778,7 @@ public class Workspace extends PagedView
      * Called at the end of a drag which originated on the workspace.
      */
     public void onDropCompleted(final View target, final DragObject d,
-            final boolean isFlingToDelete, final boolean success) {
+                                final boolean isFlingToDelete, final boolean success) {
         if (mDeferDropAfterUninstall) {
             mDeferredAction = new Runnable() {
                 public void run() {
@@ -3890,7 +3874,7 @@ public class Workspace extends PagedView
         saveWorkspaceScreenToDb((CellLayout) mLauncher.getHotseat().getLayout());
         int count = getChildCount();
         for (int i = 0; i < count; i++) {
-            CellLayout cl = (CellLayout) getChildAt(i, true);
+            CellLayout cl = (CellLayout) getChildAt(i);
             saveWorkspaceScreenToDb(cl);
         }
     }
@@ -3972,7 +3956,7 @@ public class Workspace extends PagedView
     public void restoreInstanceStateForChild(int child) {
         if (mSavedStates != null) {
             mRestoredPages.add(child);
-            CellLayout cl = (CellLayout) getChildAt(child, true);
+            CellLayout cl = (CellLayout) getChildAt(child);
             if (cl != null) {
                 cl.restoreInstanceState(mSavedStates);
             }
@@ -3988,20 +3972,6 @@ public class Workspace extends PagedView
         }
         mRestoredPages.clear();
         mSavedStates = null;
-    }
-
-    /**
-     * @param index
-     * @param a 没有使用 只是为了区别开 getChildAt方法
-     * @return
-     */
-    private View getChildAt(int index,boolean a){
-        View view = getChildAt(index);
-        if(view instanceof MyFrameLayout) {
-            MyFrameLayout mfl = (MyFrameLayout)view;
-            view = mfl.getView();
-        }
-        return view;
     }
 
     @Override
@@ -4043,7 +4013,7 @@ public class Workspace extends PagedView
             mInScrollArea = true;
 
             final int page = getNextPage() +
-                       (direction == DragController.SCROLL_LEFT ? -1 : 1);
+                    (direction == DragController.SCROLL_LEFT ? -1 : 1);
             // We always want to exit the current layout to ensure parity of enter / exit
             setCurrentDropLayout(null);
 
@@ -4053,7 +4023,7 @@ public class Workspace extends PagedView
                     return false;
                 }
 
-                CellLayout layout = (CellLayout) getChildAt(page, true);
+                CellLayout layout = (CellLayout) getChildAt(page);
                 setCurrentDragOverlappingLayout(layout);
 
                 // Workspace is responsible for drawing the edge glow on adjacent pages,
@@ -4105,7 +4075,7 @@ public class Workspace extends PagedView
         ArrayList<CellLayout> layouts = new ArrayList<CellLayout>();
         int screenCount = getChildCount();
         for (int screen = 0; screen < screenCount; screen++) {
-            layouts.add(((CellLayout) getChildAt(screen, true)));
+            layouts.add(((CellLayout) getChildAt(screen)));
         }
         if (mLauncher.getHotseat() != null) {
             layouts.add(mLauncher.getHotseat().getLayout());
@@ -4123,7 +4093,7 @@ public class Workspace extends PagedView
                 new ArrayList<ShortcutAndWidgetContainer>();
         int screenCount = getChildCount();
         for (int screen = 0; screen < screenCount; screen++) {
-            childrenLayouts.add(((CellLayout)getChildAt(screen, true)).getShortcutsAndWidgets());
+            childrenLayouts.add(((CellLayout) getChildAt(screen)).getShortcutsAndWidgets());
         }
         if (mLauncher.getHotseat() != null) {
             childrenLayouts.add(mLauncher.getHotseat().getLayout().getShortcutsAndWidgets());
@@ -4202,7 +4172,7 @@ public class Workspace extends PagedView
     }
 
     public void disableShortcutsByPackageName(final ArrayList<String> packages,
-            final UserHandleCompat user, final int reason) {
+                                              final UserHandleCompat user, final int reason) {
         final HashSet<String> packageNames = new HashSet<String>();
         packageNames.addAll(packages);
 
@@ -4272,7 +4242,7 @@ public class Workspace extends PagedView
      * shortcuts are not removed.
      */
     void removeItemsByComponentName(final HashSet<ComponentName> componentNames,
-            final UserHandleCompat user) {
+                                    final UserHandleCompat user) {
         ArrayList<CellLayout> cellLayouts = getWorkspaceAndHotseatCellLayouts();
         for (final CellLayout layoutParent: cellLayouts) {
             final ViewGroup layout = layoutParent.getShortcutsAndWidgets();
@@ -4471,7 +4441,7 @@ public class Workspace extends PagedView
                 setCurrentPage(page);
             }
         }
-        View child = getChildAt(page, true);
+        View child = getChildAt(page);
         if (child != null) {
             child.requestFocus();
         }
@@ -4489,11 +4459,11 @@ public class Workspace extends PagedView
             } else {
                 setCurrentPage(ccIndex);
             }
-            View child = getChildAt(ccIndex, true);
+            View child = getChildAt(ccIndex);
             if (child != null) {
                 child.requestFocus();
             }
-         }
+        }
         exitWidgetResizeMode();
     }
 
@@ -4549,6 +4519,11 @@ public class Workspace extends PagedView
         return mDefaultPage;
     }
 
+    public LongArrayMap getWorkspaceScreens(){
+        return mWorkspaceScreens;
+    }
+
+
     /**
      * Used as a workaround to ensure that the AppWidgetService receives the
      * PACKAGE_ADDED broadcast before updating widgets.
@@ -4561,7 +4536,7 @@ public class Workspace extends PagedView
         private boolean mRefreshPending;
 
         public DeferredWidgetRefresh(ArrayList<LauncherAppWidgetInfo> infos,
-                LauncherAppWidgetHost host) {
+                                     LauncherAppWidgetHost host) {
             mInfos = infos;
             mHost = host;
             mHandler = new Handler();
