@@ -313,6 +313,14 @@ public class WorkspaceStateTransitionAnimation {
 
         mNewScale = 1.0f;
 
+        System.out.println("animateWorkspace stateIsOverview:"+states.stateIsOverview);
+        //zhuyk
+        if(states.stateIsOverview){
+            mLauncher.getWorkspace().setDefaultScreenButtonVisibility(View.VISIBLE);
+        }else {
+            mLauncher.getWorkspace().setDefaultScreenButtonVisibility(View.GONE);
+        }
+
         if (states.oldStateIsOverview) {
             mWorkspace.disableFreeScroll();
         } else if (states.stateIsOverview) {

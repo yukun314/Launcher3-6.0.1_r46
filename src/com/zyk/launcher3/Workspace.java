@@ -327,7 +327,11 @@ public class Workspace extends PagedView
                 res.getInteger(R.integer.config_workspaceSpringLoadShrinkPercentage) / 100.0f;
         mOverviewModeShrinkFactor =
                 res.getInteger(R.integer.config_workspaceOverviewShrinkPercentage) / 100f;
-        mOriginalDefaultPage = mDefaultPage = a.getInt(R.styleable.Workspace_defaultScreen, 1);
+
+        //zhuyk
+        SharedPreferences  defaultScreenIdPreference = mLauncher.getSharedPreferences("defaultScreenId", Context.MODE_PRIVATE);
+//        mOriginalDefaultPage = mDefaultPage =  a.getInt(R.styleable.Workspace_defaultScreen, 1);
+        mOriginalDefaultPage = mDefaultPage = defaultScreenIdPreference.getInt("key", a.getInt(R.styleable.Workspace_defaultScreen, 1));
         a.recycle();
 
         setOnHierarchyChangeListener(this);
@@ -568,6 +572,7 @@ public class Workspace extends PagedView
         newScreen.setOnLongClickListener(mLongClickListener);
         newScreen.setOnClickListener(mLauncher);
         newScreen.setSoundEffectsEnabled(false);
+        newScreen.setScreenId((int)screenId);
         mWorkspaceScreens.put(screenId, newScreen);
         mScreenOrder.add(insertIndex, screenId);
         addView(newScreen, insertIndex);
@@ -580,17 +585,37 @@ public class Workspace extends PagedView
         return screenId;
     }
 
-    //FIXME 待实现 DefaultScreenButton的点击事件
-    public void DefaultScreenButtonOnclick(){
-        System.out.println("mCurrentScreen:"+mCurrentPage);
-    }
-
+    private boolean isDefaultScreenButtonVisibility = false;
     public void setDefaultScreenButtonVisibility(int visibility){
+        if(visibility == View.VISIBLE) {
+            isDefaultScreenButtonVisibility = true;
+        } else {
+            isDefaultScreenButtonVisibility = false;
+        }
         int childNum = getChildCount();
         for(int i = 0; i<childNum;i++) {
             CellLayout cl = (CellLayout) getChildAt(i);
             cl.setDefaultScreenButtonVisibility(visibility);
+            if(visibility == View.VISIBLE){
+                if(i == mDefaultPage){
+                    cl.setDefaultScreenButtonImage(R.drawable.home_select);
+                }else {
+                    cl.setDefaultScreenButtonImage(R.drawable.home_unselect);
+                }
+            }
         }
+    }
+
+    public void resetDefaultScreenButtonImage() {
+        int childNum = getChildCount();
+        for (int i = 0; i < childNum; i++) {
+            CellLayout cl = (CellLayout) getChildAt(i);
+            cl.setDefaultScreenButtonImage(R.drawable.home_unselect);
+        }
+    }
+
+    public boolean isDefaultScreenButtonVisibilty(){
+        return isDefaultScreenButtonVisibility;
     }
 
     public void createCustomContentContainer() {
@@ -4513,6 +4538,7 @@ public class Workspace extends PagedView
     //add by zhuyk
     public void setDefaultScreen(int defaultPage){
         mDefaultPage = defaultPage;
+        mOriginalDefaultPage = defaultPage;
     }
 
     public int getDefaultScreen(){

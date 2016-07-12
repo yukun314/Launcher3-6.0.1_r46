@@ -24,6 +24,7 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -141,6 +142,7 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
 
     //zhuyk
     private ImageView mDefaultScreenButton;
+    private int mScreenId = -1;
 
     private boolean mIsHotseat = false;
     private float mHotseatScale = 1f;
@@ -293,15 +295,28 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
         mDefaultScreenButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mLauncher.getWorkspace().DefaultScreenButtonOnclick();
+                System.out.println("currentPage:"+mScreenId);
+                int id = mScreenId -1;
+                mLauncher.getWorkspace().setDefaultScreen(id);
+                SharedPreferences defaultScreenIdPreference = mLauncher.getSharedPreferences("defaultScreenId", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = defaultScreenIdPreference.edit();
+                editor.putInt("key",id);
+                editor.commit();
+                mLauncher.getWorkspace().resetDefaultScreenButtonImage();
+                mDefaultScreenButton.setImageResource(R.drawable.home_select);
             }
         });
+        mDefaultScreenButton.setImageResource(R.drawable.home_unselect);
         mDefaultScreenButton.setVisibility(View.GONE);
         addView(mDefaultScreenButton);
     }
 
     public void setDefaultScreenButtonVisibility(int visibility){
         mDefaultScreenButton.setVisibility(visibility);
+    }
+
+    public void setDefaultScreenButtonImage(int id){
+        mDefaultScreenButton.setImageResource(id);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -344,11 +359,31 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (mUseTouchHelper ||
-                (mInterceptTouchListener != null && mInterceptTouchListener.onTouch(this, ev))) {
-            return true;
+        boolean isVisibility = mDefaultScreenButton.getVisibility() == View.VISIBLE;
+        boolean isInternal = isInternal(ev);
+        if(isVisibility && isInternal){
+            return false;
+        }else {
+            if (mUseTouchHelper ||
+                    (mInterceptTouchListener != null && mInterceptTouchListener.onTouch(this, ev)) && mDefaultScreenButton.onTouchEvent(ev)) {
+                return true;
+            }
+            return false;
         }
-        return false;
+    }
+
+    private boolean isInternal(MotionEvent ev){
+        int left = mDefaultScreenButton.getLeft();
+        int right = mDefaultScreenButton.getRight();
+        int top = mDefaultScreenButton.getTop();
+        int bottom = mDefaultScreenButton.getBottom();
+        float x = ev.getX();
+        float y = ev.getY();
+        if(x > left && x < right && y > top && y < bottom){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -885,7 +920,13 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
                 MeasureSpec.makeMeasureSpec(newHeight, MeasureSpec.EXACTLY));
 
 
-        mDefaultScreenButton.measure(newWidth,newHeight);
+        mDefaultScreenButton.measure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY));
+
+        //zhuyk
+        int dsbWidth = mDefaultScreenButton.getLayoutParams().width;
+        int dsbHeight = mDefaultScreenButton.getLayoutParams().height;
+        measureChildWithMargins(mDefaultScreenButton, widthSize, dsbWidth, heightSize, dsbHeight);
 
         int maxWidth = mShortcutsAndWidgets.getMeasuredWidth();
         int maxHeight = mShortcutsAndWidgets.getMeasuredHeight();
@@ -911,10 +952,10 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
                 top + b - t);
 
         int center = (r - l)/2;
-        int buttonHeight = mDefaultScreenButton.getMeasuredHeight()/2;
+        int buttonHeight = mDefaultScreenButton.getMeasuredHeight()/4;
         int buttonWidth = mDefaultScreenButton.getMeasuredWidth()/2;
         mDefaultScreenButton.layout(center - buttonWidth, top - buttonHeight,center + buttonWidth,
-                top+ buttonHeight);
+                top+ buttonHeight*3);
     }
 
     @Override
@@ -2983,4 +3024,13 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
 
         return true;
     }
+
+    public void setScreenId(int id){
+        mScreenId = id;
+    }
+
+    public long getScreenId(){
+        return mScreenId;
+    }
+
 }

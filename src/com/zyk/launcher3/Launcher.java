@@ -2506,8 +2506,8 @@ public class Launcher extends Activity
         if (v instanceof Workspace) {
             if (mWorkspace.isInOverviewMode()) {
                 showWorkspace(true);
+                return;
             }
-            return;
         }
 
         if (v instanceof CellLayout) {
@@ -2535,6 +2535,7 @@ public class Launcher extends Activity
 //            Toast.makeText(Launcher.this,"点击了LockButton",Toast.LENGTH_SHORT).show();
             onClickLockButton(v);
         }
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -3418,6 +3419,7 @@ public class Launcher extends Activity
 
     void showOverviewMode(boolean animated) {
         mWorkspace.setVisibility(View.VISIBLE);
+        //zhuyk
 //        mStateTransitionAnimation.startAnimationToWorkspace(mState, mWorkspace.getState(),
 //                Workspace.State.OVERVIEW,
 //                WorkspaceStateTransitionAnimation.SCROLL_TO_CURRENT_PAGE, animated,
