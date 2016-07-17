@@ -63,9 +63,10 @@
     <uses-permission android:name="com.zyk.launcher3.permission.RECEIVE_LAUNCH_BROADCASTS" />
     <uses-permission android:name="com.zyk.launcher3.permission.RECEIVE_FIRST_LOAD_BROADCAST" />
 
-    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- <uses-permission android:name="android.permission.SET_PREFERRED_APPLICATIONS"/> -->
     <application
         android:allowBackup="@bool/enable_backup"
@@ -236,6 +237,10 @@
         <activity
             android:name=".setting.HelpFeedbackActivity"
             android:theme="@style/SettingTheme" />
+
+        <activity
+            android:name=".setting.AboutActivity"
+            android:theme="@style/Theme" />
     </application>
 
 </manifest>

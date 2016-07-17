@@ -187,7 +187,7 @@ public class LauncherStateTransitionAnimation {
                 toWorkspaceState != Workspace.State.OVERVIEW) {
             Log.e(TAG, "Unexpected call to startAnimationToWorkspace");
         }
-
+        System.out.println("startAnimationToWorkspace page:"+toWorkspacePage);
         if (fromState == Launcher.State.APPS || fromState == Launcher.State.APPS_SPRING_LOADED) {
             startAnimationToWorkspaceFromAllApps(fromWorkspaceState, toWorkspaceState, toWorkspacePage,
                     animated, onCompleteRunnable);
@@ -456,7 +456,7 @@ public class LauncherStateTransitionAnimation {
     private void startAnimationToWorkspaceFromWidgets(final Workspace.State fromWorkspaceState,
             final Workspace.State toWorkspaceState, final int toWorkspacePage,
             final boolean animated, final Runnable onCompleteRunnable) {
-        System.out.println("startAnimationToWorkspaceFromWidgets");
+        System.out.println("startAnimationToWorkspaceFromWidgets toWorkspacePage:"+toWorkspacePage);
         final WidgetsContainerView widgetsView = mLauncher.getWidgetsView();
         PrivateTransitionCallbacks cb = new PrivateTransitionCallbacks() {
             @Override
@@ -488,7 +488,7 @@ public class LauncherStateTransitionAnimation {
             final View fromView, final View contentView, final View revealView,
             final View overlaySearchBarView, final boolean animated, final Runnable onCompleteRunnable,
             final PrivateTransitionCallbacks pCb) {
-        System.out.println("startAnimationToWorkspaceFromOverlay");
+        System.out.println("startAnimationToWorkspaceFromOverlay toWorkspacePage:"+toWorkspacePage);
         final AnimatorSet animation = LauncherAnimUtils.createAnimatorSet();
         final Resources res = mLauncher.getResources();
         final boolean material = Utilities.ATLEAST_LOLLIPOP;

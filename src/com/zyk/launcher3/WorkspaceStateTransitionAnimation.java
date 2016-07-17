@@ -249,7 +249,6 @@ public class WorkspaceStateTransitionAnimation {
         int workspaceDuration = getAnimationDuration(states);
         animateWorkspace(states, toPage, animated, workspaceDuration, layerViews,
                 accessibilityEnabled);
-        System.out.println("states:"+states);
         animateBackgroundGradient(states, animated, BACKGROUND_FADE_OUT_DURATION);
         return mStateAnimator;
     }
@@ -334,7 +333,6 @@ public class WorkspaceStateTransitionAnimation {
                 mNewScale = mOverviewModeShrinkFactor;
             }
         }
-
         if (toPage == SCROLL_TO_CURRENT_PAGE) {
             toPage = mWorkspace.getPageNearestToCenterOfScreen();
         }
@@ -514,6 +512,7 @@ public class WorkspaceStateTransitionAnimation {
                 AlphaUpdateListener.updateVisibility(pageIndicator, accessibilityEnabled);
             }
             mWorkspace.updateCustomContentVisibility();
+            System.out.println("mNewScale:"+mNewScale);
             mWorkspace.setScaleX(mNewScale);
             mWorkspace.setScaleY(mNewScale);
             mWorkspace.setTranslationY(finalWorkspaceTranslationY);

@@ -332,6 +332,7 @@ public class Workspace extends PagedView
         SharedPreferences  defaultScreenIdPreference = mLauncher.getSharedPreferences("defaultScreenId", Context.MODE_PRIVATE);
 //        mOriginalDefaultPage = mDefaultPage =  a.getInt(R.styleable.Workspace_defaultScreen, 1);
         mOriginalDefaultPage = mDefaultPage = defaultScreenIdPreference.getInt("key", a.getInt(R.styleable.Workspace_defaultScreen, 1));
+        System.out.println("构造方法 mDefaultPage:"+mDefaultPage);
         a.recycle();
 
         setOnHierarchyChangeListener(this);
@@ -572,6 +573,7 @@ public class Workspace extends PagedView
         newScreen.setOnLongClickListener(mLongClickListener);
         newScreen.setOnClickListener(mLauncher);
         newScreen.setSoundEffectsEnabled(false);
+        System.out.println("insertNewWorkspaceScreen screenId long:"+screenId+"  int:"+((int)screenId));
         newScreen.setScreenId((int)screenId);
         mWorkspaceScreens.put(screenId, newScreen);
         mScreenOrder.add(insertIndex, screenId);
@@ -587,6 +589,7 @@ public class Workspace extends PagedView
 
     private boolean isDefaultScreenButtonVisibility = false;
     public void setDefaultScreenButtonVisibility(int visibility){
+        System.out.println("setDefaultScreenButtonVisibility mDefaultPage:"+mDefaultPage);
         if(visibility == View.VISIBLE) {
             isDefaultScreenButtonVisibility = true;
         } else {
@@ -4539,6 +4542,7 @@ public class Workspace extends PagedView
     public void setDefaultScreen(int defaultPage){
         mDefaultPage = defaultPage;
         mOriginalDefaultPage = defaultPage;
+        System.out.println("setDefaultScreen mdefaultPage:"+mDefaultPage);
     }
 
     public int getDefaultScreen(){

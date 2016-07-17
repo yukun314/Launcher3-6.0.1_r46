@@ -3426,8 +3426,9 @@ public class Launcher extends Activity
 //                null /* onCompleteRunnable */);
         mStateTransitionAnimation.startAnimationToWorkspace(mState, mWorkspace.getState(),
                 Workspace.State.OVERVIEW,
-                mWorkspace.getDefaultScreen(), animated,
+                mWorkspace.getCurrentPage(), animated,
                 null /* onCompleteRunnable */);
+        /*这里如果使用 getDefaultScreen() 会导致滚动后 显示位置不正确*/
         mState = State.WORKSPACE;
     }
 

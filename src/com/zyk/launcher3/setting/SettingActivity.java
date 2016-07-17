@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zyk.launcher3.CellLayout;
 import com.zyk.launcher3.Launcher;
@@ -65,6 +66,9 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         SettingDL.setOnClickListener(this);
         mDefaultLauncherSwitch = (Switch) findViewById(R.id.activity_setting_default_launcher_switch);
 
+        View about = findViewById(R.id.activity_setting_about);
+        about.setOnClickListener(this);
+
         initValue();
     }
 
@@ -97,10 +101,17 @@ public class SettingActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.activity_setting_default_launcher) {
+        int id = v.getId();
+        if(id == R.id.activity_setting_default_launcher) {
             if(!isDefault) {
                 setDefaultL();
+            }else {
+                Toast.makeText(SettingActivity.this, "IS桌面已经是默认桌面不需要再设置", Toast.LENGTH_SHORT).show();
             }
+        } else if(id == R.id.activity_setting_about) {
+            Intent intent = new Intent();
+            intent.setClass(SettingActivity.this, AboutActivity.class);
+            SettingActivity.this.startActivity(intent);
         }
     }
 

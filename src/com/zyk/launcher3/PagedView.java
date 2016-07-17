@@ -2058,9 +2058,8 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
     protected void snapToPage(int whichPage, int duration, boolean immediate,
             TimeInterpolator interpolator) {
         whichPage = validateNewPage(whichPage);
-
         int newX = getScrollForPage(whichPage);
-        final int delta = newX - getScrollX();
+        int delta = newX - getScrollX();
         snapToPage(whichPage, delta, duration, immediate, interpolator);
     }
 
@@ -2096,7 +2095,7 @@ public abstract class PagedView extends ViewGroup implements ViewGroup.OnHierarc
         } else {
             mScroller.setInterpolator(mDefaultInterpolator);
         }
-
+//        System.out.println("startX:"+getScrollX()+"  dx:"+delta+"  width:"+width+"  whichPage:"+whichPage);
         mScroller.startScroll(getScrollX(), 0, delta, 0, duration);
 
         updatePageIndicator();

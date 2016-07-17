@@ -17,14 +17,38 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zyk.launcher3.R;
+import com.zyk.launcher3.json.Content;
+import com.zyk.launcher3.json.Contents;
+import com.zyk.launcher3.json.Version;
+
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zyk on 2016/7/3.
  */
 public class HelpFeedbackActivity extends Activity {
-
+    private String baseURL = "https://yukun314.github.io/launcher3";
+    private String filePath ;
     private ProgressBar progressbar;
     WebView mWebView;
 
@@ -38,7 +62,34 @@ public class HelpFeedbackActivity extends Activity {
         mWebView.addView(progressbar);
         initNavigation();
         setWebView();
-        mWebView.loadUrl("https://yukun314.github.io/launcher3/help.html");
+        File file = getExternalFilesDir("");
+        filePath = file.getAbsolutePath();
+        File helpFile = new File(filePath,"help.html");
+        if(helpFile.exists()){
+            String data = "";
+            try {
+                FileInputStream fis = new FileInputStream(helpFile);
+                StringBuffer out = new StringBuffer();
+                byte[] b = new byte[1024];
+                for (int n; (n = fis.read(b)) != -1; ) {
+                    out.append(new String(b, 0, n));
+                }
+                fis.close();
+                data = new String(out.toString().getBytes(),"UTF-8");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String baseURL = "file://"+filePath+"/";
+            System.out.println("baseURL:"+baseURL);
+            mWebView.loadDataWithBaseURL(baseURL, data, "text/html", "utf-8",null);
+        }else{
+            mWebView.loadUrl("https://yukun314.github.io/launcher3/help.html");
+        }
+
+        loadData();
     }
 
     @Override
@@ -48,6 +99,125 @@ public class HelpFeedbackActivity extends Activity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void loadData() {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                String str = downloadData(baseURL + "/version.json");
+                if (str != null && !str.equals("error")) {
+                    Gson json = new Gson();
+                    Version version = json.fromJson(str, Version.class);
+                    int oldVersion = toVersion(filePath);
+                    if (oldVersion < version.version) {//有新版本
+                        //把version保存到本地
+                        version.savaFile(filePath, "version.json");
+                        String cs = downloadData(baseURL + "/" + version.url);
+                        Gson cjson = new Gson();
+                        Type type = new TypeToken<List<Content>>() {
+                        }.getType();
+                        List<Content> contents = cjson.fromJson(cs, type);
+                        System.out.println("contents.size:" + contents.size());
+                        for (Content c : contents) {
+                            downloadAndSaveData(baseURL + "/" + c.url, filePath + "/" + c.url);
+                        }
+                        System.out.println("cs:" + cs);
+                    }
+                }
+            }
+        }.start();
+    }
+
+    private int toVersion(String filePath){
+        int version = 0;
+        try {
+            File file = new File(filePath,"version.json");
+            if(file!= null && file.exists()) {
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+                Version v = (Version) ois.readObject();
+                version = v.version;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return version;
+    }
+
+    private String downloadData(String urlString) {
+        try {
+            URL url = new URL(urlString);
+            //打开到url的连接
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            //以下为java IO部分，大体来说就是先检查文件夹是否存在，不存在则创建,然后的文件名重复问题，没有考虑
+            InputStream in = connection.getInputStream();
+            StringBuffer out = new StringBuffer();
+            byte[] b = new byte[512];
+            for (int n; (n = in.read(b)) != -1; ) {
+                out.append(new String(b, 0, n));
+            }
+            in.close();
+            return out.toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "error";
+    }
+
+    /**
+     * @param urlString 文件的网络全路径
+     * @param filePath 保存到本地的全路径
+     */
+    private void downloadAndSaveData(String urlString, String filePath) {
+        OutputStream output = null;
+        InputStream in = null;
+        try {
+            URL url = new URL(urlString);
+            //打开到url的连接
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            //以下为java IO部分，大体来说就是先检查文件夹是否存在，不存在则创建,然后的文件名重复问题，没有考虑
+            in = connection.getInputStream();
+            File file = new File(filePath);
+            File dir = file.getParentFile();
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            if(!file.exists()) {
+                file.createNewFile();
+            }
+            output = new FileOutputStream(file);
+            byte[] buffer = new byte[1024*5];
+            int length;
+            while((length=(in.read(buffer))) >0){
+                output.write(buffer,0,length);
+            }
+            //下面的方法会导致文件的内容改变
+//            while (in.read(buffer) != -1) {
+//                output.write(buffer);
+//            }
+            output.flush();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if(output != null) {
+                    output.close();
+                }
+                if(in != null ) {
+                    in.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private void initNavigation(){
@@ -82,6 +252,7 @@ public class HelpFeedbackActivity extends Activity {
         // 开启 Application Caches 功能
         ws.setAppCacheEnabled(true);
 
+        ws.setAllowFileAccess(true);// 设置允许访问文件数据
         //设置适应屏幕
         ws.setUseWideViewPort(true);
         ws.setLoadWithOverviewMode(true);

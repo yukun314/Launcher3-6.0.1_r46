@@ -295,8 +295,10 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
         mDefaultScreenButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("currentPage:"+mScreenId);
-                int id = mScreenId -1;
+
+                int id = mScreenId;
+                id = id<=0?0:id;
+//                System.out.println("currentPage:"+mScreenId+"  id:"+id);
                 mLauncher.getWorkspace().setDefaultScreen(id);
                 SharedPreferences defaultScreenIdPreference = mLauncher.getSharedPreferences("defaultScreenId", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = defaultScreenIdPreference.edit();
@@ -3026,6 +3028,7 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
     }
 
     public void setScreenId(int id){
+        System.out.println("setScreenId mScreenId:"+id);
         mScreenId = id;
     }
 
