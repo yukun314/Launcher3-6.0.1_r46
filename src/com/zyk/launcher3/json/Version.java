@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class Version implements Serializable{
 
-    public int version;//版本好
+    public int version;//版本号
     public String url;//该版本对应的contents列表的相对地址
 
     /**

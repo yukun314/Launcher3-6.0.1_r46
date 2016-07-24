@@ -11,14 +11,66 @@
         android:id="@+id/activity_about_navigation"
         layout="@layout/activity_navigation"/>
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/activity_about_banben"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/activity_about_navigation"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/widgets_view_item_text_color"
+            android:drawableTop="@mipmap/icon"
+            android:textSize="21sp"
+            android:text="IS桌面"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/widgets_view_item_text_color"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:text="版本号:8.0.1"/>
+    </LinearLayout>
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/activity_about_dashang"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/activity_about_navigation"
-        android:textColor="@color/widgets_view_item_text_color"
-        android:layout_marginTop="20dp"
-        android:textSize="30sp"
-        android:text="IS桌面"/>
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/activity_about_dashang_tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="14sp"
+            android:textColor="@color/widgets_view_item_text_color"
+            android:text="@string/setting_about_weixin"/>
+
+        <TextView
+            android:id="@+id/activity_about_dashang_tv3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:layout_toRightOf="@id/activity_about_dashang_tv2"
+            android:textSize="18sp"
+            android:textColor="@color/widgets_view_item_text_color"
+            android:text="@string/setting_about_save"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

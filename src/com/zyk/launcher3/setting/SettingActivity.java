@@ -2,6 +2,7 @@ package com.zyk.launcher3.setting;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.PatternMatcher;
 import android.provider.Settings;
 import android.util.Log;
@@ -27,14 +30,23 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.zyk.launcher3.BuildConfig;
 import com.zyk.launcher3.CellLayout;
 import com.zyk.launcher3.Launcher;
 import com.zyk.launcher3.R;
 import com.zyk.launcher3.config.Config;
+import com.zyk.launcher3.json.ApkVersion;
 import com.zyk.launcher3.util.LongArrayMap;
+import com.zyk.launcher3.widget.UpdateDialog;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -52,6 +64,37 @@ public class SettingActivity extends Activity implements View.OnClickListener{
     private boolean isDefault;
     private ResolveInfo mResolveInfo;
 
+    private ProgressDialog mProgressDialog;
+    private UpdateDialog mUpdateDialog;
+    private Thread checkUpdateThread;
+
+    private final int noupdate = 0;
+    private final int haveupdate = 1;
+    private final int error = 3;
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int what = msg.what;
+            if(what == noupdate){
+                Toast.makeText(SettingActivity.this, "您安装的已是最新版本了!", Toast.LENGTH_SHORT).show();
+                System.out.println("您安装的已是最新版本了");
+            }else if(what == error){
+                Toast.makeText(SettingActivity.this, "遇到了错误!"+msg.obj, Toast.LENGTH_SHORT).show();
+                System.out.println("遇到了错误"+msg.obj);
+            }else if(what == haveupdate){
+                ApkVersion versionInfo = (ApkVersion) msg.obj;
+                System.out.println("有新版本");
+                showUpdateDialog((ApkVersion) msg.obj);
+            }
+            if(mProgressDialog.isShowing()){
+                mProgressDialog.dismiss();
+                mProgressDialog = null;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +104,20 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         initNavigation();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mProgressDialog != null && mProgressDialog.isShowing()){
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
+
+        if(checkUpdateThread!= null && checkUpdateThread.isAlive()){
+            checkUpdateThread.interrupt();
+            checkUpdateThread = null;
+        }
+    }
+
     private void init(){
         View SettingDL = findViewById(R.id.activity_setting_default_launcher);
         SettingDL.setOnClickListener(this);
@@ -68,6 +125,14 @@ public class SettingActivity extends Activity implements View.OnClickListener{
 
         View about = findViewById(R.id.activity_setting_about);
         about.setOnClickListener(this);
+
+        View update = findViewById(R.id.activity_about_version);
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkUpdate();
+            }
+        });
 
         initValue();
     }
@@ -145,6 +210,89 @@ public class SettingActivity extends Activity implements View.OnClickListener{
                 SettingActivity.this.startActivity(intent);
             }
         }
+    }
+
+    //检测是否有新版本
+    private void checkUpdate() {
+        showDialog();
+        checkUpdateThread = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                Message message = new Message();
+                try {
+                    URL url = new URL(Config.baseURL + "/appVersion.json");
+                    //打开到url的连接
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    //以下为java IO部分，大体来说就是先检查文件夹是否存在，不存在则创建,然后的文件名重复问题，没有考虑
+                    InputStream in = connection.getInputStream();
+                    StringBuffer out = new StringBuffer();
+                    byte[] b = new byte[512];
+                    for (int n; (n = in.read(b)) != -1; ) {
+                        out.append(new String(b, 0, n));
+                    }
+                    in.close();
+                    String returnStr = out.toString();
+
+                    if (returnStr != null && !returnStr.equals("error")) {
+                        Gson returnM = new Gson();
+                        ApkVersion apkVersion = returnM.fromJson(returnStr, ApkVersion.class);
+                        int versionCode = BuildConfig.VERSION_CODE;
+                        int newVersionCode = Integer.parseInt(apkVersion.versionCode);
+                        if (versionCode < newVersionCode) {
+                            message.what = haveupdate;
+                            message.obj = apkVersion;
+                        } else {
+                            message.what = noupdate;
+                        }
+                    } else {
+                        message.what = error;
+                        message.obj = "超时或服务器没有返回";
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    message.what = error;
+                    message.obj = "服务器无响应，请稍后再试！";;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    message.what = error;
+                    message.obj = "服务器无响应，请稍后再试！";
+                }
+                mHandler.sendMessage(message);
+            }
+        };
+        checkUpdateThread.start();
+
+    }
+
+    private void showUpdateDialog(ApkVersion versionInfo){
+        if(mUpdateDialog == null){
+            mUpdateDialog = new UpdateDialog(this, versionInfo);
+        }
+        mUpdateDialog.show();
+    }
+
+    private void showDialog(){
+        if(mProgressDialog == null) {
+            //创建ProgressDialog对象
+            mProgressDialog = new ProgressDialog(this);
+            // 设置进度条风格，风格为圆形，旋转的
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            // 设置ProgressDialog 标题
+            mProgressDialog.setTitle(null);
+            // 设置ProgressDialog 提示信息
+            mProgressDialog.setMessage("正在检测新版本");
+            // 设置ProgressDialog 标题图标
+//        mProgressDialog.setIcon(R.drawable.a);
+            // 设置ProgressDialog 的进度条是否不明确
+            mProgressDialog.setIndeterminate(false);
+            // 设置ProgressDialog 是否可以按退回按键取消
+            mProgressDialog.setCancelable(true);
+            //设置ProgressDialog 的一个Button
+//        mProgressDialog.setButton("确定", new SureButtonListener());
+            // 让ProgressDialog显示
+        }
+        mProgressDialog.show();
     }
 
     /**

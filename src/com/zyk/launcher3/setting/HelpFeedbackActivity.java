@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.zyk.launcher3.R;
+import com.zyk.launcher3.config.Config;
 import com.zyk.launcher3.json.Content;
 import com.zyk.launcher3.json.Contents;
 import com.zyk.launcher3.json.Version;
@@ -47,7 +48,6 @@ import java.util.List;
  * Created by zyk on 2016/7/3.
  */
 public class HelpFeedbackActivity extends Activity {
-    private String baseURL = "https://yukun314.github.io/launcher3";
     private String filePath ;
     private ProgressBar progressbar;
     WebView mWebView;
@@ -106,7 +106,7 @@ public class HelpFeedbackActivity extends Activity {
             @Override
             public void run() {
                 super.run();
-                String str = downloadData(baseURL + "/version.json");
+                String str = downloadData(Config.baseURL + "/version.json");
                 if (str != null && !str.equals("error")) {
                     Gson json = new Gson();
                     Version version = json.fromJson(str, Version.class);
@@ -114,14 +114,14 @@ public class HelpFeedbackActivity extends Activity {
                     if (oldVersion < version.version) {//有新版本
                         //把version保存到本地
                         version.savaFile(filePath, "version.json");
-                        String cs = downloadData(baseURL + "/" + version.url);
+                        String cs = downloadData(Config.baseURL + "/" + version.url);
                         Gson cjson = new Gson();
                         Type type = new TypeToken<List<Content>>() {
                         }.getType();
                         List<Content> contents = cjson.fromJson(cs, type);
                         System.out.println("contents.size:" + contents.size());
                         for (Content c : contents) {
-                            downloadAndSaveData(baseURL + "/" + c.url, filePath + "/" + c.url);
+                            downloadAndSaveData(Config.baseURL + "/" + c.url, filePath + "/" + c.url);
                         }
                         System.out.println("cs:" + cs);
                     }

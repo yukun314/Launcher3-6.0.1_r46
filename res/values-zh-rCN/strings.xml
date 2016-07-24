@@ -114,5 +114,12 @@
     <string name="setting_about">关于</string>
     <string name="setting_default_screen">设置默认屏幕</string>
     <string name="application_lock">应用锁</string>
+    <string name="setting_about_version_update">版本更新</string>
+    <string name="setting_about_weixin">&#040;打赏,请使用微信扫我&#041;</string>
+    <string name="setting_about_save">保存到\n相册</string>
     <string name="setting_feedback">请把您的意见发往:yukun314@126.com</string>
+    <string name="update_title">有新版本</string>
+    <string name="not_now">以后再说</string>
+    <string name="now_upate">立即更新</string>
+    <string name="install_now">立即安装</string>
 </resources>

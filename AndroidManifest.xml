@@ -63,10 +63,12 @@
     <uses-permission android:name="com.zyk.launcher3.permission.RECEIVE_LAUNCH_BROADCASTS" />
     <uses-permission android:name="com.zyk.launcher3.permission.RECEIVE_FIRST_LOAD_BROADCAST" />
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
+    <!--<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- <uses-permission android:name="android.permission.SET_PREFERRED_APPLICATIONS"/> -->
     <application
         android:allowBackup="@bool/enable_backup"

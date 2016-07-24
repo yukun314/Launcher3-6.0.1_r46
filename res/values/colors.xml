@@ -72,5 +72,12 @@
     <color name="lock_delete_password_text_color">#f2061a</color>
     <color name="lock_uncheck_text_color">#828486</color>
     <color name="setting_bg_color">#99374248</color>
-    <color name="setting_item_bg_color">#99263238</color>
+    <color name="setting_item_bg_color">#b0486776</color>
+
+    <color name="green6aAlpha80">#cc6A8759</color>
+    <color name="green5fAlpha80">#cc5f7950</color>
+    <color name="green">#6A8759</color>
+    <color name="green5f">#5f7950</color>
+    <color name="white80">#808080</color>
+
 </resources>

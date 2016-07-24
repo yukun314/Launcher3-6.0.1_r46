@@ -20,6 +20,8 @@ import java.util.List;
 public class Config {
     private static Config mConfig;
 
+    public static final String baseURL = "https://yukun314.github.io/launcher3";
+
     public static Config getInstance(){
         if(mConfig == null){
             throw new NullPointerException("Config 还没有初始化！");

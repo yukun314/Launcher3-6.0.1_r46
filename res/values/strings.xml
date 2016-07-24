@@ -276,5 +276,13 @@
     <string name="setting_about">About</string>
     <string name="setting_default_screen">Setting the default screen</string>
     <string name="application_lock">Application Lock</string>
+    <string name="setting_about_version_update">version update</string>
+    <string name="setting_about_save">Save to album</string>
+    <string name="setting_about_weixin">&#040;Reward,the use of WeChat sweep&#041;</string>
     <string name="setting_feedback">Please send your comments to: yukun314@126.com</string>
+
+    <string name="update_title">new version</string>
+    <string name="not_now">talk about it later</string>
+    <string name="now_upate">update immediately</string>
+    <string name="install_now">install now</string>
 </resources>
