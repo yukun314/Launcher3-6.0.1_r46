@@ -1,24 +1,23 @@
 package com.zyk.launcher3.setting;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.zyk.launcher3.R;
-import com.zyk.launcher3.safety.MD5;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -29,6 +28,8 @@ import java.io.IOException;
  */
 public class AboutActivity extends Activity {
 
+    private final int CODE_FOR_WRITE_PERMISSION = 101;
+    private Bitmap mBitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +58,8 @@ public class AboutActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Context context = AboutActivity.this.getApplicationContext();
-                Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.dashang);
-                saveImageToGallery(context, bitmap);
+                mBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.dashang);
+                saveImageToGallery();
             }
         });
 
@@ -78,50 +79,72 @@ public class AboutActivity extends Activity {
         message.setText(R.string.setting_about);
     }
 
-    public void saveImageToGallery(Context context, Bitmap bmp) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CODE_FOR_WRITE_PERMISSION){
+            if (permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    &&grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                //用户同意使用write
+                saveImageToGallery();
+            }else{
+                //用户不同意，自行处理即可
+                Toast.makeText(getApplicationContext(),"保存失败，没有使用sd卡的权限",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
+    public void saveImageToGallery() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        CODE_FOR_WRITE_PERMISSION);
+                return;
+            }
+        }
+//        String str = MediaStore.Images.Media.insertImage(getContentResolver(), mBitmap, "MyQRCode", "MyQRCode");
         // 首先保存图片
-        File appDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/ISLauncher/");
+        File appDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath()+"/isLauncher");
 
         if (!appDir.exists()) {
-            boolean isSuccess = appDir.mkdirs();
-            System.out.println("文件夹不存在 创建:"+isSuccess);
+            boolean isSuccess = appDir.mkdir();
         }
-        System.out.println("appDir:" + appDir.getAbsolutePath());
-        String fileName = MD5.md5("MyQRCode") + ".jpg";
+        String fileName = "MyQRCode.jpg";
         final File file = new File(appDir, fileName);
         System.out.println("file:"+file.getAbsolutePath());
         try {
             if (!file.exists()) {
-                System.out.println("文件不存在 创建");
                 file.createNewFile();
 
             }
 
             FileOutputStream fos = new FileOutputStream(file);
-            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            if(mBitmap.isRecycled()){
+                mBitmap.recycle();
+            }
         }
-
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                    file.getAbsolutePath(), fileName, null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // 最后通知图库更新
+//        // 其次把文件插入到系统图库
+//        try {
+//            MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(),
+//                    file.getAbsolutePath(), fileName, "MyQRCode");
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//         //最后通知图库更新 FIXME 没有添加下面的通知也会再图库中显示
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri uri = Uri.fromFile(file);
-        System.out.println("uri:" + uri);
         intent.setData(uri);
-        context.sendBroadcast(intent);
-        Toast.makeText(context, "保存成功!", Toast.LENGTH_SHORT).show();
+        getApplicationContext().sendBroadcast(intent);
+        Toast.makeText(getApplicationContext(), "二维码保存成功!", Toast.LENGTH_SHORT).show();
     }
 
 }

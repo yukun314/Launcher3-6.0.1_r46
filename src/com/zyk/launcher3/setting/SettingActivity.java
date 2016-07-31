@@ -79,13 +79,13 @@ public class SettingActivity extends Activity implements View.OnClickListener{
             int what = msg.what;
             if(what == noupdate){
                 Toast.makeText(SettingActivity.this, "您安装的已是最新版本了!", Toast.LENGTH_SHORT).show();
-                System.out.println("您安装的已是最新版本了");
+//                System.out.println("您安装的已是最新版本了");
             }else if(what == error){
                 Toast.makeText(SettingActivity.this, "遇到了错误!"+msg.obj, Toast.LENGTH_SHORT).show();
-                System.out.println("遇到了错误"+msg.obj);
+//                System.out.println("遇到了错误"+msg.obj);
             }else if(what == haveupdate){
                 ApkVersion versionInfo = (ApkVersion) msg.obj;
-                System.out.println("有新版本");
+//                System.out.println("有新版本");
                 showUpdateDialog((ApkVersion) msg.obj);
             }
             if(mProgressDialog.isShowing()){
