@@ -2,9 +2,11 @@ package com.zyk.launcher3.setting;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -22,6 +24,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by zyk on 2016/7/17.
@@ -52,6 +56,13 @@ public class AboutActivity extends Activity {
         }
         topImage.setBounds(0,0,imageSize,imageSize);
         image.setCompoundDrawables(null, topImage, null, null);
+//        image.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                openApp("tencent.mm");
+//                return true;
+//            }
+//        });
 
         View save = findViewById(R.id.activity_about_dashang_tv3);
         save.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +74,35 @@ public class AboutActivity extends Activity {
             }
         });
 
+    }
+
+    //不能 默认 打开支付的url
+    private void openApp(String str) {
+        //应用过滤条件
+        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        PackageManager mPackageManager = this.getPackageManager();
+        List<ResolveInfo> mAllApps = mPackageManager.queryIntentActivities(mainIntent, 0);
+        //按报名排序
+        Collections.sort(mAllApps, new ResolveInfo.DisplayNameComparator(mPackageManager));
+
+        for (ResolveInfo res : mAllApps) {
+            //该应用的包名和主Activity
+            String pkg = res.activityInfo.packageName;
+            String cls = res.activityInfo.name;
+            System.out.println("pkg---" + pkg);
+
+            // 打开QQ pkg中包含"qq"，打开微信，pkg中包含"mm"
+            if (pkg.contains(str)) {
+                ComponentName componet = new ComponentName(pkg, cls);
+                Intent intent = new Intent();
+                Uri url = Uri.parse("www.baidu.com");//https://wx.tenpay.com/f2f?t=AQAAACllJFzmijxxxcqSyoIKnns%3D
+                intent.setData(url);
+                intent.setComponent(componet);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                this.startActivity(intent);
+            }
+        }
     }
 
     private void initNavigation(){

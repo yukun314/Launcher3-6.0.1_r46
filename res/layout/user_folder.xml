@@ -14,14 +14,15 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+<!--FIXME 文件夹打开时使用的布局-->
 <com.zyk.launcher3.Folder xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:launcher="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/quantum_panel"
+    android:background="#000"
     android:elevation="5dp"
     android:orientation="vertical" >
-
+    <!--android:background="@drawable/quantum_panel"-->
     <FrameLayout
         android:id="@+id/folder_content_wrapper"
         android:layout_width="match_parent"

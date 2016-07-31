@@ -531,6 +531,17 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         float scale;
         int overlayAlpha;
         Drawable drawable;
+
+        @Override
+        public String toString() {
+            return "PreviewItemDrawingParams{" +
+                    "transX=" + transX +
+                    ", transY=" + transY +
+                    ", scale=" + scale +
+                    ", overlayAlpha=" + overlayAlpha +
+                    ", drawable=" + drawable +
+                    '}';
+        }
     }
 
     private float getLocalCenterForIndex(int index, int[] center) {
@@ -546,6 +557,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         return mParams.scale;
     }
 
+    //FIXME 该方法 决定了 文件夹中应用图标的显示位置
     private PreviewItemDrawingParams computePreviewItemDrawingParams(int index,
             PreviewItemDrawingParams params) {
         index = NUM_ITEMS_IN_PREVIEW - index - 1;
@@ -573,8 +585,9 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         }
         return params;
     }
-
+//FIXME 这个方法是绘制 文件夹显示的，文件夹的显示样式 需要在此修改
     private void drawPreviewItem(Canvas canvas, PreviewItemDrawingParams params) {
+        System.out.println("params:"+params.toString());
         canvas.save();
         canvas.translate(params.transX + mPreviewOffsetX, params.transY + mPreviewOffsetY);
         canvas.scale(params.scale, params.scale);

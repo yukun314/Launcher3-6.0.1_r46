@@ -954,6 +954,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
         return mContent.isFull();
     }
 
+    //FIXME  控制打开后的显示
     private void centerAboutIcon() {
         DragLayer.LayoutParams lp = (DragLayer.LayoutParams) getLayoutParams();
 
