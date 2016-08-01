@@ -1420,7 +1420,7 @@ public class Launcher extends Activity
         });
 
         View settingsButton = findViewById(R.id.settings_button);
-        if (hasSettings()) {
+//        if (hasSettings()) {
             settingsButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
@@ -1430,9 +1430,9 @@ public class Launcher extends Activity
                 }
             });
             settingsButton.setOnTouchListener(getHapticFeedbackTouchListener());
-        } else {
-            settingsButton.setVisibility(View.GONE);
-        }
+//        } else {
+//            settingsButton.setVisibility(View.GONE);
+//        }
 
         mOverviewPanel.setAlpha(0f);
 

@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class AboutActivity extends Activity {
 
-    private final int CODE_FOR_WRITE_PERMISSION = 101;
+    private final int REQUESTCODE = 101;
     private Bitmap mBitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +122,7 @@ public class AboutActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CODE_FOR_WRITE_PERMISSION){
+        if (requestCode == REQUESTCODE){
             if (permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     &&grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 //用户同意使用write
@@ -139,7 +139,7 @@ public class AboutActivity extends Activity {
             int hasWriteContactsPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        CODE_FOR_WRITE_PERMISSION);
+                        REQUESTCODE);
                 return;
             }
         }
