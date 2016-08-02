@@ -60,7 +60,7 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     private StylusEventHelper mStylusEventHelper;
 
     // The number of icons to display in the
-    public static final int NUM_ITEMS_IN_PREVIEW = 3;
+    public static final int NUM_ITEMS_IN_PREVIEW = 4;
     private static final int CONSUMPTION_ANIMATION_DURATION = 100;
     private static final int DROP_IN_ANIMATION_DURATION = 400;
     private static final int INITIAL_ITEM_ANIMATION_DURATION = 350;
@@ -73,7 +73,8 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     private static final float OUTER_RING_GROWTH_FACTOR = 0.3f;
 
     // The amount of vertical spread between items in the stack [0...1]
-    private static final float PERSPECTIVE_SHIFT_FACTOR = 0.18f;
+//    private static final float PERSPECTIVE_SHIFT_FACTOR = 0.18f;
+    private static final float PERSPECTIVE_SHIFT_FACTOR = 0.1f;
 
     // Flag as to whether or not to draw an outer ring. Currently none is designed.
     public static final boolean HAS_OUTER_RING = true;
@@ -499,7 +500,8 @@ public class FolderIcon extends FrameLayout implements FolderListener {
             final int previewSize = mPreviewBackground.getLayoutParams().height;
             final int previewPadding = FolderRingAnimator.sPreviewPadding;
 
-            mAvailableSpaceInPreview = (previewSize - 2 * previewPadding);
+//            mAvailableSpaceInPreview = (previewSize - 2 * previewPadding);
+            mAvailableSpaceInPreview = previewSize;
             // cos(45) = 0.707  + ~= 0.1) = 0.8f
             int adjustedAvailableSpace = (int) ((mAvailableSpaceInPreview / 2) * (1 + 0.8f));
 
@@ -558,22 +560,69 @@ public class FolderIcon extends FrameLayout implements FolderListener {
     }
 
     //FIXME 该方法 决定了 文件夹中应用图标的显示位置
+//    private PreviewItemDrawingParams computePreviewItemDrawingParams(int index,
+//            PreviewItemDrawingParams params) {
+//        index = NUM_ITEMS_IN_PREVIEW - index - 1;
+//        float r = (index * 1.0f) / (NUM_ITEMS_IN_PREVIEW - 1);
+//        float scale = (1 - PERSPECTIVE_SCALE_FACTOR * (1 - r));
+//
+//        float offset = (1 - r) * mMaxPerspectiveShift;
+//        float scaledSize = scale * mBaselineIconSize;
+//        float scaleOffsetCorrection = (1 - scale) * mBaselineIconSize;
+//
+//        // We want to imagine our coordinates from the bottom left, growing up and to the
+//        // right. This is natural for the x-axis, but for the y-axis, we have to invert things.
+//        float transY = mAvailableSpaceInPreview - (offset + scaledSize + scaleOffsetCorrection) + getPaddingTop();
+//        float transX = (mAvailableSpaceInPreview - scaledSize) / 2;
+//        float totalScale = mBaselineIconScale * scale;
+//        final int overlayAlpha = (int) (80 * (1 - r));
+//
+//        if (params == null) {
+//            params = new PreviewItemDrawingParams(transX, transY, totalScale, overlayAlpha);
+//        } else {
+//            params.transX = transX;
+//            params.transY = transY;
+//            params.scale = totalScale;
+//            params.overlayAlpha = overlayAlpha;
+//        }
+//        return params;
+//    }
+
     private PreviewItemDrawingParams computePreviewItemDrawingParams(int index,
-            PreviewItemDrawingParams params) {
-        index = NUM_ITEMS_IN_PREVIEW - index - 1;
-        float r = (index * 1.0f) / (NUM_ITEMS_IN_PREVIEW - 1);
-        float scale = (1 - PERSPECTIVE_SCALE_FACTOR * (1 - r));
+                                                                     PreviewItemDrawingParams params) {
+//        float scale = 0.6f;
+//        index = NUM_ITEMS_IN_PREVIEW - index - 1;
+        System.out.println("index:"+index);
+        //mMaxPerspectiveShift 17
+        float offset =  mMaxPerspectiveShift;
+//        float scaledSize = scale * mBaselineIconSize;
+//        float totalScale = mBaselineIconScale * scale;
+//        System.out.println("mAvailableSpaceInPreview:"+mAvailableSpaceInPreview+"  scaledSize:"+scaledSize);
+        //显示的图标实际大小
+        float size = (mAvailableSpaceInPreview - 3* offset)/2;
 
-        float offset = (1 - r) * mMaxPerspectiveShift;
-        float scaledSize = scale * mBaselineIconSize;
-        float scaleOffsetCorrection = (1 - scale) * mBaselineIconSize;
-
+        float totalScale = size/mAvailableSpaceInPreview;
+        //mAvailableSpaceInPreview 125
         // We want to imagine our coordinates from the bottom left, growing up and to the
         // right. This is natural for the x-axis, but for the y-axis, we have to invert things.
-        float transY = mAvailableSpaceInPreview - (offset + scaledSize + scaleOffsetCorrection) + getPaddingTop();
-        float transX = (mAvailableSpaceInPreview - scaledSize) / 2;
-        float totalScale = mBaselineIconScale * scale;
-        final int overlayAlpha = (int) (80 * (1 - r));
+        float transY = 0;
+        float transX = 0;
+        System.out.println("index:"+index);
+        if(index == 0) {
+            transX = offset;
+            transY = getPaddingTop() ;
+        } else if(index == 1){
+            transX = 2*offset + size;
+            transY = getPaddingTop() ;
+        }else if(index == 3){
+            transX = offset;
+            transY = getPaddingTop() + size + offset;
+        }else{
+            transX = 2*offset + size;
+            transY = getPaddingTop() + size + offset;
+        }
+
+        final int overlayAlpha = 20;
 
         if (params == null) {
             params = new PreviewItemDrawingParams(transX, transY, totalScale, overlayAlpha);

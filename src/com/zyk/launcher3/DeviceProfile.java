@@ -220,8 +220,10 @@ public class DeviceProfile {
         // Folder
         folderCellWidthPx = cellWidthPx + 3 * edgeMarginPx;
         folderCellHeightPx = cellHeightPx + edgeMarginPx;
-        folderBackgroundOffset = -edgeMarginPx;
-        folderIconSizePx = iconSizePx + 2 * -folderBackgroundOffset;
+//        folderBackgroundOffset = -edgeMarginPx;
+        folderBackgroundOffset = 0;
+//        folderIconSizePx = iconSizePx + 2 * -folderBackgroundOffset;
+        folderIconSizePx = iconSizePx;
     }
 
     /**
