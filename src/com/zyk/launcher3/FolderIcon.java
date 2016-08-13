@@ -592,7 +592,6 @@ public class FolderIcon extends FrameLayout implements FolderListener {
                                                                      PreviewItemDrawingParams params) {
 //        float scale = 0.6f;
 //        index = NUM_ITEMS_IN_PREVIEW - index - 1;
-        System.out.println("index:"+index);
         //mMaxPerspectiveShift 17
         float offset =  mMaxPerspectiveShift;
 //        float scaledSize = scale * mBaselineIconSize;
@@ -607,14 +606,13 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         // right. This is natural for the x-axis, but for the y-axis, we have to invert things.
         float transY = 0;
         float transX = 0;
-        System.out.println("index:"+index);
         if(index == 0) {
             transX = offset;
             transY = getPaddingTop() ;
         } else if(index == 1){
             transX = 2*offset + size;
             transY = getPaddingTop() ;
-        }else if(index == 3){
+        }else if(index == 2){
             transX = offset;
             transY = getPaddingTop() + size + offset;
         }else{
@@ -634,9 +632,9 @@ public class FolderIcon extends FrameLayout implements FolderListener {
         }
         return params;
     }
-//FIXME 这个方法是绘制 文件夹显示的，文件夹的显示样式 需要在此修改
+//zyk 这个方法是绘制 文件夹显示的，文件夹的显示样式 需要在此修改
     private void drawPreviewItem(Canvas canvas, PreviewItemDrawingParams params) {
-        System.out.println("params:"+params.toString());
+
         canvas.save();
         canvas.translate(params.transX + mPreviewOffsetX, params.transY + mPreviewOffsetY);
         canvas.scale(params.scale, params.scale);

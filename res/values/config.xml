@@ -22,7 +22,7 @@
 
 <!-- AllApps & Launcher transitions -->
     <!-- The alpha of the AppsCustomize bg in spring loaded mode -->
-    <integer name="config_workspaceScrimAlpha">55</integer>
+    <integer name="config_workspaceScrimAlpha">5</integer>
     <!--AllApps界面的透明度 add by zhuyk-->
     <integer name="config_AllAppsAlpha">20</integer>
     <integer name="config_allAppsTransitionTime">100</integer>
@@ -31,7 +31,7 @@
     <!-- Out of 100, the percent to shrink the workspace during spring loaded mode. -->
     <integer name="config_workspaceSpringLoadShrinkPercentage">80</integer>
     <!-- Out of 100, the percent to shrink the workspace during overview mode. -->
-    <integer name="config_workspaceOverviewShrinkPercentage">70</integer>
+    <integer name="config_workspaceOverviewShrinkPercentage">75</integer>
 
     <!-- Fade/zoom in/out duration & scale in a Launcher overlay transition.
          Note: This should be less than the config_overlayTransitionTime as they happen together. -->

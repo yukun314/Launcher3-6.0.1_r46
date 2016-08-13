@@ -89,8 +89,8 @@ public class LockPatternUtils {
 	public int checkPattern(List<LockPatternView.Cell> pattern) {
 //		String stored = getLockPaternString();
 		String newPassword = MD5.md5(patternToString(pattern));
-		System.out.println("KEY_LOCK_PWD:"+KEY_LOCK_PWD);
-		System.out.println("newPassword:"+newPassword);
+//		System.out.println("KEY_LOCK_PWD:"+KEY_LOCK_PWD);
+//		System.out.println("newPassword:"+newPassword);
 		if (KEY_LOCK_PWD != null && KEY_LOCK_PWD.length() > 0) {
 			return KEY_LOCK_PWD.equals(newPassword) ? 1 : 0;
 		}

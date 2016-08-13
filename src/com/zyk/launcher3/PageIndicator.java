@@ -201,18 +201,18 @@ public class PageIndicator extends LinearLayout {
     }
 
     void dumpState(String txt) {
-        System.out.println(txt);
-        System.out.println("\tmMarkers: " + mMarkers.size());
-        for (int i = 0; i < mMarkers.size(); ++i) {
-            PageIndicatorMarker m = mMarkers.get(i);
-            System.out.println("\t\t(" + i + ") " + m);
-        }
-        System.out.println("\twindow: [" + mWindowRange[0] + ", " + mWindowRange[1] + "]");
-        System.out.println("\tchildren: " + getChildCount());
-        for (int i = 0; i < getChildCount(); ++i) {
-            PageIndicatorMarker m = (PageIndicatorMarker) getChildAt(i);
-            System.out.println("\t\t(" + i + ") " + m);
-        }
-        System.out.println("\tactive: " + mActiveMarkerIndex);
+//        System.out.println(txt);
+//        System.out.println("\tmMarkers: " + mMarkers.size());
+//        for (int i = 0; i < mMarkers.size(); ++i) {
+//            PageIndicatorMarker m = mMarkers.get(i);
+//            System.out.println("\t\t(" + i + ") " + m);
+//        }
+//        System.out.println("\twindow: [" + mWindowRange[0] + ", " + mWindowRange[1] + "]");
+//        System.out.println("\tchildren: " + getChildCount());
+//        for (int i = 0; i < getChildCount(); ++i) {
+//            PageIndicatorMarker m = (PageIndicatorMarker) getChildAt(i);
+//            System.out.println("\t\t(" + i + ") " + m);
+//        }
+//        System.out.println("\tactive: " + mActiveMarkerIndex);
     }
 }

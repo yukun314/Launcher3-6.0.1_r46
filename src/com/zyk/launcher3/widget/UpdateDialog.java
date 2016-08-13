@@ -77,9 +77,9 @@ public class UpdateDialog extends PopupWindow {
 //        cb.setVisibility(View.GONE);
 
         String path = mActivity.get().getExternalFilesDir("download").getAbsolutePath();
-        System.out.println("path:"+path);
+//        System.out.println("path:"+path);
         final File file = new File(path,"IS桌面"+versionInfo.versionName+".apk");
-        System.out.println("file:"+file.exists()+"  file.path:"+file.getAbsolutePath());
+//        System.out.println("file:"+file.exists()+"  file.path:"+file.getAbsolutePath());
         if(file != null && file.exists()){
             isdownloaded = true;
         }else{

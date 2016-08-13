@@ -90,7 +90,7 @@ public class AboutActivity extends Activity {
             //该应用的包名和主Activity
             String pkg = res.activityInfo.packageName;
             String cls = res.activityInfo.name;
-            System.out.println("pkg---" + pkg);
+//            System.out.println("pkg---" + pkg);
 
             // 打开QQ pkg中包含"qq"，打开微信，pkg中包含"mm"
             if (pkg.contains(str)) {
@@ -152,7 +152,7 @@ public class AboutActivity extends Activity {
         }
         String fileName = "MyQRCode.jpg";
         final File file = new File(appDir, fileName);
-        System.out.println("file:"+file.getAbsolutePath());
+//        System.out.println("file:"+file.getAbsolutePath());
         try {
             if (!file.exists()) {
                 file.createNewFile();

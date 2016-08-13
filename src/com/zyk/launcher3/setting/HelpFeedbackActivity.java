@@ -83,7 +83,7 @@ public class HelpFeedbackActivity extends Activity {
             }
 
             String baseURL = "file://"+filePath+"/";
-            System.out.println("baseURL:"+baseURL);
+//            System.out.println("baseURL:"+baseURL);
             mWebView.loadDataWithBaseURL(baseURL, data, "text/html", "utf-8",null);
         }else{
             mWebView.loadUrl("https://yukun314.github.io/launcher3/help.html");
@@ -119,11 +119,11 @@ public class HelpFeedbackActivity extends Activity {
                         Type type = new TypeToken<List<Content>>() {
                         }.getType();
                         List<Content> contents = cjson.fromJson(cs, type);
-                        System.out.println("contents.size:" + contents.size());
+//                        System.out.println("contents.size:" + contents.size());
                         for (Content c : contents) {
                             downloadAndSaveData(Config.baseURL + "/" + c.url, filePath + "/" + c.url);
                         }
-                        System.out.println("cs:" + cs);
+//                        System.out.println("cs:" + cs);
                     }
                 }
             }

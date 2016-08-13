@@ -1581,7 +1581,7 @@ public class Launcher extends Activity
         LauncherModel.addItemToDatabase(this, info, container, screenId, cellXY[0], cellXY[1]);
 
         if (!mRestoring) {
-            System.out.println("completeAddShortcut ");
+//            System.out.println("completeAddShortcut ");
             mWorkspace.addInScreen(view, container, screenId, cellXY[0], cellXY[1], 1, 1,
                     isWorkspaceLocked());
         }
@@ -3388,7 +3388,7 @@ public class Launcher extends Activity
     }
 
     void showWorkspace(int snapToPage, boolean animated, Runnable onCompleteRunnable) {
-        System.out.println("showWorkspace 三个参数");
+//        System.out.println("showWorkspace 三个参数");
         boolean changed = mState != State.WORKSPACE ||
                 mWorkspace.getState() != Workspace.State.NORMAL;
         if (changed) {

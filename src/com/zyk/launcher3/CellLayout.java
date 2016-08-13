@@ -3028,7 +3028,7 @@ public class CellLayout extends ViewGroup implements BubbleTextShadowHandler {
     }
 
     public void setScreenId(int id){
-        System.out.println("setScreenId mScreenId:"+id);
+//        System.out.println("setScreenId mScreenId:"+id);
         mScreenId = id;
     }
 

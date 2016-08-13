@@ -954,7 +954,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
         return mContent.isFull();
     }
 
-    //FIXME  控制打开后的显示
+    //zyk  控制文件夹打开后的显示位置
     private void centerAboutIcon() {
         DragLayer.LayoutParams lp = (DragLayer.LayoutParams) getLayoutParams();
 
@@ -999,6 +999,7 @@ public class Folder extends LinearLayout implements DragSource, View.OnClickList
 
         lp.width = width;
         lp.height = height;
+        //弹出框相对于屏幕的位置
         lp.x = left;
         lp.y = top;
     }

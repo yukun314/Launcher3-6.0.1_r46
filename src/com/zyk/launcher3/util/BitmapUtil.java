@@ -73,7 +73,7 @@ public class BitmapUtil {
      * @return
      */
     public static Bitmap mergeBitmap(Bitmap backBitmap, Bitmap frontBitmap) {
-        System.out.println("mergeBitmap");
+//        System.out.println("mergeBitmap");
         if (frontBitmap == null || frontBitmap.isRecycled()) {
             return backBitmap;
         }

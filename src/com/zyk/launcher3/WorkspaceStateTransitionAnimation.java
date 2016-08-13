@@ -312,7 +312,7 @@ public class WorkspaceStateTransitionAnimation {
 
         mNewScale = 1.0f;
 
-        System.out.println("animateWorkspace stateIsOverview:"+states.stateIsOverview);
+//        System.out.println("animateWorkspace stateIsOverview:"+states.stateIsOverview);
         //zhuyk
         if(states.stateIsOverview){
             mLauncher.getWorkspace().setDefaultScreenButtonVisibility(View.VISIBLE);
@@ -333,6 +333,7 @@ public class WorkspaceStateTransitionAnimation {
                 mNewScale = mOverviewModeShrinkFactor;
             }
         }
+//        System.out.println("mNewScale:"+mNewScale);
         if (toPage == SCROLL_TO_CURRENT_PAGE) {
             toPage = mWorkspace.getPageNearestToCenterOfScreen();
         }
@@ -363,7 +364,7 @@ public class WorkspaceStateTransitionAnimation {
                     cl.setShortcutAndWidgetAlpha(initialAlpha);
                 }
             }
-
+//            System.out.println("finalAlpha:"+finalAlpha);
             mOldAlphas[i] = initialAlpha;
             mNewAlphas[i] = finalAlpha;
             if (animated) {
@@ -512,7 +513,7 @@ public class WorkspaceStateTransitionAnimation {
                 AlphaUpdateListener.updateVisibility(pageIndicator, accessibilityEnabled);
             }
             mWorkspace.updateCustomContentVisibility();
-            System.out.println("mNewScale:"+mNewScale);
+//            System.out.println("mNewScale:"+mNewScale);
             mWorkspace.setScaleX(mNewScale);
             mWorkspace.setScaleY(mNewScale);
             mWorkspace.setTranslationY(finalWorkspaceTranslationY);

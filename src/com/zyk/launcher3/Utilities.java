@@ -651,7 +651,7 @@ public final class Utilities {
             }
             b.append(arg);
         }
-        System.out.println(b.toString());
+//        System.out.println(b.toString());
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)

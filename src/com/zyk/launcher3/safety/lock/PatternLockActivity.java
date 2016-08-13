@@ -265,7 +265,7 @@ public class PatternLockActivity extends Activity{
 				String password = LockPatternUtils.patternToString(pattern);
 //				lockPatternUtils.saveLockPattern(pattern);
 				Intent intent = new Intent();
-				System.out.println("两次密码一致:"+password);
+//				System.out.println("两次密码一致:"+password);
 				intent.putExtra(DATA,password);
 				if(type == SETTING) {
 					setResult(LockActivity.newPassword, intent);

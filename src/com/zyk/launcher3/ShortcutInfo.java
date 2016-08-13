@@ -159,7 +159,7 @@ public class ShortcutInfo extends ItemInfo {
         this.intent = intent;
         this.title = Utilities.trim(title);
         this.contentDescription = contentDescription;
-        System.out.println("ShortcutInfo 构造方法1 icon is null:"+(icon == null));
+//        System.out.println("ShortcutInfo 构造方法1 icon is null:"+(icon == null));
         mIcon = icon;
         this.user = user;
     }
@@ -173,7 +173,7 @@ public class ShortcutInfo extends ItemInfo {
             iconResource.packageName = info.iconResource.packageName;
             iconResource.resourceName = info.iconResource.resourceName;
         }
-        System.out.println("ShortcutInfo 构造方法2 icon is null:"+(info.mIcon == null));
+//        System.out.println("ShortcutInfo 构造方法2 icon is null:"+(info.mIcon == null));
         mIcon = info.mIcon; // TODO: should make a copy here.  maybe we don't need this ctor at all
         customIcon = info.customIcon;
         flags = info.flags;
@@ -230,11 +230,11 @@ public class ShortcutInfo extends ItemInfo {
         if (customIcon) {
             values.put(LauncherSettings.BaseLauncherColumns.ICON_TYPE,
                     LauncherSettings.BaseLauncherColumns.ICON_TYPE_BITMAP);
-            System.out.println("ShortcutInfo onAddToDatabase customIcon");
+//            System.out.println("ShortcutInfo onAddToDatabase customIcon");
             writeBitmap(values, mIcon);
         } else {
             if (!usingFallbackIcon) {
-                System.out.println("ShortcutInfo onAddToDatabase !usingFallbackIcon");
+//                System.out.println("ShortcutInfo onAddToDatabase !usingFallbackIcon");
                 writeBitmap(values, mIcon);
             }
             if (iconResource != null) {

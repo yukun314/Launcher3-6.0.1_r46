@@ -33,7 +33,9 @@
         android:text="@string/wallpaper_button_text"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:padding="3dp"
+        android:background="@drawable/bg_screenpanel"/>
 
     <TextView
         android:id="@+id/widget_button"
@@ -47,7 +49,9 @@
         android:text="@string/widget_button_text"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:padding="3dp"
+        android:background="@drawable/bg_screenpanel"/>
 
     <TextView
         android:id="@+id/help_button"
@@ -61,7 +65,9 @@
         android:text="@string/help_button_text"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:padding="3dp"
+        android:background="@drawable/bg_screenpanel"/>
 
     <TextView
         android:id="@+id/settings_button"
@@ -75,6 +81,8 @@
         android:text="@string/settings_button_text"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:padding="3dp"
+        android:background="@drawable/bg_screenpanel"/>
 
 </LinearLayout>
