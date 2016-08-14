@@ -18,11 +18,13 @@ package com.zyk.launcher3;
 
 import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
@@ -45,6 +47,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -332,7 +335,7 @@ public class AutoInstallsLayout {
         public long parseAndAdd(XmlResourceParser parser) {
             final String packageName = getAttributeValue(parser, ATTR_PACKAGE_NAME);
             final String className = getAttributeValue(parser, ATTR_CLASS_NAME);
-
+//            a();
             if (!TextUtils.isEmpty(packageName) && !TextUtils.isEmpty(className)) {
                 ActivityInfo info;
                 try {
@@ -370,6 +373,7 @@ public class AutoInstallsLayout {
             Log.w(TAG, "Skipping invalid <favorite> with no component");
             return -1;
         }
+
     }
 
     /**
@@ -461,25 +465,31 @@ public class AutoInstallsLayout {
                 throws XmlPullParserException, IOException {
             final String packageName = getAttributeValue(parser, ATTR_PACKAGE_NAME);
             final String className = getAttributeValue(parser, ATTR_CLASS_NAME);
-            if (TextUtils.isEmpty(packageName) || TextUtils.isEmpty(className)) {
+            //zhuyk
+//            if (TextUtils.isEmpty(packageName) || TextUtils.isEmpty(className)) {
+            if (TextUtils.isEmpty(packageName)) {
                 if (LOGD) Log.d(TAG, "Skipping invalid <favorite> with no component");
+                System.out.println("Skipping invalid <favorite> with no component");
                 return -1;
             }
 
-            ComponentName cn = new ComponentName(packageName, className);
-            try {
-                mPackageManager.getReceiverInfo(cn, 0);
-            } catch (Exception e) {
-                String[] packages = mPackageManager.currentToCanonicalPackageNames(
-                        new String[] { packageName });
-                cn = new ComponentName(packages[0], className);
-                try {
-                    mPackageManager.getReceiverInfo(cn, 0);
-                } catch (Exception e1) {
-                    if (LOGD) Log.d(TAG, "Can't find widget provider: " + className);
-                    return -1;
-                }
-            }
+            ComponentName cn = getComponentName("deskcloc");
+//            ComponentName cn = new ComponentName(packageName, className);
+//            try {
+//                mPackageManager.getReceiverInfo(cn, 0);
+//            } catch (Exception e) {
+//                String[] packages = mPackageManager.currentToCanonicalPackageNames(
+//                        new String[] { packageName });
+//                System.out.println("packages[0]:"+packages[0]);
+//                cn = new ComponentName(packages[0], className);
+//                try {
+//                    mPackageManager.getReceiverInfo(cn, 0);
+//                } catch (Exception e1) {
+//                    if (LOGD) Log.d(TAG, "Can't find widget provider: " + className);
+//                    System.out.println("Can't find widget provider:" + className);
+//                    return -1;
+//                }
+//            }
 
             mValues.put(Favorites.SPANX, getAttributeValue(parser, ATTR_SPAN_X));
             mValues.put(Favorites.SPANY, getAttributeValue(parser, ATTR_SPAN_Y));
@@ -493,7 +503,7 @@ public class AutoInstallsLayout {
                 if (type != XmlPullParser.START_TAG) {
                     continue;
                 }
-
+                System.out.println("widget parser.getName():"+parser.getName());
                 if (TAG_EXTRA.equals(parser.getName())) {
                     String key = getAttributeValue(parser, ATTR_KEY);
                     String value = getAttributeValue(parser, ATTR_VALUE);
@@ -514,6 +524,7 @@ public class AutoInstallsLayout {
 
                 if (!appWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn)) {
                     if (LOGD) Log.e(TAG, "Unable to bind app widget id " + cn);
+                    System.out.println("Unable to bind app widget id " + cn);
                     return -1;
                 }
 
@@ -522,6 +533,7 @@ public class AutoInstallsLayout {
                 mValues.put(Favorites.APPWIDGET_PROVIDER, cn.flattenToString());
                 mValues.put(Favorites._ID, mCallback.generateNewItemId());
                 insertedId = mCallback.insertAndCheck(mDb, mValues);
+                System.out.println("widget insertedId:"+insertedId);
                 if (insertedId < 0) {
                     mAppWidgetHost.deleteAppWidgetId(appWidgetId);
                     return insertedId;
@@ -537,9 +549,32 @@ public class AutoInstallsLayout {
                 }
             } catch (RuntimeException ex) {
                 if (LOGD) Log.e(TAG, "Problem allocating appWidgetId", ex);
+                System.out.println("Problem allocating appWidgetId:"+ex);
             }
             return insertedId;
         }
+
+    }
+
+    private List<AppWidgetProviderInfo> providers;
+    private ComponentName getComponentName(String packageNamePart){
+        if(providers == null) {
+            AppWidgetManager mAppWidgetManager;
+            mAppWidgetManager = AppWidgetManager.getInstance(mContext);
+            providers = mAppWidgetManager
+                    .getInstalledProviders();
+        }
+        final int providerCount = providers.size();
+        ComponentName result = null;
+        for (int i = 0; i < providerCount; i++) {
+            ComponentName provider = providers.get(i).provider;
+            String packageName = provider.getPackageName();
+            if(packageName.indexOf(packageNamePart)> 0 ){
+                result = provider;
+                break;
+            }
+        }
+        return result;
     }
 
     protected class FolderParser implements TagParser {
@@ -589,7 +624,6 @@ public class AutoInstallsLayout {
                 mValues.clear();
                 mValues.put(Favorites.CONTAINER, folderId);
                 mValues.put(Favorites.RANK, rank);
-
                 TagParser tagParser = mFolderElements.get(parser.getName());
                 if (tagParser != null) {
                     final long id = tagParser.parseAndAdd(parser);

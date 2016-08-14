@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2012 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2009 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -17,19 +16,66 @@
 <favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.zyk.launcher3">
 
     <!-- Hotseat -->
-    <include launcher:workspace="@xml/dw_tablet_hotseat" />
+    <include launcher:workspace="@xml/dw_phone_hotseat" />
 
     <!-- Bottom row -->
-    <favorite
+    <resolve
         launcher:screen="0"
         launcher:x="0"
-        launcher:y="4"
-        launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_CONTACTS;end" />
+        launcher:y="4">
+        <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;component=com.android.calculator2/.Calculator;end" />
+
+    </resolve>
 
     <resolve
         launcher:screen="0"
-        launcher:x="5"
+        launcher:x="1"
+        launcher:y="4">
+        <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;component=com.android.calendar/.AllInOneActivity;end" />
+    </resolve>
+
+    <!--appwidget 在AutoInstallsLayout.java中修改了代码。根据packageName(关键字)与系统的widget进行查找 -->
+    <appwidget
+        launcher:packageName="deskcloc"
+        launcher:screen="1"
+        launcher:spanX="4"
+        launcher:spanY="2"
+        launcher:x="0"
+        launcher:y="0"/>
+    <!--qq-->
+    <resolve
+        launcher:screen="1"
+        launcher:x="0"
+        launcher:y="4">
+        <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;component=com.tencent.mobileqq/.activity.SplashActivity;end" />
+    </resolve>
+
+    <!--微信-->
+    <resolve
+        launcher:screen="1"
+        launcher:x="1"
         launcher:y="4" >
+        <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;component=com.tencent.mm/.ui.LauncherUI;end" />
+    </resolve>
+    <resolve
+        launcher:screen="1"
+        launcher:x="2"
+        launcher:y="4">
+        <favorite launcher:uri="#Intent;action=Intent.ACTION_GET_CONTENT;end" />
+        <favorite launcher:uri="#Intent;type=*/*;end" />
+    </resolve>
+
+
+    <resolve
+        launcher:screen="2"
+        launcher:x="0"
+        launcher:y="4">
+        <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;component=com.android.settings/.Settings;end" />
+    </resolve>
+    <resolve
+        launcher:screen="2"
+        launcher:x="1"
+        launcher:y="4">
         <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MARKET;end" />
         <favorite launcher:uri="market://details?id=com.android.launcher" />
     </resolve>

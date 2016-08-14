@@ -96,8 +96,6 @@
         <attr name="icon" format="reference" />  
         <attr name="title" format="reference" />
         <attr name="uri" format="string" />
-        <attr name="_id" format="integer"/>
-        <attr name="itemType" format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="Extra">
