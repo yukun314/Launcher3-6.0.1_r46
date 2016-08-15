@@ -7,15 +7,15 @@ import java.io.Serializable;
  */
 public class ApkVersion implements Serializable{
 
-    public String versionCode;//版本号
+    public String versionCode = "0";//版本号
 
-    public String versionName;//版本名
+    public String versionName = "";//版本名
 
-    public String versionSize;//版本apk的大小
+    public String versionSize = "0";//版本apk的大小
 
-    public String versionContent;//更新的内容
+    public String versionContent = "";//更新的内容
 
-    public String downloadUrl;//下载地址,相对目录
+    public String downloadUrl = "";//下载地址,相对目录
 
     @Override
     public String toString() {

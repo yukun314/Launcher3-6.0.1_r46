@@ -236,13 +236,18 @@ public class SettingActivity extends Activity implements View.OnClickListener{
 
                     if (returnStr != null && !returnStr.equals("error")) {
                         Gson returnM = new Gson();
+                        System.out.println("returnStr:"+returnStr);
                         ApkVersion apkVersion = returnM.fromJson(returnStr, ApkVersion.class);
-                        int versionCode = BuildConfig.VERSION_CODE;
-                        int newVersionCode = Integer.parseInt(apkVersion.versionCode);
-                        if (versionCode < newVersionCode) {
-                            message.what = haveupdate;
-                            message.obj = apkVersion;
-                        } else {
+                        if(apkVersion != null) {
+                            int versionCode = BuildConfig.VERSION_CODE;
+                            int newVersionCode = Integer.parseInt(apkVersion.versionCode);
+                            if (versionCode < newVersionCode) {
+                                message.what = haveupdate;
+                                message.obj = apkVersion;
+                            } else {
+                                message.what = noupdate;
+                            }
+                        }else {
                             message.what = noupdate;
                         }
                     } else {
