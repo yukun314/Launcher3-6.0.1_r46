@@ -146,6 +146,8 @@
 -keep class im.yixin.sdk.api.YXMessage {*;}
 -keep class im.yixin.sdk.api.** implements im.yixin.sdk.api.YXMessage$YXMessageData{*;}
 
+-keep public class * implements java.io.Serializable{*;}
+
 #-dontwarn twitter4j.**
 #-keep class twitter4j.** { *; }
 

@@ -42,6 +42,7 @@ import com.zyk.launcher3.widget.UpdateDialog;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
@@ -220,6 +221,7 @@ public class SettingActivity extends Activity implements View.OnClickListener{
             public void run() {
                 super.run();
                 Message message = new Message();
+
                 try {
                     URL url = new URL(Config.baseURL + "/appVersion.json");
                     //打开到url的连接
@@ -233,10 +235,8 @@ public class SettingActivity extends Activity implements View.OnClickListener{
                     }
                     in.close();
                     String returnStr = out.toString();
-
                     if (returnStr != null && !returnStr.equals("error")) {
                         Gson returnM = new Gson();
-                        System.out.println("returnStr:"+returnStr);
                         ApkVersion apkVersion = returnM.fromJson(returnStr, ApkVersion.class);
                         if(apkVersion != null) {
                             int versionCode = BuildConfig.VERSION_CODE;
@@ -269,6 +269,8 @@ public class SettingActivity extends Activity implements View.OnClickListener{
         checkUpdateThread.start();
 
     }
+
+
 
     private void showUpdateDialog(ApkVersion versionInfo){
         if(mUpdateDialog == null){
